@@ -1,6 +1,6 @@
 Summary:	Common Unix Printing System	
 Name:		cups
-Version:	1.1.2
+Version:	1.1.4
 Release:	1
 Vendor:		PLD
 License:	GPL/LGPL
@@ -30,27 +30,29 @@ support real-world printing under UNIX.
 %patch -p1
 
 %build
-autoconf
 %configure
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%{__make}    prefix=$RPM_BUILD_ROOT \
-exec_prefix=$RPM_BUILD_ROOT%{_prefix} \
+%{__make} DESTDIR=$RPM_BUILD_ROOT
+
+%{__make} \
+        prefix=$RPM_BUILD_ROOT \
+	exec_prefix=$RPM_BUILD_ROOT%{_prefix} \
         BINDIR=$RPM_BUILD_ROOT%{_bindir} \
-        DATADIR=$RPM_BUILD_ROOT%{_datadir}/cups \
+	DATADIR=$RPM_BUILD_ROOT%{_datadir}/cups \
         DOCDIR=$RPM_BUILD_ROOT%{_datadir}/doc/cups \
         INCLUDEDIR=$RPM_BUILD_ROOT%{_includedir} \
-        LIBDIR=$RPM_BUILD_ROOT%{_libdir} \
-        LOCALEDIR=$RPM_BUILD_ROOT%{_datadir}/locale \
-MANDIR=$RPM_BUILD_ROOT%{_prefix}/man \
-        PAMDIR=$RPM_BUILD_ROOT/etc/pam.d \
+	LIBDIR=$RPM_BUILD_ROOT%{_libdir} \
+	LOCALEDIR=$RPM_BUILD_ROOT%{_datadir}/locale \
+        MANDIR=$RPM_BUILD_ROOT%{_mandir} \
+	PAMDIR=$RPM_BUILD_ROOT/etc/pam.d \
         REQUESTS=$RPM_BUILD_ROOT/var/spool/cups \
-SBINDIR=$RPM_BUILD_ROOT%{_sbindir} \
+	SBINDIR=$RPM_BUILD_ROOT%{_sbindir} \
         SERVERBIN=$RPM_BUILD_ROOT%{_libdir}/cups \
-SERVERROOT=$RPM_BUILD_ROOT%{_sysconfdir}/cups \
-        install 
+	SERVERROOT=$RPM_BUILD_ROOT%{_sysconfdir}/cups \
+    install 
 
 
 %clean
