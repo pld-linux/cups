@@ -1,6 +1,6 @@
 diff -urN cups-1.1.7.old/conf/cupsd.conf cups-1.1.7/conf/cupsd.conf
 --- cups-1.1.7.old/conf/cupsd.conf	Fri May 18 16:07:37 2001
-+++ cups-1.1.7/conf/cupsd.conf	Fri May 18 16:50:40 2001
++++ cups-1.1.7/conf/cupsd.conf.in	Fri May 18 16:50:40 2001
 @@ -257,6 +257,9 @@
  # default IPP port of 631.  It changes users whenever an external
  # program is run...

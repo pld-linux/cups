@@ -1,12 +1,11 @@
-diff -Nur cups-1.1.12/Makefile cups-1.1.12-new/Makefile
---- cups-1.1.12/Makefile	Tue Oct 30 21:37:13 2001
-+++ cups-1.1.12-new/Makefile	Sat Nov 24 20:53:48 2001
-@@ -75,32 +75,8 @@
+--- cups-1.1.13/Makefile.orig	Thu Jan 24 19:51:04 2002
++++ cups-1.1.13/Makefile	Tue Feb  5 08:20:11 2002
+@@ -76,33 +76,8 @@
  	echo Installing in templates...
  	(cd templates; $(MAKE) $(MFLAGS) install)
  	echo Installing cups-config script...
--	$(INSTALL_DIR) $(bindir)
--	$(INSTALL_SCRIPT) cups-config $(bindir)/cups-config
+-	$(INSTALL_DIR) $(BINDIR)
+-	$(INSTALL_SCRIPT) cups-config $(BINDIR)/cups-config
 -	echo Installing startup script...
 -	if test "x$(INITDIR)" != "x"; then \
 -		$(INSTALL_DIR) $(BUILDROOT)$(INITDIR)/init.d; \
@@ -31,11 +30,12 @@ diff -Nur cups-1.1.12/Makefile cups-1.1.12-new/Makefile
 -			$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDDIR)/cups; \
 -		fi \
 -	fi
+-
 +	$(INSTALL_DIR) $(DESTDIR)$(bindir)
 +	$(INSTALL_SCRIPT) cups-config $(DESTDIR)$(bindir)/cups-config
  
- 
  #
+ # Run the test suite...
 diff -Nur cups-1.1.12/backend/Makefile cups-1.1.12-new/backend/Makefile
 --- cups-1.1.12/backend/Makefile	Tue Jul 24 21:56:41 2001
 +++ cups-1.1.12-new/backend/Makefile	Sat Nov 24 20:27:51 2001
@@ -153,10 +153,9 @@ diff -Nur cups-1.1.12/cups/Makefile cups-1.1.12-new/cups/Makefile
  
  
  #
-diff -Nur cups-1.1.12/data/Makefile cups-1.1.12-new/data/Makefile
---- cups-1.1.12/data/Makefile	Thu Jul 19 22:17:52 2001
-+++ cups-1.1.12-new/data/Makefile	Sat Nov 24 20:27:51 2001
-@@ -81,26 +81,20 @@
+--- cups-1.1.13/data/Makefile.orig	Thu Jan 31 15:53:42 2002
++++ cups-1.1.13/data/Makefile	Tue Feb  5 08:22:43 2002
+@@ -85,27 +85,20 @@
  #
  
  install:
@@ -178,7 +177,7 @@ diff -Nur cups-1.1.12/data/Makefile cups-1.1.12-new/data/Makefile
 -		$(INSTALL_DATA) $$file $(DATADIR)/data; \
 +		$(INSTALL_DATA) $$file $(DESTDIR)$(DATADIR)/data; \
  	done
--	-if test x$(PAMDIR) != x; then \
+-	-if test x$(PAMDIR) != x$(BUILDROOT); then \
 -		$(INSTALL_DIR) $(PAMDIR); \
 -		if test -f /lib/security/pam_unix.so; then \
 -			$(INSTALL_DATA) cups.suse $(PAMDIR)/cups; \
@@ -186,11 +185,12 @@ diff -Nur cups-1.1.12/data/Makefile cups-1.1.12-new/data/Makefile
 -			$(INSTALL_DATA) cups.pam $(PAMDIR)/cups; \
 -		fi \
 -	fi
+-
 +	$(INSTALL_DIR) $(DESTDIR)$(PAMDIR)
 +	$(INSTALL_DATA) cups.pam $(DESTDIR)$(PAMDIR)/cups
  
- 
  #
+ # End of "$Id$".
 diff -Nur cups-1.1.12/doc/Makefile cups-1.1.12-new/doc/Makefile
 --- cups-1.1.12/doc/Makefile	Thu Jul 19 22:17:53 2001
 +++ cups-1.1.12-new/doc/Makefile	Sat Nov 24 20:27:51 2001
@@ -224,10 +224,9 @@ diff -Nur cups-1.1.12/doc/Makefile cups-1.1.12-new/doc/Makefile
  	done
  
  
-diff -Nur cups-1.1.12/filter/Makefile cups-1.1.12-new/filter/Makefile
---- cups-1.1.12/filter/Makefile	Sun Oct  7 14:16:09 2001
-+++ cups-1.1.12-new/filter/Makefile	Sat Nov 24 20:33:57 2001
-@@ -59,22 +59,15 @@
+--- cups-1.1.13/filter/Makefile.orig	Wed Jan 23 23:30:42 2002
++++ cups-1.1.13/filter/Makefile	Tue Feb  5 08:25:37 2002
+@@ -59,24 +59,15 @@
  #
  
  install:
@@ -248,15 +247,17 @@ diff -Nur cups-1.1.12/filter/Makefile cups-1.1.12-new/filter/Makefile
 -		$(LN) $(LIBCUPSIMAGE) $(LIBDIR)/libcupsimage.dylib; \
 -	fi
 -	$(INSTALL_DIR) $(INCLUDEDIR)/cups
+-	$(INSTALL_DATA) image.h $(INCLUDEDIR)/cups
 -	$(INSTALL_DATA) raster.h $(INCLUDEDIR)/cups
+-
 +	$(INSTALL_DIR) $(DESTDIR)$(LIBDIR)
 +	$(INSTALL_LIB) $(LIBCUPSIMAGE) $(DESTDIR)$(LIBDIR)
 +	$(LN) $(LIBCUPSIMAGE) $(DESTDIR)$(LIBDIR)/`basename $(LIBCUPSIMAGE) .2`; \
 +	$(INSTALL_DIR) $(DESTDIR)$(INCLUDEDIR)/cups
-+	$(INSTALL_DATA) raster.h $(DESTDIR)$(INCLUDEDIR)/cups
- 
++	$(INSTALL_DATA) image.h raster.h $(DESTDIR)$(INCLUDEDIR)/cups
  
  #
+ # formtops
 diff -Nur cups-1.1.12/fonts/Makefile cups-1.1.12-new/fonts/Makefile
 --- cups-1.1.12/fonts/Makefile	Thu Jul 19 22:17:55 2001
 +++ cups-1.1.12-new/fonts/Makefile	Sat Nov 24 20:27:51 2001
