@@ -1,15 +1,6 @@
-diff -urN cups-1.1.10.orig/conf/cupsd.conf cups-1.1.10/conf/cupsd.conf
---- cups-1.1.10.orig/conf/cupsd.conf	Sun Nov  4 21:37:50 2001
-+++ cups-1.1.10/conf/cupsd.conf	Sun Nov  4 21:43:17 2001
-@@ -121,7 +121,7 @@
- # By default the compiled in directory.
- #
- 
--#DocumentRoot /usr/share/doc/cups
-+DocumentRoot /usr/lib/cups/cgi-bin
- 
- #
- # ErrorLog: the error log file; if this does not start with a leading /
+diff -urN cups-1.1.10.orig/conf/cupsd.conf.in cups-1.1.10/conf/cupsd.conf.in
+--- cups-1.1.10.orig/conf/cupsd.conf.in	Sun Nov  4 21:37:50 2001
++++ cups-1.1.10/conf/cupsd.conf.in	Sun Nov  4 21:43:17 2001
 @@ -159,8 +159,10 @@
  # MaxLogSize: controls the maximum size of each log file before they are
  # rotated.  Defaults to 1048576 (1MB).  Set to 0 to disable log rotating.
