@@ -3,7 +3,7 @@ Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.1.12
-Release:	1
+Release:	2
 License:	GPL/LGPL
 Group:		Applications/System
 Group(de):	Applikationen/System
@@ -30,9 +30,9 @@ BuildRequires:	automake
 Prereq:		%{name}-libs = %{version}
 Prereq:		/sbin/chkconfig
 Provides:	lpr
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	lpr
 Obsoletes:	LPRng
-BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description 
 CUPS provides a portable printing layer for UNIX®-based operating
