@@ -3,7 +3,7 @@ Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.1.10
-Release:	1
+Release:	2
 License:	GPL/LGPL
 Group:		Applications/System
 Group(de):	Applikationen/System
@@ -11,6 +11,7 @@ Group(pl):	Aplikacje/System
 Source0:	ftp://ftp.easysw.com/pub/%{name}/%{version}/%{name}-%{version}-1-source.tar.bz2
 Source1:	%{name}.init
 Source2:	%{name}.pamd
+Source3:	%{name}.logrotate
 Patch0:		%{name}-DESTDIR.patch
 Patch1:		%{name}-config.patch
 Patch2:		%{name}-tmpdir.patch
@@ -137,17 +138,22 @@ bibliotecas do CUPS.
 %build
 aclocal
 autoconf
-%configure
+# NOTE: --with-docdir sets where internal HTTP server will look for
+#	files. Keep in mind that ./configure doesn't give a shit to
+#	config.h.in.
+%configure \
+	--with-docdir=%{_datadir}/%{name}/http
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d}
+install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,logrotate.d}
 
 %{__make} DESTDIR=$RPM_BUILD_ROOT install 
 
-install %{SOURCE1}	$RPM_BUILD_ROOT/etc/rc.d/init.d/cups
-install %{SOURCE2}	$RPM_BUILD_ROOT/etc/pam.d/cups
+install %{SOURCE1}	$RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
+install %{SOURCE2}	$RPM_BUILD_ROOT/etc/pam.d/%{name}
+install %{SOURCE3}	$RPM_BUILD_ROOT/etc/logrotate.d/%{name}
 
 gzip -9nf *.txt
 
@@ -175,7 +181,8 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc *.gz doc/*.html doc/*.css doc/*.pdf doc/images
+%doc *.gz
+# doc/*.html doc/*.css doc/*.pdf doc/images
 %attr(640,root,root) %config %verify(not size mtime md5) /etc/pam.d/*
 %attr(754,root,root) /etc/rc.d/init.d/cups
 %dir %{_sysconfdir}/%{name}
@@ -185,6 +192,7 @@ fi
 %dir %{_sysconfdir}/%{name}/certs
 %dir %{_sysconfdir}/%{name}/interfaces
 %dir %{_sysconfdir}/%{name}/ppd
+%attr(644,root,root) %{_sysconfdir}/logrotate.d/%{name}
 %attr(4755,lp,root) %{_bindir}/lppasswd
 %attr(755,root,root) %{_bindir}/cancel
 %attr(755,root,root) %{_bindir}/disable
