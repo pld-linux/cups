@@ -2,11 +2,11 @@ Summary:	Common Unix Printing System
 Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.1.18
-Release:	3
+Version:	1.1.14
+Release:	22
 Epoch:		1
 License:	GPL/LGPL
-Group:		Applications/Printing
+Group:		Applications/System
 Source0:	ftp://ftp.easysw.com/pub/%{name}/%{version}/%{name}-%{version}-source.tar.bz2
 Source1:	%{name}.init
 Source2:	%{name}.pamd
@@ -16,20 +16,22 @@ Patch1:		%{name}-config.patch
 Patch2:		%{name}-tmpdir.patch
 Patch3:		%{name}-lp-lpr.patch
 Patch4:		%{name}-options.patch
-Patch5:		%{name}-ENCRYPTIONtxt.patch
-Patch6:		%{name}-man_pages_linking.patch
-Patch7:		%{name}-nolibs.patch
+Patch5:		%{name}-pstoraster-gcc-2.96.patch
+Patch6:		%{name}-ENCRYPTIONtxt.patch
+Patch7:		%{name}-tmprace.patch
+Patch8:		%{name}-idefense-v2.patch
+Patch9:		%{name}-pdftops.patch
 URL:		http://www.cups.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libtiff-devel
-BuildRequires:	openssl-devel >= 0.9.7
+BuildRequires:	openssl-devel >= 0.9.6b
 BuildRequires:	pam-devel
 BuildRequires:	pkgconfig
 PreReq:		%{name}-libs = %{version}
-PreReq:		/sbin/chkconfig
+Requires(post,preun):	/sbin/chkconfig
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	lpr
 Obsoletes:	LPRng
@@ -59,7 +61,7 @@ portável para os sistemas operacionais baseados no UNIX®.
 Summary:	Common Unix Printing System Libraries
 Summary(pl):	Biblioteki dla CUPS
 Summary(pt_BR):	Sistema Unix de Impressão - bibliotecas para uso em clientes cups
-Group:		Libraries
+Group:		Development/Libraries
 Provides:	%{name}-libs = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-libs
 Obsoletes:	libcups1
@@ -90,7 +92,7 @@ Aplikacje klienckie dla CUPS.
 Summary:	Common Unix Printing System Libraries - images manipulation
 Summary(pl):	Biblioteki dla CUPS - obs³uga formatów graficznych
 Summary(pt_BR):	Sistema Unix de Impressão - bibliotecas para uso em clientes cups
-Group:		Libraries
+Group:		Development/Libraries
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 Obsoletes:	libcups1
 
@@ -144,18 +146,23 @@ bibliotecas do CUPS.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-# wtf?
-#%patch2 -p1
+%patch2 -p1
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%patch7 -p1
+%patch7 -p0
+%patch8 -p0
+%patch9 -p0
 
 %build
-%{__aclocal}
+aclocal
 %{__autoconf}
-%configure \
+if [ -f %{_pkgconfigdir}/libpng12.pc ] ; then
+	CFLAGS="%{rpmcflags} `pkg-config libpng12 --cflags`"
+	CPPFLAGS="`pkg-config libpng12 --cflags`"
+fi
+%configure CPPFLAGS="$CPPFLAGS" \
 	--with-docdir=%{_libdir}/%{name}/cgi-bin
 %{__make}
 
@@ -178,17 +185,15 @@ cp doc/images/*	$RPM_BUILD_ROOT/%{_libdir}/%{name}/cgi-bin/images/
 touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
 touch $RPM_BUILD_ROOT/etc/security/blacklist.cups
 
-#ln -s %{_bindir}/smbspool $RPM_BUILD_ROOT/%{_libdir}/%{name}/backend/smb
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post
 /sbin/chkconfig --add cups
 if [ -f /var/lock/subsys/cupsd ]; then
-	/etc/rc.d/init.d/cups restart 1>&2
+        /etc/rc.d/init.d/cups restart 1>&2
 else
-	echo "Run \"/etc/rc.d/init.d/cups start\" to start cups daemon."
+        echo "Run \"/etc/rc.d/init.d/cups start\" to start cups daemon."
 fi
 
 %preun
@@ -220,25 +225,19 @@ fi
 %dir %{_sysconfdir}/%{name}/certs
 %dir %{_sysconfdir}/%{name}/interfaces
 %dir %{_sysconfdir}/%{name}/ppd
-%attr(644,root,root) /etc/logrotate.d/%{name}
+%attr(644,root,root) %{_sysconfdir}/logrotate.d/%{name}
 %attr(4755,lp,root) %{_bindir}/lppasswd
 %attr(755,root,root) %{_bindir}/disable
 %attr(755,root,root) %{_bindir}/enable
 %dir %{_libdir}/cups
 %dir %{_libdir}/cups/*
-%attr(755,root,root) %{_libdir}/cups/*/*
+%attr(755,root,root)  %{_libdir}/cups/*/*
 %attr(755,root,root) %{_sbindir}/*
 %{_datadir}/cups
 %{_mandir}/man1/backend.1*
-%{_mandir}/man1/cupstestppd.1*
 %{_mandir}/man1/filter.1*
 %{_mandir}/man1/lppasswd.1*
 %{_mandir}/man[58]/*
-%lang(fr) %{_mandir}/fr/man1/backend.1*
-%lang(fr) %{_mandir}/fr/man1/cupstestppd.1*
-%lang(fr) %{_mandir}/fr/man1/filter.1*
-%lang(fr) %{_mandir}/fr/man1/lppasswd.1*
-%lang(fr) %{_mandir}/fr/man[58]/*
 %{_datadir}/locale/C/cups_C
 %lang(be) %{_datadir}/locale/be/cups_be
 %lang(cs) %{_datadir}/locale/cs/cups_cs
@@ -274,20 +273,12 @@ fi
 %attr(755,root,root) %{_bindir}/lpr
 %attr(755,root,root) %{_bindir}/lprm
 %attr(755,root,root) %{_bindir}/lpstat
-%{_mandir}/man1/cancel.1*
 %{_mandir}/man1/lp.1*
 %{_mandir}/man1/lpoptions.1*
 %{_mandir}/man1/lpq.1*
 %{_mandir}/man1/lpr.1*
 %{_mandir}/man1/lprm.1*
 %{_mandir}/man1/lpstat.1*
-%lang(fr) %{_mandir}/fr/man1/cancel.1*
-%lang(fr) %{_mandir}/fr/man1/lp.1*
-%lang(fr) %{_mandir}/fr/man1/lpoptions.1*
-%lang(fr) %{_mandir}/fr/man1/lpq.1*
-%lang(fr) %{_mandir}/fr/man1/lpr.1*
-%lang(fr) %{_mandir}/fr/man1/lprm.1*
-%lang(fr) %{_mandir}/fr/man1/lpstat.1*
 
 %files image-lib
 %defattr(644,root,root,755)
@@ -299,7 +290,6 @@ fi
 %{_includedir}/cups
 %{_libdir}/lib*.so
 %{_mandir}/man3/*
-%lang(fr) %{_mandir}/fr/man3/*
 
 %files static
 %defattr(644,root,root,755)
