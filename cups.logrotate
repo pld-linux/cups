@@ -1,0 +1,10 @@
+/var/log/cups/*log {
+	olddir /var/log/archiv/cups
+	weekly
+	rotate 4
+	compress
+	create 660 root root
+	postrotate
+		/etc/rc.d/init.d/cups restart > /dev/null
+	endscript
+}
