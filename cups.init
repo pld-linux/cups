@@ -3,7 +3,7 @@
 #
 # cups		Common UNIX Printing System (CUPS)
 #
-# chkconfig:	235 99 00
+# chkconfig:	235 95 00
 # description:	Startup/shutdown script for the Common UNIX \
 #		Printing System (CUPS).
 #
