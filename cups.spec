@@ -14,7 +14,7 @@ Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 %define	rcver	rc4
 Version:	1.1.20
-Release:	0.%{rcver}.1
+Release:	0.%{rcver}.2
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
@@ -32,6 +32,7 @@ Patch5:		%{name}-ENCRYPTIONtxt.patch
 Patch6:		%{name}-man_pages_linking.patch
 Patch7:		%{name}-nolibs.patch
 Patch8:		%{name}-chown.patch
+Patch9:		%{name}-nostrip.patch
 URL:		http://www.cups.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -234,6 +235,7 @@ pod³±czonych do portów równoleg³ych.
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
+%patch9 -p1
 
 %build
 %{__aclocal}
