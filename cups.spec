@@ -57,7 +57,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_ulibdir	%{_prefix}/lib
 
 %description
-CUPS provides a portable printing layer for UNIX®-based operating
+CUPS provides a portable printing layer for UNIX-based operating
 systems. It has been developed by Easy Software Products to promote a
 standard printing solution for all UNIX vendors and users. CUPS
 provides the System V and Berkeley command-line interfaces. CUPS uses
