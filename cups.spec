@@ -3,7 +3,7 @@ Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.1.13
-Release:	4
+Release:	1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/System
@@ -150,7 +150,7 @@ bibliotecas do CUPS.
 aclocal
 autoconf
 %configure \
-	--with-docdir=%{_datadir}/%{name}-%{version}
+	--with-docdir=%{_libdir}/%{name}/cgi-bin
 %{__make}
 
 %install
@@ -163,6 +163,11 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,logrotate.d} \
 install %{SOURCE1}	$RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install %{SOURCE2}	$RPM_BUILD_ROOT/etc/pam.d/%{name}
 install %{SOURCE3}	$RPM_BUILD_ROOT/etc/logrotate.d/%{name}
+
+# for internal http browser:
+cp doc/*.html	$RPM_BUILD_ROOT/%{_libdir}/%{name}/cgi-bin/
+cp doc/*.css	$RPM_BUILD_ROOT/%{_libdir}/%{name}/cgi-bin/
+cp doc/images/*	$RPM_BUILD_ROOT/%{_libdir}/%{name}/cgi-bin/images/
 
 touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
 
@@ -192,7 +197,8 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc *.gz doc/*.html doc/*.css doc/images
+#%doc *.gz doc/*.html doc/*.css doc/images
+%doc *.gz
 %attr(640,root,root) %config %verify(not size mtime md5) /etc/pam.d/*
 %attr(754,root,root) /etc/rc.d/init.d/cups
 %dir %{_sysconfdir}/%{name}
