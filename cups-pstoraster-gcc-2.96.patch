@@ -1,0 +1,21 @@
+--- cups-1.1.10/pstoraster/genarch.c.orig	Thu Mar 29 18:55:43 2001
++++ cups-1.1.10/pstoraster/genarch.c	Thu Mar 29 18:58:27 2001
+@@ -28,6 +28,7 @@
+ 
+ #include "stdpre.h"
+ #include <stdio.h>
++#include <string.h>
+ 
+ /* We should write the result on stdout, but the original Turbo C 'make' */
+ /* can't handle output redirection (sigh). */
+--- cups-1.1.10/pstoraster/zchar1.c.orig	Thu Mar 29 18:51:23 2001
++++ cups-1.1.10/pstoraster/zchar1.c	Thu Mar 29 18:52:23 2001
+@@ -49,6 +49,8 @@
+ #include "iname.h"
+ #include "store.h"
+ 
++#include <string.h>
++
+ /* Test whether a font is Type 1 compatible. */
+ inline private bool
+ font_is_type1_compatible(const gs_font *pfont)
