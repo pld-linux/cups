@@ -150,7 +150,7 @@ bibliotecas do CUPS.
 %patch6 -p1
 
 %build
-aclocal
+%{__aclocal}
 %{__autoconf}
 if [ -f %{_pkgconfigdir}/libpng12.pc ] ; then
 	CFLAGS="%{rpmcflags} `pkg-config libpng12 --cflags`"
