@@ -1,3 +1,6 @@
+# TODO:
+# - SECURITY: http://securitytracker.com/alerts/2004/Sep/1011283.html
+#
 Summary:	Common Unix Printing System
 Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
