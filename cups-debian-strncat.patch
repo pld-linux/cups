@@ -1,0 +1,251 @@
+From Debian - fixes for invalid strncat() usage
+--- cupsys-1.1.14.orig/cgi-bin/ipp-var.c
++++ cupsys-1.1.14/cgi-bin/ipp-var.c
+@@ -184,7 +184,7 @@
+       for (i = 0; i < attr->num_values; i ++)
+       {
+ 	if (i)
+-	  strncat(valptr, ",", sizeof(value) - (valptr - value) - 1);
++	  strncat(valptr, ",", sizeof(value) - strlen(value) - 1);
+ 
+ 	valptr += strlen(valptr);
+ 
+@@ -209,7 +209,7 @@
+ 	      break;
+ 
+ 	  case IPP_TAG_NOVALUE :
+-	      strncat(valptr, "novalue", sizeof(value) - (valptr - value) - 1);
++	      strncat(valptr, "novalue", sizeof(value) - strlen(value) - 1);
+ 	      break;
+ 
+ 	  case IPP_TAG_RANGE :
+@@ -261,7 +261,7 @@
+ 		             ishttps ? "https" : "http",
+ 			     hostname, port, resource);
+ 
+-		  strncat(valptr, uri, sizeof(value) - (valptr - value) - 1);
++		  strncat(valptr, uri, sizeof(value) - strlen(value) - 1);
+         	  break;
+         	}
+               }
+@@ -273,7 +273,7 @@
+ 	  case IPP_TAG_CHARSET :
+ 	  case IPP_TAG_LANGUAGE :
+ 	      strncat(valptr, attr->values[i].string.text,
+-	              sizeof(value) - (valptr - value) - 1);
++	              sizeof(value) - strlen(value) - 1);
+ 	      break;
+ 
+           default :
+--- cupsys-1.1.14.orig/scheduler/client.c
++++ cupsys-1.1.14/scheduler/client.c
+@@ -141,6 +144,7 @@
+     */
+ 
+     strncpy(con->http.hostname, ServerName, sizeof(con->http.hostname) - 1);
++    con->http.hostname[sizeof(con->http.hostname) - 1] = '\0';
+   }
+   else if (host == NULL)
+   {
+@@ -165,7 +169,10 @@
+     }
+   }
+   else
++  {
+     strncpy(con->http.hostname, host->h_name, sizeof(con->http.hostname) - 1);
++    con->http.hostname[sizeof(con->http.hostname) - 1] = '\0';
++  }
+ 
+   if (HostNameLookups == 2)
+   {
+@@ -2049,9 +2110,9 @@
+   if (!status && S_ISDIR(filestats->st_mode))
+   {
+     if (filename[strlen(filename) - 1] == '/')
+-      strncat(filename, "index.html", sizeof(filename));
++      strncat(filename, "index.html", sizeof(filename) - strlen(filename) - 1);
+     else
+-      strncat(filename, "/index.html", sizeof(filename));
++      strncat(filename, "/index.html", sizeof(filename) - strlen(filename) - 1);
+ 
+     filename[sizeof(filename) - 1] = '\0';
+ 
+--- cupsys-1.1.14.orig/scheduler/dirsvc.c
++++ cupsys-1.1.14/scheduler/dirsvc.c
+@@ -140,8 +165,8 @@
+ 	  if (p->type & CUPS_PRINTER_REMOTE)
+ 	  {
+ 	    /* No "p->var[sizeof(p->var) - 1] = '\0';" because p is zeroed */
+-            strncat(p->name, "@", sizeof(p->name) - 1);
+-	    strncat(p->name, p->hostname, sizeof(p->name) - 1);
++            strncat(p->name, "@", sizeof(p->name) - strlen(p->name) - 1);
++	    strncat(p->name, p->hostname, sizeof(p->name) - strlen(p->name) - 1);
+ 	    SetPrinterAttrs(p);
+ 	    SortPrinters();
+ 	  }
+@@ -221,8 +246,8 @@
+ 	  if (p->type & CUPS_PRINTER_REMOTE)
+ 	  {
+ 	    /* No "p->var[sizeof(p->var) - 1] = '\0';" because p is zeroed */
+-            strncat(p->name, "@", sizeof(p->name) - 1);
+-	    strncat(p->name, p->hostname, sizeof(p->name) - 1);
++            strncat(p->name, "@", sizeof(p->name) - strlen(p->name) - 1);
++	    strncat(p->name, p->hostname, sizeof(p->name) - strlen(p->name) - 1);
+ 	    SetPrinterAttrs(p);
+ 	    SortPrinters();
+ 	  }
+@@ -1297,7 +1322,7 @@
+   if (p->type & CUPS_PRINTER_BIND)
+   {
+     if (finishings[0])
+-      strncat(finishings, ",bind", sizeof(finishings) - 1);
++      strncat(finishings, ",bind", sizeof(finishings) - strlen(finishings) - 1);
+     else
+       strcpy(finishings, "bind");
+   }
+@@ -1305,7 +1330,7 @@
+   if (p->type & CUPS_PRINTER_PUNCH)
+   {
+     if (finishings[0])
+-      strncat(finishings, ",punch", sizeof(finishings) - 1);
++      strncat(finishings, ",punch", sizeof(finishings) - strlen(finishings) - 1);
+     else
+       strcpy(finishings, "punch");
+   }
+@@ -1313,7 +1338,7 @@
+   if (p->type & CUPS_PRINTER_COVER)
+   {
+     if (finishings[0])
+-      strncat(finishings, ",cover", sizeof(finishings) - 1);
++      strncat(finishings, ",cover", sizeof(finishings) - strlen(finishings) - 1);
+     else
+       strcpy(finishings, "cover");
+   }
+@@ -1321,7 +1346,7 @@
+   if (p->type & CUPS_PRINTER_SORT)
+   {
+     if (finishings[0])
+-      strncat(finishings, ",sort", sizeof(finishings) - 1);
++      strncat(finishings, ",sort", sizeof(finishings) - strlen(finishings) - 1);
+     else
+       strcpy(finishings, "sort");
+   }
+--- cupsys-1.1.14.orig/scheduler/job.c
++++ cupsys-1.1.14/scheduler/job.c
+@@ -1290,18 +1291,18 @@
+       */
+ 
+       if (optptr > options)
+-	strncat(optptr, " ", sizeof(options) - (optptr - options) - 1);
++	strncat(optptr, " ", sizeof(options) - strlen(options) - 1);
+ 
+       if (attr->value_tag != IPP_TAG_BOOLEAN)
+       {
+ 	strncat(optptr, attr->name, sizeof(options) - (optptr - options) - 1);
+-	strncat(optptr, "=", sizeof(options) - (optptr - options) - 1);
++	strncat(optptr, "=", sizeof(options) - strlen(options) - 1);
+       }
+ 
+       for (i = 0; i < attr->num_values; i ++)
+       {
+ 	if (i)
+-	  strncat(optptr, ",", sizeof(options) - (optptr - options) - 1);
++	  strncat(optptr, ",", sizeof(options) - strlen(options) - 1);
+ 
+ 	optptr += strlen(optptr);
+ 
+@@ -1309,27 +1310,27 @@
+ 	{
+ 	  case IPP_TAG_INTEGER :
+ 	  case IPP_TAG_ENUM :
+-	      snprintf(optptr, sizeof(options) - (optptr - options) - 1,
++	      snprintf(optptr, sizeof(options) - strlen(options) - 1,
+ 	               "%d", attr->values[i].integer);
+ 	      break;
+ 
+ 	  case IPP_TAG_BOOLEAN :
+ 	      if (!attr->values[i].boolean)
+-		strncat(optptr, "no", sizeof(options) - (optptr - options) - 1);
++		strncat(optptr, "no", sizeof(options) - strlen(options) - 1);
+ 
+ 	  case IPP_TAG_NOVALUE :
+ 	      strncat(optptr, attr->name,
+-	              sizeof(options) - (optptr - options) - 1);
++	              sizeof(options) - strlen(options) - 1);
+ 	      break;
+ 
+ 	  case IPP_TAG_RANGE :
+-	      snprintf(optptr, sizeof(options) - (optptr - options) - 1,
++	      snprintf(optptr, sizeof(options) - strlen(options) - 1,
+ 	               "%d-%d", attr->values[i].range.lower,
+ 		       attr->values[i].range.upper);
+ 	      break;
+ 
+ 	  case IPP_TAG_RESOLUTION :
+-	      snprintf(optptr, sizeof(options) - (optptr - options) - 1,
++	      snprintf(optptr, sizeof(options) - strlen(options) - 1,
+ 	               "%dx%d%s", attr->values[i].resolution.xres,
+ 		       attr->values[i].resolution.yres,
+ 		       attr->values[i].resolution.units == IPP_RES_PER_INCH ?
+@@ -1346,14 +1347,14 @@
+ 		  strchr(attr->values[i].string.text, '\t') != NULL ||
+ 		  strchr(attr->values[i].string.text, '\n') != NULL)
+ 	      {
+-		strncat(optptr, "\'", sizeof(options) - (optptr - options) - 1);
++		strncat(optptr, "\'", sizeof(options) - strlen(options) - 1);
+ 		strncat(optptr, attr->values[i].string.text,
+ 		        sizeof(options) - (optptr - options) - 1);
+-		strncat(optptr, "\'", sizeof(options) - (optptr - options) - 1);
++		strncat(optptr, "\'", sizeof(options) - strlen(options) - 1);
+ 	      }
+ 	      else
+ 		strncat(optptr, attr->values[i].string.text,
+-		        sizeof(options) - (optptr - options) - 1);
++		        sizeof(options) - strlen(options) - 1);
+ 	      break;
+ 
+           default :
+--- cupsys-1.1.14.orig/scheduler/log.c
++++ cupsys-1.1.14/scheduler/log.c
+@@ -355,7 +355,7 @@
+     if (logname[0] != '/')
+     {
+       strncpy(filename, ServerRoot, sizeof(filename) - 1);
+-      strncat(filename, "/", sizeof(filename) - 1);
++      strncat(filename, "/", sizeof(filename) - strlen(filename) - 1);
+     }
+     else
+       filename[0] = '\0';
+@@ -421,7 +421,7 @@
+     fclose(*log);
+ 
+     strcpy(backname, filename);
+-    strncat(backname, ".O", sizeof(backname) - 1);
++    strncat(backname, ".O", sizeof(backname) - strlen(backname) - 1);
+     backname[sizeof(backname) - 1] = '\0';
+ 
+     unlink(backname);
+--- cupsys-1.1.14.orig/scheduler/main.c
++++ cupsys-1.1.14/scheduler/main.c
+@@ -124,8 +124,8 @@
+ 		*/
+ 
+                 getcwd(ConfigurationFile, sizeof(ConfigurationFile));
+-		strncat(ConfigurationFile, "/", sizeof(ConfigurationFile) - 1);
+-		strncat(ConfigurationFile, argv[i], sizeof(ConfigurationFile) - 1);
++		strncat(ConfigurationFile, "/", sizeof(ConfigurationFile) - strlen(ConfigurationFile) - 1);
++		strncat(ConfigurationFile, argv[i], sizeof(ConfigurationFile) - strlen(ConfigurationFile) - 1);
+ 		ConfigurationFile[sizeof(ConfigurationFile) - 1] = '\0';
+               }
+ 	      break;
+--- cupsys-1.1.14.orig/systemv/cupsaddsmb.c
++++ cupsys-1.1.14/systemv/cupsaddsmb.c
+@@ -147,7 +147,7 @@
+       printf("Running command: %s\n", temp);
+     else
+     {
+-      strncat(temp, " </dev/null >/dev/null 2>/dev/null", sizeof(temp) - 1);
++      strncat(temp, " </dev/null >/dev/null 2>/dev/null", sizeof(temp) - strlen(temp) - 1);
+       temp[sizeof(temp) - 1] = '\0';
+     }
+ 
