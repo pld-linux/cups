@@ -2,13 +2,13 @@ Summary:	Common Unix Printing System
 Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.1.18
-Release:	4
+Version:	1.1.19
+Release:	1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
+# Source0-md5:	04cbeed9a8acfe23624f1cb6be9c3eac
 Source0:	ftp://ftp.easysw.com/pub/%{name}/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5: 4a8a423a8268d088bffa19f6515883a7
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -20,7 +20,6 @@ Patch4:		%{name}-options.patch
 Patch5:		%{name}-ENCRYPTIONtxt.patch
 Patch6:		%{name}-man_pages_linking.patch
 Patch7:		%{name}-nolibs.patch
-Patch8:		%{name}-1.1.18-str75.patchv2
 URL:		http://www.cups.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -154,7 +153,6 @@ bibliotecas do CUPS.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%patch8 -p1
 
 %build
 %{__aclocal}
@@ -226,6 +224,7 @@ fi
 %dir %{_sysconfdir}/%{name}/ppd
 %attr(644,root,root) /etc/logrotate.d/%{name}
 %attr(4755,lp,root) %{_bindir}/lppasswd
+%attr(755,root,root) %{_bindir}/cupstestppd
 %attr(755,root,root) %{_bindir}/disable
 %attr(755,root,root) %{_bindir}/enable
 %dir %{_libdir}/cups
@@ -248,14 +247,15 @@ fi
 %lang(cs) %{_datadir}/locale/cs/cups_cs
 %lang(de) %{_datadir}/locale/de/cups_de
 %{_datadir}/locale/en/cups_en
+%lang(en_US)%{_datadir}/locale/en_US/cups_en_US
 %lang(es) %{_datadir}/locale/es/cups_es
 %lang(fr) %{_datadir}/locale/fr/cups_fr
 %lang(he) %{_datadir}/locale/he/cups_he
 %lang(it) %{_datadir}/locale/it/cups_it
-%lang(ru) %{_datadir}/locale/ru_RU.*/cups_ru_RU.*
+%lang(ru) %{_datadir}/locale/ru_RU/cups_ru_RU
 %lang(sv) %{_datadir}/locale/sv/cups_sv
 %lang(uk) %{_datadir}/locale/uk/cups_uk
-%lang(uk) %{_datadir}/locale/uk_UA.*/cups_uk_UA.*
+%lang(uk) %{_datadir}/locale/uk_UA/cups_uk_UA
 %lang(zh_CN) %{_datadir}/locale/zh_CN/cups_zh_CN
 /var/spool/cups
 %attr(750,root,root) %dir /var/log/archiv/cups
