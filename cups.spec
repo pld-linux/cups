@@ -272,12 +272,14 @@ fi
 %attr(755,root,root) %{_bindir}/lpr
 %attr(755,root,root) %{_bindir}/lprm
 %attr(755,root,root) %{_bindir}/lpstat
+%{_mandir}/man1/cancel.1*
 %{_mandir}/man1/lp.1*
 %{_mandir}/man1/lpoptions.1*
 %{_mandir}/man1/lpq.1*
 %{_mandir}/man1/lpr.1*
 %{_mandir}/man1/lprm.1*
 %{_mandir}/man1/lpstat.1*
+%lang(fr) %{_mandir}/fr/man1/cancel.1*
 %lang(fr) %{_mandir}/fr/man1/lp.1*
 %lang(fr) %{_mandir}/fr/man1/lpoptions.1*
 %lang(fr) %{_mandir}/fr/man1/lpq.1*
