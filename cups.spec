@@ -2,13 +2,13 @@ Summary:	Common Unix Printing System
 Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.1.10
-Release:	3
+Version:	1.1.12
+Release:	1
 License:	GPL/LGPL
 Group:		Applications/System
 Group(de):	Applikationen/System
 Group(pl):	Aplikacje/System
-Source0:	ftp://ftp.easysw.com/pub/%{name}/%{version}/%{name}-%{version}-1-source.tar.bz2
+Source0:	ftp://ftp.easysw.com/pub/%{name}/%{version}/%{name}-%{version}-source.tar.bz2
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -138,11 +138,8 @@ bibliotecas do CUPS.
 %build
 aclocal
 autoconf
-# NOTE: --with-docdir sets where internal HTTP server will look for
-#	files. Keep in mind that ./configure doesn't give a shit to
-#	config.h.in.
 %configure \
-	--with-docdir=%{_datadir}/%{name}/http
+	--with-docdir=%{_datadir}/%{name}-%{version}
 %{__make}
 
 %install
@@ -184,8 +181,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc *.gz
-# doc/*.html doc/*.css doc/*.pdf doc/images
+%doc *.gz doc/*.html doc/*.css doc/images
 %attr(640,root,root) %config %verify(not size mtime md5) /etc/pam.d/*
 %attr(754,root,root) /etc/rc.d/init.d/cups
 %dir %{_sysconfdir}/%{name}
@@ -231,6 +227,7 @@ fi
 
 %files devel
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/cups-config
 %{_includedir}/cups
 %{_libdir}/lib*.so
 
