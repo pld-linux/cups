@@ -53,6 +53,8 @@ Obsoletes:	lpr
 Obsoletes:	LPRng
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
+%define		_ulibdir	%{_prefix}/lib
+
 %description
 CUPS provides a portable printing layer for UNIX®-based operating
 systems. It has been developed by Easy Software Products to promote a
@@ -241,7 +243,8 @@ pod³±czonych do portów równoleg³ych.
 %{__aclocal}
 %{__autoconf}
 %configure \
-	--with-docdir=%{_libdir}/%{name}/cgi-bin
+	--libdir=%{_ulibdir} \
+	--with-docdir=%{_ulibdir}/%{name}/cgi-bin
 %{__make}
 
 perl -pi -e 's#-I\.\.\/\.\.#-I../.. -I../../cups#g' scripting/php/Makefile
@@ -268,6 +271,12 @@ install -d $RPM_BUILD_ROOT/etc/{{rc.d/init.d,pam.d,logrotate.d},security} \
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
+if [ "%{_lib}" != "lib" ] ; then
+	install -d $RPM_BUILD_ROOT%{_libdir}
+	mv $RPM_BUILD_ROOT%{_ulibdir}/*.so* $RPM_BUILD_ROOT%{_libdir}
+	mv $RPM_BUILD_ROOT%{_ulibdir}/*.a $RPM_BUILD_ROOT%{_libdir}
+fi
+
 %if 0%{?!_without_php:1}
 %{__make} -C scripting/php install \
 	PHPDIR="$RPM_BUILD_ROOT`php-config --extension-dir`"
@@ -285,9 +294,9 @@ install %{SOURCE2}	$RPM_BUILD_ROOT/etc/pam.d/%{name}
 install %{SOURCE3}	$RPM_BUILD_ROOT/etc/logrotate.d/%{name}
 
 # for internal http browser:
-cp doc/*.html	$RPM_BUILD_ROOT%{_libdir}/%{name}/cgi-bin
-cp doc/*.css	$RPM_BUILD_ROOT%{_libdir}/%{name}/cgi-bin
-cp doc/images/*	$RPM_BUILD_ROOT%{_libdir}/%{name}/cgi-bin/images
+cp doc/*.html	$RPM_BUILD_ROOT%{_ulibdir}/%{name}/cgi-bin
+cp doc/*.css	$RPM_BUILD_ROOT%{_ulibdir}/%{name}/cgi-bin
+cp doc/images/*	$RPM_BUILD_ROOT%{_ulibdir}/%{name}/cgi-bin/images
 
 touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
 touch $RPM_BUILD_ROOT/etc/security/blacklist.cups
@@ -340,12 +349,12 @@ fi
 %attr(755,root,root) %{_bindir}/cupstestppd
 %attr(755,root,root) %{_bindir}/disable
 %attr(755,root,root) %{_bindir}/enable
-%dir %{_libdir}/cups
-%dir %{_libdir}/cups/*
-%attr(755,root,root) %{_libdir}/cups/*/*
-%exclude %{_libdir}/cups/backend/usb
-%exclude %{_libdir}/cups/backend/serial
-%exclude %{_libdir}/cups/backend/parallel
+%dir %{_ulibdir}/cups
+%dir %{_ulibdir}/cups/*
+%attr(755,root,root) %{_ulibdir}/cups/*/*
+%exclude %{_ulibdir}/cups/backend/usb
+%exclude %{_ulibdir}/cups/backend/serial
+%exclude %{_ulibdir}/cups/backend/parallel
 %attr(755,root,root) %{_sbindir}/cupsd
 %{_datadir}/cups
 %{_mandir}/man1/backend.1*
@@ -450,12 +459,12 @@ fi
 
 %files backend-usb
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/cups/backend/usb
+%attr(755,root,root) %{_ulibdir}/cups/backend/usb
 
 %files backend-serial
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/cups/backend/serial
+%attr(755,root,root) %{_ulibdir}/cups/backend/serial
 
 %files backend-parallel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/cups/backend/parallel
+%attr(755,root,root) %{_ulibdir}/cups/backend/parallel
