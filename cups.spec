@@ -371,6 +371,7 @@ fi
 %defattr(644,root,root,755)
 %{_libdir}/*.a
 
+%if 0%{?!_without_perl:1}
 %files -n perl-cups
 %defattr(644,root,root,755)
 %{perl_vendorarch}/*.pm
@@ -378,7 +379,10 @@ fi
 %{perl_vendorarch}/auto/CUPS/*.bs
 %{perl_vendorarch}/auto/CUPS/autosplit.ix
 %attr(755,root,root) %{perl_vendorarch}/auto/CUPS/*.so
+%endif
 
+%if 0%{?!_without_php:1}
 %files -n php-cups
 %defattr(644,root,root,755)
 %attr(755,root,root) %(php-config --extension-dir)/*
+%endif
