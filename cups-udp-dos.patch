@@ -1,0 +1,23 @@
+CAN-2004-0558 fix (taken from Debian)
+--- cupsys-1.1.14.orig/scheduler/dirsvc.c
++++ cupsys-1.1.14/scheduler/dirsvc.c
+@@ -900,7 +925,7 @@
+   int		auth;			/* Authorization status */
+   int		len;			/* Length of name string */
+   int		bytes;			/* Number of bytes left */
+-  char		packet[1540],		/* Broadcast packet */
++  char		packet[1541],		/* Broadcast packet */
+ 		*pptr;			/* Pointer into packet */
+   struct sockaddr_in srcaddr;		/* Source address */
+   char		srcname[1024];		/* Source hostname */
+@@ -924,8 +949,8 @@
+   */
+ 
+   len = sizeof(srcaddr);
+-  if ((bytes = recvfrom(BrowseSocket, packet, sizeof(packet), 0, 
+-                        (struct sockaddr *)&srcaddr, &len)) <= 0)
++  if ((bytes = recvfrom(BrowseSocket, packet, sizeof(packet)-1, 0,
++                        (struct sockaddr *)&srcaddr, &len)) < 0)
+   {
+    /*
+     * "Connection refused" is returned under Linux if the destination port
