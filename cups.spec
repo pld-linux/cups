@@ -182,27 +182,43 @@ Modu³ PHP do Popularnego Systemu Druku dla Uniksa.
 
 %package backend-usb
 Summary:	USB backend for CUPS
+Summary(pl):	Backend USB dla CUPS-a
 Group:		Applications/Printing
 Requires:	cups = %{epoch}:%{version}
 
 %description backend-usb
 This package allow CUPS printing on USB printers.
 
+%description backend-usb -l pl
+Ten pakiet umo¿liwia drukowanie z poziomu CUPS-a na drukarkach USB.
+
 %package backend-serial
-Summary:	Serial backend for CUPS
+Summary:	Serial port backend for CUPS
+Summary(pl):	Backend obs³uguj±cy porty szeregowe dla CUPS-a
 Group:		Applications/Printing
 Requires:	cups = %{epoch}:%{version}
 
 %description backend-serial
-This package allow CUPS printing on printers connected by serial ports.
+This package allow CUPS printing on printers connected by serial
+ports.
+
+%description backend-serial -l pl
+Ten pakiet umo¿liwia drukowanie z poziomu CUPS-a na drukarkach
+pod³±czonych do portów szeregowych.
 
 %package backend-parallel
-Summary:	Parallel backend for CUPS
+Summary:	Parallel port backend for CUPS
+Summary(pl):	Backend obs³uguj±cy porty równoleg³e dla CUPS-a
 Group:		Applications/Printing
 Requires:	cups = %{epoch}:%{version}
 
 %description backend-parallel
-This package allow CUPS printing on printers connected by parallel ports.
+This package allow CUPS printing on printers connected by parallel
+ports.
+
+%description backend-parallel -l pl
+Ten pakiet umo¿liwia drukowanie z poziomu CUPS-a na drukarkach
+pod³±czonych do portów równoleg³ych.
 
 %prep
 %setup -q -n %{name}-%{version}%{rcver}
