@@ -3,7 +3,7 @@ Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.1.18
-Release:	2
+Release:	3
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
@@ -18,6 +18,7 @@ Patch3:		%{name}-lp-lpr.patch
 Patch4:		%{name}-options.patch
 Patch5:		%{name}-ENCRYPTIONtxt.patch
 Patch6:		%{name}-man_pages_linking.patch
+Patch7:		%{name}-nolibs.patch
 URL:		http://www.cups.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -149,6 +150,7 @@ bibliotecas do CUPS.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 
 %build
 %{__aclocal}
