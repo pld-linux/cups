@@ -3,7 +3,7 @@ Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.1.14
-Release:	22
+Release:	23
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/System
@@ -21,6 +21,7 @@ Patch6:		%{name}-ENCRYPTIONtxt.patch
 Patch7:		%{name}-tmprace.patch
 Patch8:		%{name}-idefense-v2.patch
 Patch9:		%{name}-pdftops.patch
+Patch10:	%{name}-dos-backport.patch
 URL:		http://www.cups.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -154,15 +155,12 @@ bibliotecas do CUPS.
 %patch7 -p0
 %patch8 -p0
 %patch9 -p0
+%patch10 -p1
 
 %build
-aclocal
+%{__aclocal}
 %{__autoconf}
-if [ -f %{_pkgconfigdir}/libpng12.pc ] ; then
-	CFLAGS="%{rpmcflags} `pkg-config libpng12 --cflags`"
-	CPPFLAGS="`pkg-config libpng12 --cflags`"
-fi
-%configure CPPFLAGS="$CPPFLAGS" \
+%configure \
 	--with-docdir=%{_libdir}/%{name}/cgi-bin
 %{__make}
 
@@ -178,9 +176,9 @@ install %{SOURCE2}	$RPM_BUILD_ROOT/etc/pam.d/%{name}
 install %{SOURCE3}	$RPM_BUILD_ROOT/etc/logrotate.d/%{name}
 
 # for internal http browser:
-cp doc/*.html	$RPM_BUILD_ROOT/%{_libdir}/%{name}/cgi-bin/
-cp doc/*.css	$RPM_BUILD_ROOT/%{_libdir}/%{name}/cgi-bin/
-cp doc/images/*	$RPM_BUILD_ROOT/%{_libdir}/%{name}/cgi-bin/images/
+cp doc/*.html	$RPM_BUILD_ROOT%{_libdir}/%{name}/cgi-bin/
+cp doc/*.css	$RPM_BUILD_ROOT%{_libdir}/%{name}/cgi-bin/
+cp doc/images/*	$RPM_BUILD_ROOT%{_libdir}/%{name}/cgi-bin/images/
 
 touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
 touch $RPM_BUILD_ROOT/etc/security/blacklist.cups
