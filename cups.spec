@@ -12,14 +12,14 @@ Summary:	Common Unix Printing System
 Summary(pl):	Popularny System Druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
-%define	rcver	rc3
+%define	rcver	rc4
 Version:	1.1.20
 Release:	0.%{rcver}.1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
 Source0:	ftp://ftp.easysw.com/pub/%{name}/%{version}%{rcver}/%{name}-%{version}%{rcver}-source.tar.bz2
-# Source0-md5:	dd98455b83a620497db4d2730ac96292
+# Source0-md5:	10caf2b395f435a332eb739ead14ce01
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -180,6 +180,30 @@ PHP module for Common Unix Printing System.
 %description -n php-cups -l pl
 Modu³ PHP do Popularnego Systemu Druku dla Uniksa.
 
+%package bakend-usb
+Summary:	USB backend for CUPS
+Group:		Applications/Printing
+Requires:	cups = %{epoch}:%{version}
+
+%description backend-usb
+This package allow CUPS printing on USB printers.
+
+%package bakend-serial
+Summary:	Serial backend for CUPS
+Group:		Applications/Printing
+Requires:	cups = %{epoch}:%{version}
+
+%description backend-serial
+This package allow CUPS printing on printers connected by serial ports.
+
+%package bakend-parallel
+Summary:	Parallel backend for CUPS
+Group:		Applications/Printing
+Requires:	cups = %{epoch}:%{version}
+
+%description backend-parallel
+This package allow CUPS printing on printers connected by parallel ports.
+
 %prep
 %setup -q -n %{name}-%{version}%{rcver}
 %patch0 -p1
@@ -299,6 +323,9 @@ fi
 %dir %{_libdir}/cups
 %dir %{_libdir}/cups/*
 %attr(755,root,root) %{_libdir}/cups/*/*
+%exclude %{_libdir}/cups/backend/usb
+%exclude %{_libdir}/cups/backend/serial
+%exclude %{_libdir}/cups/backend/parallel
 %attr(755,root,root) %{_sbindir}/*
 %{_datadir}/cups
 %{_mandir}/man1/backend.1*
@@ -393,3 +420,15 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %(php-config --extension-dir)/*
 %endif
+
+%files backend-usb
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/cups/backend/usb
+
+%files backend-serial
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/cups/backend/serial
+
+%files backend-parallel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/cups/backend/parallel
