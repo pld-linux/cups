@@ -8,19 +8,17 @@
 # - build/install java ext ?
 # - perl BRs
 %include	/usr/lib/rpm/macros.perl
-%define		_rc	rc2
 Summary:	Common Unix Printing System
 Summary(pl):	Popularny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.1.22
-Release:	0.%{_rc}.1
+Release:	1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
-#Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-Source0:	http://ftp.easysw.com/pub/cups/test/%{name}-%{version}%{_rc}-source.tar.bz2
-# Source0-md5:	8b9a7818b016914d32ba015204ff7311
+Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
+# Source0-md5:	fe0a1b0fedccfe8b2e35e0cea1e5f0a9
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -227,7 +225,7 @@ Ten pakiet umo¿liwia drukowanie z poziomu CUPS-a na drukarkach
 pod³±czonych do portów równoleg³ych.
 
 %prep
-%setup -q -n %{name}-%{version}%{_rc}
+%setup -q
 %patch1 -p1
 # wtf?
 #%patch2 -p1
@@ -372,6 +370,11 @@ fi
 %lang(fr) %{_mandir}/fr/man1/filter.1*
 %lang(fr) %{_mandir}/fr/man1/lppasswd.1*
 %lang(fr) %{_mandir}/fr/man[58]/*
+%lang(es) %{_mandir}/es/man1/backend.1*
+%lang(es) %{_mandir}/es/man1/cupstestppd.1*
+%lang(es) %{_mandir}/es/man1/filter.1*
+%lang(es) %{_mandir}/es/man1/lppasswd.1*
+%lang(es) %{_mandir}/es/man[58]/*
 %{_datadir}/locale/C/cups_C
 %lang(be) %{_datadir}/locale/be/cups_be
 %lang(cs) %{_datadir}/locale/cs/cups_cs
@@ -429,6 +432,12 @@ fi
 %lang(fr) %{_mandir}/fr/man1/lpr.1*
 %lang(fr) %{_mandir}/fr/man1/lprm.1*
 %lang(fr) %{_mandir}/fr/man1/lpstat.1*
+%lang(es) %{_mandir}/es/man1/lp.1*
+%lang(es) %{_mandir}/es/man1/lpoptions.1*
+%lang(es) %{_mandir}/es/man1/lpq.1*
+%lang(es) %{_mandir}/es/man1/lpr.1*
+%lang(es) %{_mandir}/es/man1/lprm.1*
+%lang(es) %{_mandir}/es/man1/lpstat.1*
 
 %files image-lib
 %defattr(644,root,root,755)
@@ -442,6 +451,7 @@ fi
 %{_mandir}/man1/cups-config*
 %{_mandir}/man3/*
 %lang(fr) %{_mandir}/fr/man1/cups-config*
+%lang(es) %{_mandir}/es/man1/cups-config*
 
 %files static
 %defattr(644,root,root,755)
