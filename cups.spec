@@ -3,7 +3,7 @@ Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.1.16
-Release:	1
+Release:	2
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/System
@@ -173,6 +173,9 @@ cp doc/images/*	$RPM_BUILD_ROOT/%{_libdir}/%{name}/cgi-bin/images/
 
 touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
 touch $RPM_BUILD_ROOT/etc/security/blacklist.cups
+
+ln -s %{_bindir}/smbspool $RPM_BUILD_ROOT/%{_libdir}/%{name}/backend/smb
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
