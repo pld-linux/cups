@@ -1,7 +1,7 @@
 #
 # Conditional build:
-# _without_php	don't build php extension
-# _without_perl	don't build perl extension
+%bcond_without php	# don't build php extension
+%bcond_without perl	# don't build perl extension
 #
 # TODO:
 # - register php module
@@ -14,7 +14,7 @@ Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 %define	rcver	%{nil}
 Version:	1.1.20
-Release:	2
+Release:	2.1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
