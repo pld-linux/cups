@@ -24,7 +24,7 @@ BuildRequires:	automake
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libtiff-devel
-BuildRequires:	openssl-devel >= 0.9.6b
+BuildRequires:	openssl-devel >= 0.9.7
 BuildRequires:	pam-devel
 BuildRequires:	pkgconfig
 PreReq:		%{name}-libs = %{version}
