@@ -177,8 +177,6 @@ cp doc/images/*	$RPM_BUILD_ROOT/%{_libdir}/%{name}/cgi-bin/images/
 
 touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
 
-gzip -9nf *.txt
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -206,7 +204,7 @@ fi
 %files
 %defattr(644,root,root,755)
 #%doc *.gz doc/*.html doc/*.css doc/images
-%doc *.gz
+%doc *.txt
 %attr(640,root,root) %config %verify(not size mtime md5) /etc/pam.d/*
 %attr(754,root,root) /etc/rc.d/init.d/cups
 %dir %{_sysconfdir}/%{name}
