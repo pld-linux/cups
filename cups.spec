@@ -38,6 +38,7 @@ BuildRequires:	automake
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libtiff-devel
+BuildRequires:	openslp-devel
 BuildRequires:	openssl-devel >= 0.9.7c
 BuildRequires:	pam-devel
 %{?!_without_php:BuildRequires:	php-devel}
