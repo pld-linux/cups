@@ -13,7 +13,7 @@ Summary(pl):	Popularny System Druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.1.19
-Release:	2
+Release:	3
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
@@ -30,6 +30,7 @@ Patch4:		%{name}-options.patch
 Patch5:		%{name}-ENCRYPTIONtxt.patch
 Patch6:		%{name}-man_pages_linking.patch
 Patch7:		%{name}-nolibs.patch
+Patch8:		%{name}-chown.patch
 URL:		http://www.cups.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -188,6 +189,7 @@ Modu³ PHP do Popularnego Systemu Druku dla Uniksa.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
+%patch8 -p1
 
 %build
 %{__aclocal}
