@@ -1,0 +1,23 @@
+--- scheduler/cert.c.orig	Mon Dec 16 05:14:17 2002
++++ scheduler/cert.c	Mon Dec 16 05:14:19 2002
+@@ -51,6 +51,7 @@
+   int		i;			/* Looping var */
+   cert_t	*cert;			/* Current certificate */
+   FILE		*fp;			/* Certificate file */
++  int fd;
+   char		filename[1024];		/* Certificate filename */
+   struct group	*grp;			/* System group */
+   static const char *hex = "0123456789ABCDEF";
+@@ -80,8 +81,11 @@
+   */
+ 
+   snprintf(filename, sizeof(filename), "%s/certs/%d", ServerRoot, pid);
++  unlink(filename);
+ 
+-  if ((fp = fopen(filename, "w")) == NULL)
++  fd = open(filename, O_WRONLY|O_CREAT|O_EXCL, 0400);
++
++  if (fd < 0 || ((fp = fdopen(fd, "w")) == NULL))
+   {
+     free(cert);
+     return;
