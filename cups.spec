@@ -1,5 +1,6 @@
 Summary:	Common Unix Printing System	
 Summary(pl):	Popularny System Druku dla Unixa
+Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.1.10
 Release:	1
@@ -12,6 +13,11 @@ Source1:	%{name}.init
 Source2:	%{name}.pamd
 Patch0:		%{name}-DESTDIR.patch
 Patch1:		%{name}-config.patch
+Patch2:		%{name}-tmpdir.patch
+Patch3:		%{name}-lp-lpr.patch
+Patch4:		%{name}-options.patch
+Patch5:		%{name}-pstoraster-gcc-2.96.patch
+Patch6:		%{name}-ENCRYPTIONtxt.patch
 URL:		http://www.cups.org/	
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
@@ -43,9 +49,14 @@ CUPS dostarcza standardowy poziom drukowania dla systemów bazuj±cych
 na UNIXie. CUPS u¿ywa protoko³u IPP - Internet Printint Protocol jako
 podstawy do zarz±dzania zadaniami i kolejkami druku.
 
+%description -l pt_BR
+O sistema Unix de impressão (CUPS) fornece uma camada de impressão
+portável para os sistemas operacionais baseados no UNIX®.
+
 %package libs
 Summary:	Common Unix Printing System Libraries
 Summary(pl):	Biblioteki dla CUPS
+Summary(pt_BR):	Sistema Unix de Impressão - bibliotecas para uso em clientes cups
 Group:		Development/Libraries
 Group(de):	Entwicklung/Libraries
 Group(es):	Desarrollo/Bibliotecas
@@ -61,9 +72,13 @@ Common Unix Printing System Libraries.
 %description libs -l pl
 Biblioteki dla CUPS.
 
+%description -l pt_BR libs
+Bibliotecas CUPS requeridas pelos clientes CUPS.
+
 %package devel
 Summary:	Common Unix Printing System development files
 Summary(pl):	Popularny System Druku dla Unixa, pliki nag³ówkowe
+Summary(pt_BR):	Sistema Unix de Impressão - ambiente de desenvolvimento
 Group:		Development/Libraries
 Group(de):	Entwicklung/Libraries
 Group(es):	Desarrollo/Bibliotecas
@@ -80,9 +95,15 @@ Common Unix Printing System development files.
 %description -l pl devel
 Popularny System Druku dla Unixa, pliki nag³ówkowe.
 
+%description -l pt_BR devel
+Este pacote é um adicional que contem um ambiente de desenvolvimento
+para a criação de suporte a novas impressoras e novos serviços ao
+CUPS.
+
 %package static
 Summary:	Common Unix Printing System static libraries
 Summary(pl):	Popularny System Druku dla Unixa, biblioteki statyczne
+Summary(pt_BR):	Common Unix Printing System - bibliotecas estáticas
 Group:		Development/Libraries
 Group(de):	Entwicklung/Libraries
 Group(es):	Desarrollo/Bibliotecas
@@ -99,10 +120,19 @@ Common Unix Printing System static libraries.
 %description -l pl static
 Popularny System Druku dla Unixa, biblioteki statyczne.
 
+%description -l pt_BR static
+Bibliotecas estáticas para desenvolvimento de programas que usam as
+bibliotecas do CUPS.
+
 %prep
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
 
 %build
 aclocal
