@@ -1,15 +1,19 @@
 Summary:	Common Unix Printing System	
+Summary(pl):	Popularny System Druku dla Unixa
 Name:		cups
-Version:	1.1.4
-Release:	3
-Vendor:		PLD
+Version:	1.1.6
+Release:	1
 License:	GPL/LGPL
 Group:		Applications/System
 Group(de):	Applikationen/System
 Group(pl):	Aplikacje/System
 Source0:	ftp://ftp.easysw.com/pub/%{name}/%{version}/%{name}-%{version}-source.tar.bz2
 Source1:	%{name}.init
-Patch0:		%{name}-chown.patch
+BuildRequires:	openssl-devel
+BuildRequires:	pam-devel
+BuildRequires:	zlib-devel
+BuildRequires:	libpng-devel
+BuildRequires:	libtiff-devel
 URL:		http://www.cups.org/	
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -26,29 +30,43 @@ with reduced functionality. CUPS adds network printer browsing and
 PostScript Printer Description ("PPD") based printing options to
 support real-world printing under UNIX.
 
+%description -l pl
+CUPS dostarcza standardowy poziom drukowania dla systemów bazuj±cych
+na UNIXie. CUPS u¿ywa protoko³u IPP - Internet Printint Protocol
+jako podstawy do zarz±dzania zadaniami i kolejkami druku.
+
 %package devel
 Summary:	Common Unix Printing System development files
+Summary(pl):	Popularny System Druku dla Unixa, pliki nag³ówkowe
 Group:		Development/Libraries
 Group(de):	Entwicklung/Libraries
 Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
+Requires:	%{name} = %{version}
 
 %description devel
 Common Unix Printing System development files
 
+%description -l pl devel
+Popularny System Druku dla Unixa, pliki nag³ówkowe
+ 
 %package static
 Summary:	Common Unix Printing System static libraries
+Summary(pl):	Popularny System Druku dla Unixa, biblioteki statyczne
 Group:		Development/Libraries
 Group(de):	Entwicklung/Libraries
 Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
+Requires:	%{name}-devel = %{version}
 
 %description static
 Common Unix Printing System static libraries
 
+%description -l pl static
+Popularny System Druku dla Unixa, biblioteki statyczne
+ 
 %prep
 %setup -q
-%patch -p1
 
 %build
 %configure
@@ -78,6 +96,10 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/%{_sysconfdir}/rc.d/init.d
 install %{SOURCE1} $RPM_BUILD_ROOT/%{_sysconfdir}/rc.d/init.d/cups
 
+%find_lang %{name}
+
+gzip -9nf *.txt
+
 %post
 /sbin/chkconfig --add cups
     
@@ -87,8 +109,9 @@ install %{SOURCE1} $RPM_BUILD_ROOT/%{_sysconfdir}/rc.d/init.d/cups
 %clean
 rm -f $RPM_BUILD_ROOT
 
-%files 
+%files  -f %{name}.lang
 %defattr(644,root,root,755)
+%doc *.gz
 %attr(755,root,root) %{_bindir}
 %attr(755,root,root) %{_libdir}/lib*.so*
 %attr(755,root,root) %{_libdir}/accept
