@@ -236,9 +236,9 @@ install %{SOURCE2}	$RPM_BUILD_ROOT/etc/pam.d/%{name}
 install %{SOURCE3}	$RPM_BUILD_ROOT/etc/logrotate.d/%{name}
 
 # for internal http browser:
-cp doc/*.html	$RPM_BUILD_ROOT%{_libdir}/%{name}/cgi-bin/
-cp doc/*.css	$RPM_BUILD_ROOT%{_libdir}/%{name}/cgi-bin/
-cp doc/images/*	$RPM_BUILD_ROOT%{_libdir}/%{name}/cgi-bin/images/
+cp doc/*.html	$RPM_BUILD_ROOT%{_libdir}/%{name}/cgi-bin
+cp doc/*.css	$RPM_BUILD_ROOT%{_libdir}/%{name}/cgi-bin
+cp doc/images/*	$RPM_BUILD_ROOT%{_libdir}/%{name}/cgi-bin/images
 
 touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
 touch $RPM_BUILD_ROOT/etc/security/blacklist.cups
