@@ -12,13 +12,14 @@ Source1:	%{name}.init
 Source2:	%{name}.pamd
 Patch0:		%{name}-DESTDIR.patch
 Patch1:		%{name}-config.patch
+URL:		http://www.cups.org/	
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	openssl-devel >= 0.9.6b
 BuildRequires:	pam-devel
-Requires:	%{name}-libs = %{version}
-URL:		http://www.cups.org/	
+Prereq:		%{name}-libs = %{version}
+Prereq:		/sbin/chkconfig
 Provides:	lpr
 Obsoletes:	lpr
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -42,6 +43,7 @@ podstawy do zarz╠dzania zadaniami i kolejkami druku.
 
 %package libs
 Summary:	Common Unix Printing System Libraries
+Summary(pl):	Biblioteki dla CUPS
 Group:		Development/Libraries
 Group(de):	Entwicklung/Libraries
 Group(es):	Desarrollo/Bibliotecas
@@ -52,7 +54,10 @@ Group(ru):	Разработка/Библиотеки
 Group(uk):	Розробка/Б╕бл╕отеки
 
 %description libs
-Common Unix Printing System Libraries
+Common Unix Printing System Libraries.
+
+%description libs -l pl
+Biblioteki dla CUPS.
 
 %package devel
 Summary:	Common Unix Printing System development files
@@ -68,10 +73,10 @@ Group(uk):	Розробка/Б╕бл╕отеки
 Requires:	%{name}-libs = %{version}
 
 %description devel
-Common Unix Printing System development files
+Common Unix Printing System development files.
 
 %description -l pl devel
-Popularny System Druku dla Unixa, pliki nagЁСwkowe
+Popularny System Druku dla Unixa, pliki nagЁСwkowe.
 
 %package static
 Summary:	Common Unix Printing System static libraries
@@ -114,6 +119,9 @@ install %{SOURCE2}	$RPM_BUILD_ROOT/etc/pam.d/cups
 
 gzip -9nf *.txt
 
+%clean
+rm -rf $RPM_BUILD_ROOT
+
 %post
 /sbin/chkconfig --add cups
 if [ -f /var/lock/subsys/cups ]; then
@@ -132,9 +140,6 @@ fi
 
 %post   libs -p /sbin/ldconfig
 %postun libs -p /sbin/ldconfig
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
