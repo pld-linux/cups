@@ -44,9 +44,9 @@ BuildRequires:	pkgconfig
 PreReq:		%{name}-libs = %{epoch}:%{version}
 Requires(post,preun):	/sbin/chkconfig
 Conflicts:	ghostscript < 7.05.4
-BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	lpr
 Obsoletes:	LPRng
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 CUPS provides a portable printing layer for UNIX®-based operating
@@ -122,8 +122,8 @@ Summary:	Common Unix Printing System development files
 Summary(pl):	Popularny System Druku dla Uniksa, pliki nag³ówkowe
 Summary(pt_BR):	Sistema Unix de Impressão - ambiente de desenvolvimento
 Group:		Development/Libraries
-Requires:	%{name}-lib = %{epoch}:%{version}
 Requires:	%{name}-image-lib = %{epoch}:%{version}
+Requires:	%{name}-lib = %{epoch}:%{version}
 Obsoletes:	libcups1-devel
 
 %description devel
