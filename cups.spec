@@ -2,7 +2,7 @@ Summary:	Common Unix Printing System
 Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.1.17
+Version:	1.1.18
 Release:	1
 Epoch:		1
 License:	GPL/LGPL
@@ -226,10 +226,12 @@ fi
 %attr(755,root,root) %{_sbindir}/*
 %{_datadir}/cups
 %{_mandir}/man1/backend.1*
+%{_mandir}/man1/cupstestppd.1*
 %{_mandir}/man1/filter.1*
 %{_mandir}/man1/lppasswd.1*
 %{_mandir}/man[58]/*
 %lang(fr) %{_mandir}/fr/man1/backend.1*
+%lang(fr) %{_mandir}/fr/man1/cupstestppd.1*
 %lang(fr) %{_mandir}/fr/man1/filter.1*
 %lang(fr) %{_mandir}/fr/man1/lppasswd.1*
 %lang(fr) %{_mandir}/fr/man[58]/*
