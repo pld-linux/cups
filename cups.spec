@@ -2,17 +2,27 @@ Summary:	Common Unix Printing System
 Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.1.13
-Release:	4
+Version:	1.1.14
+Release:	1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/System
+Group(cs):	Aplikace/Systém
+Group(da):	Programmer/System
 Group(de):	Applikationen/System
 Group(es):	Aplicaciones/Sistema
-Group(fr):	Aplicaciones/Système
+Group(fr):	Applications/Système
+Group(is):	Forrit/Kerfisforrit
+Group(it):	Applicazioni/Sistema
+Group(ja):	¥¢¥×¥ê¥±¡¼¥·¥ç¥ó/¥·¥¹¥Æ¥à
+Group(no):	Applikasjoner/System
 Group(pl):	Aplikacje/System
 Group(pt):	Aplicações/Sistema
 Group(pt_BR):	Aplicações/Sistema
+Group(ru):	ğÒÉÌÏÖÅÎÉÑ/óÉÓÔÅÍÁ
+Group(sl):	Programi/Sistem
+Group(sv):	Tillämpningar/System
+Group(uk):	ğÒÉËÌÁÄÎ¦ ğÒÏÇÒÁÍÉ/óÉÓÔÅÍÁ
 Source0:	ftp://ftp.easysw.com/pub/%{name}/%{version}/%{name}-%{version}-source.tar.bz2
 Source1:	%{name}.init
 Source2:	%{name}.pamd
@@ -65,13 +75,21 @@ Summary:	Common Unix Printing System Libraries
 Summary(pl):	Biblioteki dla CUPS
 Summary(pt_BR):	Sistema Unix de Impressão - bibliotecas para uso em clientes cups
 Group:		Development/Libraries
+Group(cs):	Vıvojové prostøedky/Knihovny
+Group(da):	Udvikling/Biblioteker
 Group(de):	Entwicklung/Bibliotheken
 Group(es):	Desarrollo/Bibliotecas
 Group(fr):	Development/Librairies
+Group(is):	Şróunartól/Ağgerğasöfn
+Group(it):	Sviluppo/Librerie
+Group(ja):	³«È¯/¥é¥¤¥Ö¥é¥ê
+Group(no):	Utvikling/Bibliotek
 Group(pl):	Programowanie/Biblioteki
 Group(pt_BR):	Desenvolvimento/Bibliotecas
 Group(pt):	Desenvolvimento/Bibliotecas
 Group(ru):	òÁÚÒÁÂÏÔËÁ/âÉÂÌÉÏÔÅËÉ
+Group(sl):	Razvoj/Knji¾nice
+Group(sv):	Utveckling/Bibliotek
 Group(uk):	òÏÚÒÏÂËÁ/â¦ÂÌ¦ÏÔÅËÉ
 Obsoletes:	libcups1
 
@@ -81,7 +99,7 @@ Common Unix Printing System Libraries.
 %description libs -l pl
 Biblioteki dla CUPS.
 
-%description -l pt_BR libs
+%description libs -l pt_BR
 Bibliotecas CUPS requeridas pelos clientes CUPS.
 
 %package devel
@@ -89,13 +107,21 @@ Summary:	Common Unix Printing System development files
 Summary(pl):	Popularny System Druku dla Unixa, pliki nag³ówkowe
 Summary(pt_BR):	Sistema Unix de Impressão - ambiente de desenvolvimento
 Group:		Development/Libraries
+Group(cs):	Vıvojové prostøedky/Knihovny
+Group(da):	Udvikling/Biblioteker
 Group(de):	Entwicklung/Bibliotheken
 Group(es):	Desarrollo/Bibliotecas
 Group(fr):	Development/Librairies
+Group(is):	Şróunartól/Ağgerğasöfn
+Group(it):	Sviluppo/Librerie
+Group(ja):	³«È¯/¥é¥¤¥Ö¥é¥ê
+Group(no):	Utvikling/Bibliotek
 Group(pl):	Programowanie/Biblioteki
 Group(pt_BR):	Desenvolvimento/Bibliotecas
 Group(pt):	Desenvolvimento/Bibliotecas
 Group(ru):	òÁÚÒÁÂÏÔËÁ/âÉÂÌÉÏÔÅËÉ
+Group(sl):	Razvoj/Knji¾nice
+Group(sv):	Utveckling/Bibliotek
 Group(uk):	òÏÚÒÏÂËÁ/â¦ÂÌ¦ÏÔÅËÉ
 Requires:	%{name}-libs = %{version}
 Obsoletes:	libcups1-devel
@@ -103,10 +129,10 @@ Obsoletes:	libcups1-devel
 %description devel
 Common Unix Printing System development files.
 
-%description -l pl devel
+%description devel -l pl
 Popularny System Druku dla Unixa, pliki nag³ówkowe.
 
-%description -l pt_BR devel
+%description devel -l pt_BR
 Este pacote é um adicional que contem um ambiente de desenvolvimento
 para a criação de suporte a novas impressoras e novos serviços ao
 CUPS.
@@ -116,23 +142,31 @@ Summary:	Common Unix Printing System static libraries
 Summary(pl):	Popularny System Druku dla Unixa, biblioteki statyczne
 Summary(pt_BR):	Common Unix Printing System - bibliotecas estáticas
 Group:		Development/Libraries
+Group(cs):	Vıvojové prostøedky/Knihovny
+Group(da):	Udvikling/Biblioteker
 Group(de):	Entwicklung/Bibliotheken
 Group(es):	Desarrollo/Bibliotecas
 Group(fr):	Development/Librairies
+Group(is):	Şróunartól/Ağgerğasöfn
+Group(it):	Sviluppo/Librerie
+Group(ja):	³«È¯/¥é¥¤¥Ö¥é¥ê
+Group(no):	Utvikling/Bibliotek
 Group(pl):	Programowanie/Biblioteki
 Group(pt_BR):	Desenvolvimento/Bibliotecas
 Group(pt):	Desenvolvimento/Bibliotecas
 Group(ru):	òÁÚÒÁÂÏÔËÁ/âÉÂÌÉÏÔÅËÉ
+Group(sl):	Razvoj/Knji¾nice
+Group(sv):	Utveckling/Bibliotek
 Group(uk):	òÏÚÒÏÂËÁ/â¦ÂÌ¦ÏÔÅËÉ
 Requires:	%{name}-devel = %{version}
 
 %description static
 Common Unix Printing System static libraries.
 
-%description -l pl static
+%description static -l pl
 Popularny System Druku dla Unixa, biblioteki statyczne.
 
-%description -l pt_BR static
+%description static -l pt_BR
 Bibliotecas estáticas para desenvolvimento de programas que usam as
 bibliotecas do CUPS.
 
