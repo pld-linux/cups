@@ -298,7 +298,7 @@ install %{SOURCE3}	$RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/%{name}
 
 gzip -9nf $RPM_BUILD_ROOT%{_datadir}/%{name}/model/*.ppd
 
-# for internal http browser:
+# for internal HTTP browser:
 cp doc/*.html	$RPM_BUILD_ROOT%{_ulibdir}/%{name}/cgi-bin
 cp doc/*.css	$RPM_BUILD_ROOT%{_ulibdir}/%{name}/cgi-bin
 cp doc/images/*	$RPM_BUILD_ROOT%{_ulibdir}/%{name}/cgi-bin/images
