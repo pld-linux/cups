@@ -171,7 +171,7 @@
 +	$(INSTALL_DATA) $(HEADERS) $(DESTDIR)$(INCLUDEDIR)/cups
 +	$(INSTALL_DIR) $(DESTDIR)$(LIBDIR)
 +	$(INSTALL_LIB) $(LIBCUPS) $(DESTDIR)$(LIBDIR)
-+	$(LN) $(LIBCUPS) $(DESTDIR)$(LIBDIR)`basename $(LIBCUPS) .2`
++	$(LN) $(LIBCUPS) $(DESTDIR)$(LIBDIR)/`basename $(LIBCUPS) .2`
 +	$(INSTALL_LIB) libcups.a $(DESTDIR)$(LIBDIR)
  
  
@@ -291,7 +291,7 @@
 +	$(INSTALL_LIB) $(LIBCUPSIMAGE) $(DESTDIR)$(LIBDIR)
  	if test $(LIBCUPSIMAGE) != "libcupsimage.a" -a $(LIBCUPSIMAGE) != "libcupsimage.la"; then \
 -		$(INSTALL_LIB) `basename $(LIBCUPSIMAGE) .2` $(LIBDIR); \
-+		$(LN) $(LIBCUPSIMAGE) $(DESTDIR)$(LIBDIR)`basename $(LIBCUPSIMAGE) .2`; \
++		$(LN) $(LIBCUPSIMAGE) $(DESTDIR)$(LIBDIR)/`basename $(LIBCUPSIMAGE) .2`; \
  	fi
 -	$(INSTALL_DIR) $(SERVERBIN)/filter
 -	$(INSTALL_BIN) $(TARGETS) $(SERVERBIN)/filter
