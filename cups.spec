@@ -2,7 +2,7 @@ Summary:	Common Unix Printing System
 Summary(pl):	Popularny System Druku dla Unixa
 Name:		cups
 Version:	1.1.9
-Release:	1
+Release:	2
 License:	GPL/LGPL
 Group:		Applications/System
 Group(de):	Applikationen/System
@@ -19,6 +19,8 @@ BuildRequires:	pam-devel
 BuildRequires:	zlib-devel
 Requires:	%{name}-libs = %{version}
 URL:		http://www.cups.org/	
+Provides:	lpr
+Obsoletes:	lpr
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 
