@@ -8,6 +8,7 @@ Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
 Source0:	ftp://ftp.easysw.com/pub/%{name}/%{version}/%{name}-%{version}-source.tar.bz2
+# Source0-md5: 4a8a423a8268d088bffa19f6515883a7
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
