@@ -14,7 +14,7 @@ Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 %define	rcver	rc5
 Version:	1.1.20
-Release:	0.%{rcver}.2
+Release:	0.%{rcver}.3
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
@@ -346,7 +346,7 @@ fi
 %exclude %{_libdir}/cups/backend/usb
 %exclude %{_libdir}/cups/backend/serial
 %exclude %{_libdir}/cups/backend/parallel
-%attr(755,root,root) %{_sbindir}/*
+%attr(755,root,root) %{_sbindir}/cupsd
 %{_datadir}/cups
 %{_mandir}/man1/backend.1*
 %{_mandir}/man1/cupstestppd.1*
@@ -394,6 +394,13 @@ fi
 %attr(755,root,root) %{_bindir}/lpr
 %attr(755,root,root) %{_bindir}/lprm
 %attr(755,root,root) %{_bindir}/lpstat
+%attr(755,root,root) %{_sbindir}/accept
+%attr(755,root,root) %{_sbindir}/cupsaddsmb
+%attr(755,root,root) %{_sbindir}/lpadmin
+%attr(755,root,root) %{_sbindir}/lpc
+%attr(755,root,root) %{_sbindir}/lpinfo
+%attr(755,root,root) %{_sbindir}/lpmove
+%attr(755,root,root) %{_sbindir}/reject
 %{_mandir}/man1/cancel.1*
 %{_mandir}/man1/lp.1*
 %{_mandir}/man1/lpoptions.1*
