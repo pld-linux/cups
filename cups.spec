@@ -9,7 +9,7 @@
 # - perl BRs
 %include	/usr/lib/rpm/macros.perl
 Summary:	Common Unix Printing System
-Summary(pl):	Popularny System Druku dla Uniksa
+Summary(pl):	Popularny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 %define	rcver	rc5
@@ -66,9 +66,9 @@ PostScript Printer Description ("PPD") based printing options to
 support real-world printing under UNIX.
 
 %description -l pl
-CUPS dostarcza standardowy poziom drukowania dla systemów bazuj±cych
-na UNIXie. CUPS u¿ywa protoko³u IPP - Internet Printint Protocol jako
-podstawy do zarz±dzania zadaniami i kolejkami druku.
+CUPS dostarcza standardowy poziom drukowania dla systemów uniksowych.
+CUPS u¿ywa protoko³u IPP - Internet Printint Protocol jako podstawy do
+zarz±dzania zadaniami i kolejkami druku.
 
 %description -l pt_BR
 O sistema Unix de impressão (CUPS) fornece uma camada de impressão
