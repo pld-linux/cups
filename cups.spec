@@ -13,7 +13,7 @@ Summary(pl):	Popularny System Druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.1.19
-Release:	1
+Release:	2
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
@@ -40,7 +40,7 @@ BuildRequires:	openssl-devel >= 0.9.7
 BuildRequires:	pam-devel
 %{?!_without_php:BuildRequires:	php-devel}
 BuildRequires:	pkgconfig
-PreReq:		%{name}-libs = %{version}
+PreReq:		%{name}-libs = %{epoch}:%{version}
 Requires(post,preun):	/sbin/chkconfig
 Conflicts:	ghostscript < 7.05.4
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -121,8 +121,8 @@ Summary:	Common Unix Printing System development files
 Summary(pl):	Popularny System Druku dla Uniksa, pliki nag³ówkowe
 Summary(pt_BR):	Sistema Unix de Impressão - ambiente de desenvolvimento
 Group:		Development/Libraries
-Requires:	%{name}-lib = %{version}
-Requires:	%{name}-image-lib = %{version}
+Requires:	%{name}-lib = %{epoch}:%{version}
+Requires:	%{name}-image-lib = %{epoch}:%{version}
 Obsoletes:	libcups1-devel
 
 %description devel
@@ -141,7 +141,7 @@ Summary:	Common Unix Printing System static libraries
 Summary(pl):	Popularny System Druku dla Uniksa, biblioteki statyczne
 Summary(pt_BR):	Common Unix Printing System - bibliotecas estáticas
 Group:		Development/Libraries
-Requires:	%{name}-devel = %{version}
+Requires:	%{name}-devel = %{epoch}:%{version}
 
 %description static
 Common Unix Printing System static libraries.
@@ -157,7 +157,7 @@ bibliotecas do CUPS.
 Summary:	Perl module for CUPS
 Summary(pl):	Modu³ Perla CUPS
 Group:		Development/Languages/Perl
-Requires:	cups-lib = %{version}
+Requires:	cups-lib = %{epoch}:%{version}
 
 %description -n perl-cups
 Perl module for Common Unix Printing System.
@@ -169,7 +169,7 @@ Modu³ Perla do Popularnego Systemu Druku dla Uniksa.
 Summary:	PHP module for CUPS
 Summary(pl):	Modu³ PHP CUPS
 Group:		Development/Languages/PHP
-Requires:	cups-lib = %{version}
+Requires:	cups-lib = %{epoch}:%{version}
 
 %description -n php-cups
 PHP module for Common Unix Printing System.
