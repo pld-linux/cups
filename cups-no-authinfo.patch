@@ -1,0 +1,178 @@
+CAN-2004-0923 fix (taken from Debian)
+--- cupsys-1.1.14.orig/scheduler/ipp.c
++++ cupsys-1.1.14/scheduler/ipp.c
+@@ -1134,7 +1165,9 @@
+     }
+ 
+     LogMessage(L_INFO, "Setting %s device-uri to \"%s\" (was \"%s\".)",
+-               printer->name, attr->values[0].string.text, printer->device_uri);
++               printer->name,
++	       cupsdSanitizeURI(attr->values[0].string.text, line, sizeof(line)),
++	       cupsdSanitizeURI(printer->device_uri, resource, sizeof(resource)));
+ 
+     strncpy(printer->device_uri, attr->values[0].string.text,
+             sizeof(printer->device_uri) - 1);
+--- cupsys-1.1.14.orig/scheduler/job.c
++++ cupsys-1.1.14/scheduler/job.c
+@@ -1053,6 +1053,7 @@
+ 		classification[1024],	/* CLASSIFICATION environment variable */
+ 		content_type[255],/* CONTENT_TYPE environment variable */
+ 		device_uri[1024],/* DEVICE_URI environment variable */
++		sani_uri[1024], /* Sanitized DEVICE_URI env var */
+ 		ppd[1024],	/* PPD environment variable */
+ 		printer_name[255],/* PRINTER environment variable */
+ 		root[1024],	/* CUPS_SERVERROOT environment variable */
+@@ -1470,13 +1471,13 @@
+   envp[16] = classification;
+   envp[17] = NULL;
+ 
+-  LogMessage(L_DEBUG, "StartJob: envp = \"%s\",\"%s\",\"%s\",\"%s\","
+-                      "\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\","
+-		      "\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"",
+-	     envp[0], envp[1], envp[2], envp[3], envp[4],
+-	     envp[5], envp[6], envp[7], envp[8], envp[9],
+-	     envp[10], envp[11], envp[12], envp[13], envp[14],
+-	     envp[15], envp[16]);
++  for (i = 0; i < 17; i ++)
++    if (strncmp(envp[i], "DEVICE_URI=", 11))
++      LogMessage(L_DEBUG, "StartJob: envp[%d]=\"%s\"", i, envp[i]);
++    else
++      LogMessage(L_DEBUG, "StartJob: envp[%d]=\"DEVICE_URI=%s\"", i,
++		 cupsdSanitizeURI(printer->device_uri, sani_uri,
++				  sizeof(sani_uri)));
+ 
+   current->current_file ++;
+ 
+--- cupsys-1.1.14.orig/scheduler/printers.c
++++ cupsys-1.1.14/scheduler/printers.c
+@@ -39,6 +39,7 @@
+  *                            changed.
+  *   StopPrinter()          - Stop a printer from printing any jobs...
+  *   ValidateDest()         - Validate a printer/class destination.
++ *   cupsdSanitizeURI()     - Sanitize a device URI...
+  *   write_irix_config()    - Update the config files used by the IRIX
+  *                            desktop tools.
+  *   write_irix_state()     - Update the status files used by IRIX printing
+@@ -828,11 +829,7 @@
+ SetPrinterAttrs(printer_t *p)		/* I - Printer to setup */
+ {
+   char		uri[HTTP_MAX_URI];	/* URI for printer */
+-  char		method[HTTP_MAX_URI],	/* Method portion of URI */
+-		username[HTTP_MAX_URI],	/* Username portion of URI */
+-		host[HTTP_MAX_URI],	/* Host portion of URI */
+-		resource[HTTP_MAX_URI];	/* Resource portion of URI */
+-  int		port;			/* Port portion of URI */
++  char		resource[HTTP_MAX_URI];	/* Resource portion of URI */
+   int		i;			/* Looping var */
+   char		filename[1024];		/* Name of PPD file */
+   int		num_media;		/* Number of media options */
+@@ -1171,12 +1168,7 @@
+         * http://..., ipp://..., etc.
+ 	*/
+ 
+-        httpSeparate(p->device_uri, method, username, host, &port, resource);
+-	if (port)
+-	  snprintf(uri, sizeof(uri), "%s://%s:%d%s", method, host, port,
+-	           resource);
+-	else
+-	  snprintf(uri, sizeof(uri), "%s://%s%s", method, host, resource);
++        cupsdSanitizeURI(p->device_uri, uri, sizeof(uri));
+       }
+       else
+       {
+@@ -1795,6 +1787,83 @@
+ }
+ 
+ 
++/*
++ * 'cupsdSanitizeURI()' - Sanitize a device URI...
++ */
++
++char *					/* O - New device URI */
++cupsdSanitizeURI(const char *uri,	/* I - Original device URI */
++                 char       *buffer,	/* O - New device URI */
++                 int        buflen)	/* I - Size of new device URI buffer */
++{
++  char	*start,				/* Start of data after scheme */
++	*slash,				/* First slash after scheme:// */
++	*ptr;				/* Pointer into user@host:port part */
++
++
++ /*
++  * Range check input...
++  */
++
++  if (!uri || !buffer || buflen < 2)
++    return (NULL);
++
++ /*
++  * Copy the device URI to the new buffer...
++  */
++
++  strncpy(buffer, uri, buflen-1);
++  buffer[buflen-1] = '\0';
++
++ /*
++  * Find the end of the scheme:// part...
++  */
++
++  if ((ptr = strchr(buffer, ':')) == NULL)
++    return (buffer);			/* No scheme: part... */
++
++  for (start = ptr + 1; *start; start ++)
++    if (*start != '/')
++      break;
++
++ /*
++  * Find the next slash (/) in the URI...
++  */
++
++  if ((slash = strchr(start, '/')) == NULL)
++    slash = start + strlen(start);	/* No slash, point to the end */
++
++ /*
++  * Check for an @ sign before the slash...
++  */
++
++  if ((ptr = strchr(start, '@')) != NULL && ptr < slash)
++  {
++   /*
++    * Found an @ sign and it is before the resource part, so we have
++    * an authentication string.  Copy the remaining URI over the
++    * authentication string...
++    */
++
++    /* cups_strcpy(start, ptr + 1); */
++
++    char *src = ptr + 1;
++    char *dst = start;
++
++    while (*src)
++      *dst++ = *src++;
++
++    *dst = '\0';
++  }
++
++ /*
++  * Return the new device URI...
++  */
++
++  return (buffer);
++  }
++  
++  
+ #ifdef __sgi
+ /*
+  * 'write_irix_config()' - Update the config files used by the IRIX
+--- cupsys-1.1.14.orig/scheduler/printers.h
++++ cupsys-1.1.14/scheduler/printers.h
+@@ -111,6 +111,9 @@
+ 			              const char *resource,
+ 			              cups_ptype_t *dtype);
+ 
++extern char		*cupsdSanitizeURI(const char *uri, char *buffer,
++			                  int buflen);
++
+ 
+ /*
+  * End of "$Id$".
