@@ -2,11 +2,11 @@ Summary:	Common Unix Printing System
 Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.1.16
-Release:	2
+Version:	1.1.17
+Release:	1
 Epoch:		1
 License:	GPL/LGPL
-Group:		Applications/System
+Group:		Applications/Printing
 Source0:	ftp://ftp.easysw.com/pub/%{name}/%{version}/%{name}-%{version}-source.tar.bz2
 Source1:	%{name}.init
 Source2:	%{name}.pamd
@@ -174,7 +174,7 @@ cp doc/images/*	$RPM_BUILD_ROOT/%{_libdir}/%{name}/cgi-bin/images/
 touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
 touch $RPM_BUILD_ROOT/etc/security/blacklist.cups
 
-ln -s %{_bindir}/smbspool $RPM_BUILD_ROOT/%{_libdir}/%{name}/backend/smb
+#ln -s %{_bindir}/smbspool $RPM_BUILD_ROOT/%{_libdir}/%{name}/backend/smb
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -225,13 +225,13 @@ fi
 %attr(755,root,root)  %{_libdir}/cups/*/*
 %attr(755,root,root) %{_sbindir}/*
 %{_datadir}/cups
-%{_mandir}/man1/backend.1.gz
-%{_mandir}/man1/filter.1.gz
-%{_mandir}/man1/lppasswd.1.gz
+%{_mandir}/man1/backend.1*
+%{_mandir}/man1/filter.1*
+%{_mandir}/man1/lppasswd.1*
 %{_mandir}/man[58]/*
-%lang(fr) %{_mandir}/fr/man1/backend.1.gz
-%lang(fr) %{_mandir}/fr/man1/filter.1.gz
-%lang(fr) %{_mandir}/fr/man1/lppasswd.1.gz
+%lang(fr) %{_mandir}/fr/man1/backend.1*
+%lang(fr) %{_mandir}/fr/man1/filter.1*
+%lang(fr) %{_mandir}/fr/man1/lppasswd.1*
 %lang(fr) %{_mandir}/fr/man[58]/*
 %{_datadir}/locale/C/cups_C
 %lang(be) %{_datadir}/locale/be/cups_be
@@ -268,18 +268,18 @@ fi
 %attr(755,root,root) %{_bindir}/lpr
 %attr(755,root,root) %{_bindir}/lprm
 %attr(755,root,root) %{_bindir}/lpstat
-%{_mandir}/man1/lp.1.gz
-%{_mandir}/man1/lpoptions.1.gz
-%{_mandir}/man1/lpq.1.gz
-%{_mandir}/man1/lpr.1.gz
-%{_mandir}/man1/lprm.1.gz
-%{_mandir}/man1/lpstat.1.gz
-%lang(fr) %{_mandir}/fr/man1/lp.1.gz
-%lang(fr) %{_mandir}/fr/man1/lpoptions.1.gz
-%lang(fr) %{_mandir}/fr/man1/lpq.1.gz
-%lang(fr) %{_mandir}/fr/man1/lpr.1.gz
-%lang(fr) %{_mandir}/fr/man1/lprm.1.gz
-%lang(fr) %{_mandir}/fr/man1/lpstat.1.gz
+%{_mandir}/man1/lp.1*
+%{_mandir}/man1/lpoptions.1*
+%{_mandir}/man1/lpq.1*
+%{_mandir}/man1/lpr.1*
+%{_mandir}/man1/lprm.1*
+%{_mandir}/man1/lpstat.1*
+%lang(fr) %{_mandir}/fr/man1/lp.1*
+%lang(fr) %{_mandir}/fr/man1/lpoptions.1*
+%lang(fr) %{_mandir}/fr/man1/lpq.1*
+%lang(fr) %{_mandir}/fr/man1/lpr.1*
+%lang(fr) %{_mandir}/fr/man1/lprm.1*
+%lang(fr) %{_mandir}/fr/man1/lpstat.1*
 
 %files image-lib
 %defattr(644,root,root,755)
