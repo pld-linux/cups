@@ -23,16 +23,16 @@ Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
-Patch1:		%{name}-config.patch
-Patch2:		%{name}-tmpdir.patch
-Patch3:		%{name}-lp-lpr.patch
-Patch4:		%{name}-options.patch
-Patch5:		%{name}-ENCRYPTIONtxt.patch
-Patch6:		%{name}-man_pages_linking.patch
-Patch7:		%{name}-nolibs.patch
-Patch9:		%{name}-nostrip.patch
-Patch10:	%{name}-rpath.patch
-Patch11:	%{name}-gcc34.patch
+Patch0:		%{name}-config.patch
+Patch1:		%{name}-lp-lpr.patch
+Patch2:		%{name}-options.patch
+Patch3:		%{name}-ENCRYPTIONtxt.patch
+Patch4:		%{name}-man_pages_linking.patch
+Patch5:		%{name}-nolibs.patch
+Patch6:		%{name}-nostrip.patch
+Patch7:		%{name}-rpath.patch
+Patch8:		%{name}-gcc34.patch
+Patch9:		%{name}-tmpdir.patch
 URL:		http://www.cups.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -226,18 +226,18 @@ Ten pakiet umo¿liwia drukowanie z poziomu CUPS-a na drukarkach
 pod³±czonych do portów równoleg³ych.
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q
+%patch0 -p1
 %patch1 -p1
-# wtf?
-#%patch2 -p1
+%patch2 -p1
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%patch9 -p1
-%patch10 -p1
-%patch11 -p1
+%patch8 -p1
+# wtf?
+#%patch9 -p1
 
 %build
 %{__aclocal}
