@@ -13,7 +13,7 @@ Summary(pl):	Popularny System Druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.1.19
-Release:	4
+Release:	5
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
