@@ -1,7 +1,7 @@
 Summary:	Common Unix Printing System	
 Name:		cups
 Version:	1.1.4
-Release:	1
+Release:	2
 Vendor:		PLD
 License:	GPL/LGPL
 Group:		Applications/System
@@ -24,6 +24,26 @@ jobs and queues. The Line Printer Daemon ("LPD") Server Message Block
 with reduced functionality. CUPS adds network printer browsing and
 PostScript Printer Description ("PPD") based printing options to
 support real-world printing under UNIX.
+
+%package devel
+Summary:	Common Unix Printing System development files
+Group:		Development/Libraries
+Group(de):	Entwicklung/Libraries
+Group(fr):	Development/Librairies
+Group(pl):	Programowanie/Biblioteki
+
+%description devel
+Common Unix Printing System development files
+
+%package static
+Summary:	Common Unix Printing System static libraries
+Group:		Development/Libraries
+Group(de):	Entwicklung/Libraries
+Group(fr):	Development/Librairies
+Group(pl):	Programowanie/Biblioteki
+
+%description static
+Common Unix Printing System static libraries
 
 %prep
 %setup -q
@@ -53,9 +73,32 @@ rm -rf $RPM_BUILD_ROOT
         SERVERBIN=$RPM_BUILD_ROOT%{_libdir}/cups \
 	SERVERROOT=$RPM_BUILD_ROOT%{_sysconfdir}/cups \
     install 
-
-
+    
 %clean
 
 %files 
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}
+%attr(755,root,root) %{_libdir}/lib*.so*
+%attr(755,root,root) %{_libdir}/accept
+%attr(755,root,root) %{_libdir}/lpadmin
+%attr(755,root,root) %{_libdir}/lpmove
+%attr(755,root,root) %{_libdir}/reject
+%attr(755,root,root) %{_libdir}/cups
+%attr(755,root,root) %{_sbindir}
+%{_datadir}/cups
+%{_mandir}/man[158]
+%lang(C)  %{_datadir}/locale/C/cups_C
+%lang(de) %{_datadir}/locale/de/cups_de
+%lang(en) %{_datadir}/locale/en/cups_en
+%lang(es) %{_datadir}/locale/es/cups_es
+%lang(fr) %{_datadir}/locale/fr/cups_fr
+%lang(it) %{_datadir}/locale/it/cups_it
+
+%files devel
+%defattr(644,root,root,755)
+%{_includedir}/cups
+
+%files static
+%defattr(644,root,root,755)
+%{_libdir}/*.a
