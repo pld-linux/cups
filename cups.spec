@@ -3,7 +3,7 @@ Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.1.14
-Release:	13
+Release:	14
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/System
@@ -28,7 +28,6 @@ BuildRequires:	openssl-devel >= 0.9.6b
 BuildRequires:	pam-devel
 Prereq:		%{name}-libs = %{version}
 Prereq:		/sbin/chkconfig
-Provides:	lpr
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	lpr
 Obsoletes:	LPRng
@@ -71,6 +70,19 @@ Biblioteki dla CUPS.
 
 %description lib -l pt_BR
 Bibliotecas CUPS requeridas pelos clientes CUPS.
+
+%package clients
+Summary:	Common Unix Printing System Clients
+Summary(pl):	Aplikacje klienckie dla CUPS
+Group:		Applications/Printing
+Provides:	%{name}-clients = %{epoch}:%{version}-%{release}
+Provides:	lpr
+
+%description clients
+Common Unix Printing System Clients.
+
+%description clients -l pl
+Aplikacje klienckie dla CUPS.
 
 %package image-lib
 Summary:	Common Unix Printing System Libraries - images manipulation
@@ -194,7 +206,9 @@ fi
 %attr(640,root,root) %config %verify(not size mtime md5) /etc/pam.d/*
 %attr(754,root,root) /etc/rc.d/init.d/cups
 %dir %{_sysconfdir}/%{name}
-%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{name}/*.conf
+%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{name}/classes.conf
+%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{name}/cupsd.conf
+%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{name}/printers.conf
 %attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{name}/*.convs
 %attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{name}/*.types
 %dir %{_sysconfdir}/%{name}/certs
@@ -202,15 +216,6 @@ fi
 %dir %{_sysconfdir}/%{name}/ppd
 %attr(644,root,root) %{_sysconfdir}/logrotate.d/%{name}
 %attr(4755,lp,root) %{_bindir}/lppasswd
-%attr(755,root,root) %{_bindir}/cancel
-%attr(755,root,root) %{_bindir}/disable
-%attr(755,root,root) %{_bindir}/enable
-%attr(755,root,root) %{_bindir}/lp
-%attr(755,root,root) %{_bindir}/lpoptions
-%attr(755,root,root) %{_bindir}/lpq
-%attr(755,root,root) %{_bindir}/lpr
-%attr(755,root,root) %{_bindir}/lprm
-%attr(755,root,root) %{_bindir}/lpstat
 %dir %{_libdir}/cups
 %dir %{_libdir}/cups/*
 %attr(755,root,root)  %{_libdir}/cups/*/*
@@ -241,6 +246,19 @@ fi
 %files lib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libcups.so.*
+
+%files clients
+%defattr(644,root,root,755)
+%attr(644,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{name}/client.conf
+%attr(755,root,root) %{_bindir}/cancel
+%attr(755,root,root) %{_bindir}/disable
+%attr(755,root,root) %{_bindir}/enable
+%attr(755,root,root) %{_bindir}/lp
+%attr(755,root,root) %{_bindir}/lpoptions
+%attr(755,root,root) %{_bindir}/lpq
+%attr(755,root,root) %{_bindir}/lpr
+%attr(755,root,root) %{_bindir}/lprm
+%attr(755,root,root) %{_bindir}/lpstat
 
 %files image-lib
 %defattr(644,root,root,755)
