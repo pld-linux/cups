@@ -12,14 +12,14 @@ Summary:	Common Unix Printing System
 Summary(pl):	Popularny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
-%define	rcver	rc6
+%define	rcver	%{nil}
 Version:	1.1.20
-Release:	0.%{rcver}.2
+Release:	1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
 Source0:	ftp://ftp.easysw.com/pub/%{name}/%{version}%{rcver}/%{name}-%{version}%{rcver}-source.tar.bz2
-# Source0-md5:	9728a739b65c420cb43e1da8db5cca39
+# Source0-md5:	09d0be2bad1b0617bc0eba6eef81f6e9
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
