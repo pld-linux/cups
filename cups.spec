@@ -3,7 +3,7 @@ Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.1.14
-Release:	16
+Release:	17
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/System
@@ -220,12 +220,17 @@ fi
 %dir %{_sysconfdir}/%{name}/ppd
 %attr(644,root,root) %{_sysconfdir}/logrotate.d/%{name}
 %attr(4755,lp,root) %{_bindir}/lppasswd
+%attr(755,root,root) %{_bindir}/disable
+%attr(755,root,root) %{_bindir}/enable
 %dir %{_libdir}/cups
 %dir %{_libdir}/cups/*
 %attr(755,root,root)  %{_libdir}/cups/*/*
 %attr(755,root,root) %{_sbindir}/*
 %{_datadir}/cups
-%{_mandir}/man[158]/*
+%{_mandir}/man1/backend.1.gz
+%{_mandir}/man1/filter.1.gz
+%{_mandir}/man1/lppasswd.1.gz
+%{_mandir}/man[58]/*
 %{_datadir}/locale/C/cups_C
 %lang(be) %{_datadir}/locale/be/cups_be
 %lang(cs) %{_datadir}/locale/cs/cups_cs
@@ -255,14 +260,18 @@ fi
 %defattr(644,root,root,755)
 %attr(644,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{name}/client.conf
 %attr(755,root,root) %{_bindir}/cancel
-%attr(755,root,root) %{_bindir}/disable
-%attr(755,root,root) %{_bindir}/enable
 %attr(755,root,root) %{_bindir}/lp
 %attr(755,root,root) %{_bindir}/lpoptions
 %attr(755,root,root) %{_bindir}/lpq
 %attr(755,root,root) %{_bindir}/lpr
 %attr(755,root,root) %{_bindir}/lprm
 %attr(755,root,root) %{_bindir}/lpstat
+%{_mandir}/man1/lp.1.gz
+%{_mandir}/man1/lpoptions.1.gz
+%{_mandir}/man1/lpq.1.gz
+%{_mandir}/man1/lpr.1.gz
+%{_mandir}/man1/lprm.1.gz
+%{_mandir}/man1/lpstat.1.gz
 
 %files image-lib
 %defattr(644,root,root,755)
