@@ -180,7 +180,7 @@ PHP module for Common Unix Printing System.
 %description -n php-cups -l pl
 Modu³ PHP do Popularnego Systemu Druku dla Uniksa.
 
-%package bakend-usb
+%package backend-usb
 Summary:	USB backend for CUPS
 Group:		Applications/Printing
 Requires:	cups = %{epoch}:%{version}
@@ -188,7 +188,7 @@ Requires:	cups = %{epoch}:%{version}
 %description backend-usb
 This package allow CUPS printing on USB printers.
 
-%package bakend-serial
+%package backend-serial
 Summary:	Serial backend for CUPS
 Group:		Applications/Printing
 Requires:	cups = %{epoch}:%{version}
@@ -196,7 +196,7 @@ Requires:	cups = %{epoch}:%{version}
 %description backend-serial
 This package allow CUPS printing on printers connected by serial ports.
 
-%package bakend-parallel
+%package backend-parallel
 Summary:	Parallel backend for CUPS
 Group:		Applications/Printing
 Requires:	cups = %{epoch}:%{version}
