@@ -1,0 +1,184 @@
+--- cups-1.1.15/pdftops/XRef.cxx.orig	2001-12-07 22:02:12.000000000 +0100
++++ cups-1.1.15/pdftops/XRef.cxx	2004-11-03 16:42:10.845674223 +0100
+@@ -62,6 +62,8 @@
+   start = str->getStart();
+   pos = readTrailer();
+ 
++  entries = NULL;
++
+   // if there was a problem with the trailer,
+   // try to reconstruct the xref table
+   if (pos == 0) {
+@@ -71,6 +73,11 @@
+ 
+   // trailer is ok - read the xref table
+   } else {
++    if ((size < 0) || (size*sizeof(XRefEntry)/sizeof(XRefEntry) != size)) {
++      error(-1, "Invalid 'size' inside xref table.");
++      ok = gFalse;
++      return;
++    }
+     entries = (XRefEntry *)gmalloc(size * sizeof(XRefEntry));
+     for (i = 0; i < size; ++i) {
+       entries[i].offset = -1;
+@@ -167,7 +174,7 @@
+     n = atoi(p);
+     while ('0' <= *p && *p <= '9') ++p;
+     while (isspace(*p)) ++p;
+-    if (p == buf)
++    if ((p == buf) || (n < 0)) /* must make progress */
+       return 0;
+     pos1 += (p - buf) + n * 20;
+   }
+@@ -240,6 +247,10 @@
+     }
+     s[i] = '\0';
+     first = atoi(s);
++    if (first < 0) {
++      error(-1, "Invalid 'first'");
++      goto err2;
++    }
+     while ((c = str->lookChar()) != EOF && isspace(c)) {
+       str->getChar();
+     }
+@@ -251,6 +262,10 @@
+     }
+     s[i] = '\0';
+     n = atoi(s);
++    if (n<=0) {
++      error(-1, "Invalid 'n'");
++      goto err2;
++    }
+     while ((c = str->lookChar()) != EOF && isspace(c)) {
+       str->getChar();
+     }
+@@ -258,6 +273,10 @@
+     // table size
+     if (first + n > size) {
+       newSize = size + 256;
++      if ((newSize < 0) || (newSize*sizeof(XRefEntry)/sizeof(XRefEntry) != newSize)) {
++        error(-1, "Invalid 'newSize'");
++        goto err2;
++      }
+       entries = (XRefEntry *)grealloc(entries, newSize * sizeof(XRefEntry));
+       for (i = size; i < newSize; ++i) {
+ 	entries[i].offset = -1;
+@@ -380,6 +399,10 @@
+     // look for object
+     } else if (isdigit(*p)) {
+       num = atoi(p);
++      if (num < 0) {
++        error(-1, "Invalid 'num' parameters.");
++        return gFalse;
++      }
+       do {
+ 	++p;
+       } while (*p && isdigit(*p));
+@@ -399,6 +422,10 @@
+ 	    if (!strncmp(p, "obj", 3)) {
+ 	      if (num >= size) {
+ 		newSize = (num + 1 + 255) & ~255;
++		if ((newSize < 0) || (newSize*sizeof(XRefEntry)/sizeof(XRefEntry) != newSize)) {
++		  error(-1, "Invalid 'obj' parameters.");
++		  return gFalse;
++		}
+ 		entries = (XRefEntry *)
+ 		            grealloc(entries, newSize * sizeof(XRefEntry));
+ 		for (i = size; i < newSize; ++i) {
+@@ -420,6 +447,11 @@
+     } else if (!strncmp(p, "endstream", 9)) {
+       if (streamEndsLen == streamEndsSize) {
+ 	streamEndsSize += 64;
++        if (streamEndsSize*sizeof(int)/sizeof(int) != streamEndsSize) {
++          error(-1, "Invalid 'endstream' parameter.");
++          return gFalse;
++        }
++
+ 	streamEnds = (int *)grealloc(streamEnds, streamEndsSize * sizeof(int));
+       }
+       streamEnds[streamEndsLen++] = pos;
+--- cups-1.1.15/pdftops/Catalog.cxx.orig	2001-12-07 22:02:09.000000000 +0100
++++ cups-1.1.15/pdftops/Catalog.cxx	2004-10-14 17:22:32.175270099 +0200
+@@ -61,6 +61,15 @@
+   }
+   pagesSize = numPages0 = obj.getInt();
+   obj.free();
++  // The gcc doesnt optimize this away, so this check is ok,
++  // even if it looks like a pagesSize != pagesSize check
++  if (pagesSize*sizeof(Page *)/sizeof(Page *) != pagesSize ||
++      pagesSize*sizeof(Ref)/sizeof(Ref) != pagesSize) {
++    error(-1, "Invalid 'pagesSize'");
++    ok = gFalse;
++    return;
++  }
++
+   pages = (Page **)gmalloc(pagesSize * sizeof(Page *));
+   pageRefs = (Ref *)gmalloc(pagesSize * sizeof(Ref));
+   for (i = 0; i < pagesSize; ++i) {
+@@ -153,6 +162,11 @@
+       }
+       if (start >= pagesSize) {
+ 	pagesSize += 32;
++        if (pagesSize*sizeof(Page *)/sizeof(Page *) != pagesSize ||
++            pagesSize*sizeof(Ref)/sizeof(Ref) != pagesSize) {
++          error(-1, "Invalid 'pagesSize' parameter.");
++          goto err3;
++        }
+ 	pages = (Page **)grealloc(pages, pagesSize * sizeof(Page *));
+ 	pageRefs = (Ref *)grealloc(pageRefs, pagesSize * sizeof(Ref));
+ 	for (j = pagesSize - 32; j < pagesSize; ++j) {
+--- cups-1.1.21/pdftops/gmem.c.orig	2003-07-20 02:30:56.000000000 +0200
++++ cups-1.1.21/pdftops/gmem.c	2004-11-03 18:01:09.197927687 +0100
+@@ -53,9 +53,9 @@
+ 
+ #endif /* DEBUG_MEM */
+ 
+-void *gmalloc(int size) {
++void *gmalloc(size_t size) {
+ #ifdef DEBUG_MEM
+-  int size1;
++  size_t size1;
+   char *mem;
+   GMemHdr *hdr;
+   void *data;
+@@ -94,11 +94,11 @@
+ #endif
+ }
+ 
+-void *grealloc(void *p, int size) {
++void *grealloc(void *p, size_t size) {
+ #ifdef DEBUG_MEM
+   GMemHdr *hdr;
+   void *q;
+-  int oldSize;
++  size_t oldSize;
+ 
+   if (size == 0) {
+     if (p)
+@@ -137,7 +137,7 @@
+ 
+ void gfree(void *p) {
+ #ifdef DEBUG_MEM
+-  int size;
++  size_t size;
+   GMemHdr *hdr;
+   GMemHdr *prevHdr, *q;
+   int lst;
+--- cups-1.1.21/pdftops/gmem.h.orig	2003-07-20 02:30:56.000000000 +0200
++++ cups-1.1.21/pdftops/gmem.h	2004-11-03 18:01:54.449256852 +0100
+@@ -19,13 +19,13 @@
+  * Same as malloc, but prints error message and exits if malloc()
+  * returns NULL.
+  */
+-extern void *gmalloc(int size);
++extern void *gmalloc(size_t size);
+ 
+ /*
+  * Same as realloc, but prints error message and exits if realloc()
+  * returns NULL.  If <p> is NULL, calls malloc instead of realloc().
+  */
+-extern void *grealloc(void *p, int size);
++extern void *grealloc(void *p, size_t size);
+ 
+ /*
+  * Same as free, but checks for and ignores NULL pointers.
