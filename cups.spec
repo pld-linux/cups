@@ -34,6 +34,7 @@ Patch7:		%{name}-nolibs.patch
 Patch8:		%{name}-chown.patch
 Patch9:		%{name}-nostrip.patch
 Patch10:	%{name}-rpath.patch
+Patch11:	%{name}-gcc34.patch
 URL:		http://www.cups.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -240,6 +241,7 @@ pod³±czonych do portów równoleg³ych.
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
+%patch11 -p1
 
 %build
 %{__aclocal}
