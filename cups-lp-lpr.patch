@@ -1,0 +1,22 @@
+--- cups-1.1.10/berkeley/lpr.c.orig	Tue Jan 30 16:17:45 2001
++++ cups-1.1.10/berkeley/lpr.c	Tue Jan 30 16:18:18 2001
+@@ -324,7 +324,7 @@
+     if (title)
+       job_id = cupsPrintFile(printer, tempfile, title, num_options, options);
+     else
+-      job_id = cupsPrintFile(printer, tempfile, "(stdin)", num_options, options);
++      job_id = cupsPrintFile(printer, tempfile, "STDIN", num_options, options);
+ 
+     unlink(tempfile);
+   }
+--- cups-1.1.10/systemv/lp.c.orig	Tue Jan 30 16:16:32 2001
++++ cups-1.1.10/systemv/lp.c	Tue Jan 30 16:17:10 2001
+@@ -544,7 +544,7 @@
+     if (title)
+       job_id = cupsPrintFile(printer, tempfile, title, num_options, options);
+     else
+-      job_id = cupsPrintFile(printer, tempfile, "(stdin)", num_options, options);
++      job_id = cupsPrintFile(printer, tempfile, "STDIN", num_options, options);
+ 
+     unlink(tempfile);
+   }
