@@ -47,7 +47,7 @@ BuildRequires:	pam-devel
 %{?with_php:BuildRequires:	php-devel}
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-perlprov
-PreReq:		%{name}-libs = %{epoch}:%{version}
+PreReq:		%{name}-libs = %{epoch}:%{version}-%{release}
 Requires(post,preun):	/sbin/chkconfig
 Requires:	pam >= 0.77.3
 Conflicts:	ghostscript < 7.05.4
@@ -131,8 +131,8 @@ Summary:	Common Unix Printing System development files
 Summary(pl):	Popularny System Druku dla Uniksa, pliki nag³ówkowe
 Summary(pt_BR):	Sistema Unix de Impressão - ambiente de desenvolvimento
 Group:		Development/Libraries
-Requires:	%{name}-image-lib = %{epoch}:%{version}
-Requires:	%{name}-lib = %{epoch}:%{version}
+Requires:	%{name}-image-lib = %{epoch}:%{version}-%{release}
+Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 Obsoletes:	libcups1-devel
 
 %description devel
@@ -151,7 +151,7 @@ Summary:	Common Unix Printing System static libraries
 Summary(pl):	Popularny System Druku dla Uniksa, biblioteki statyczne
 Summary(pt_BR):	Common Unix Printing System - bibliotecas estáticas
 Group:		Development/Libraries
-Requires:	%{name}-devel = %{epoch}:%{version}
+Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 
 %description static
 Common Unix Printing System static libraries.
@@ -167,7 +167,7 @@ bibliotecas do CUPS.
 Summary:	Perl module for CUPS
 Summary(pl):	Modu³ Perla CUPS
 Group:		Development/Languages/Perl
-Requires:	cups-lib = %{epoch}:%{version}
+Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 
 %description -n perl-cups
 Perl module for Common Unix Printing System.
@@ -179,7 +179,7 @@ Modu³ Perla do Popularnego Systemu Druku dla Uniksa.
 Summary:	PHP module for CUPS
 Summary(pl):	Modu³ PHP CUPS
 Group:		Development/Languages/PHP
-Requires:	cups-lib = %{epoch}:%{version}
+Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 
 %description -n php-cups
 PHP module for Common Unix Printing System.
@@ -191,7 +191,7 @@ Modu³ PHP do Popularnego Systemu Druku dla Uniksa.
 Summary:	USB backend for CUPS
 Summary(pl):	Backend USB dla CUPS-a
 Group:		Applications/Printing
-Requires:	cups = %{epoch}:%{version}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description backend-usb
 This package allow CUPS printing on USB printers.
@@ -203,7 +203,7 @@ Ten pakiet umo¿liwia drukowanie z poziomu CUPS-a na drukarkach USB.
 Summary:	Serial port backend for CUPS
 Summary(pl):	Backend obs³uguj±cy porty szeregowe dla CUPS-a
 Group:		Applications/Printing
-Requires:	cups = %{epoch}:%{version}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description backend-serial
 This package allow CUPS printing on printers connected by serial
@@ -217,7 +217,7 @@ pod³±czonych do portów szeregowych.
 Summary:	Parallel port backend for CUPS
 Summary(pl):	Backend obs³uguj±cy porty równoleg³e dla CUPS-a
 Group:		Applications/Printing
-Requires:	cups = %{epoch}:%{version}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description backend-parallel
 This package allow CUPS printing on printers connected by parallel
@@ -297,7 +297,7 @@ install %{SOURCE1}	$RPM_BUILD_ROOT/%{_sysconfdir}/rc.d/init.d/%{name}
 install %{SOURCE2}	$RPM_BUILD_ROOT/%{_sysconfdir}/pam.d/%{name}
 install %{SOURCE3}	$RPM_BUILD_ROOT/%{_sysconfdir}/logrotate.d/%{name}
 
-gzip $RPM_BUILD_ROOT/%{_datadir}/%{name}/model/*.ppd
+gzip -9nf $RPM_BUILD_ROOT/%{_datadir}/%{name}/model/*.ppd
 
 # for internal http browser:
 cp doc/*.html	$RPM_BUILD_ROOT%{_ulibdir}/%{name}/cgi-bin
