@@ -1,6 +1,28 @@
---- cups-1.1.9/conf/cupsd.conf~	Fri Jun 22 17:50:51 2001
-+++ cups-1.1.9/conf/cupsd.conf	Wed Aug 15 16:24:28 2001
-@@ -194,7 +194,7 @@
+diff -urN cups-1.1.10.orig/conf/cupsd.conf cups-1.1.10/conf/cupsd.conf
+--- cups-1.1.10.orig/conf/cupsd.conf	Sun Nov  4 21:37:50 2001
++++ cups-1.1.10/conf/cupsd.conf	Sun Nov  4 21:43:17 2001
+@@ -121,7 +121,7 @@
+ # By default the compiled in directory.
+ #
+ 
+-#DocumentRoot /usr/share/doc/cups
++#DocumentRoot /usr/share/cups/http
+ 
+ #
+ # ErrorLog: the error log file; if this does not start with a leading /
+@@ -159,8 +159,10 @@
+ # MaxLogSize: controls the maximum size of each log file before they are
+ # rotated.  Defaults to 1048576 (1MB).  Set to 0 to disable log rotating.
+ #
++# NOTE: In PLD logrotate daemon performs taks of rotating logs.
++#
+ 
+-#MaxLogSize 0
++MaxLogSize 0
+ 
+ #
+ # PageLog: the page log file; if this does not start with a leading /
+@@ -206,7 +208,7 @@
  # Leave blank to disable printcap file generation.
  #
  
