@@ -305,7 +305,7 @@ touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
 touch $RPM_BUILD_ROOT%{_sysconfdir}/security/blacklist.cups
 
 # check-files cleanup
-rm -rf $RPM_BUILD_ROOT%{_mandir}/{,fr/}cat?
+rm -rf $RPM_BUILD_ROOT%{_mandir}/{,es/,fr/}cat?
 
 %clean
 rm -rf $RPM_BUILD_ROOT
