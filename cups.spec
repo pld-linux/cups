@@ -7,7 +7,8 @@ Release:	23
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/System
-Source0:	ftp://ftp.easysw.com/pub/%{name}/%{version}/%{name}-%{version}-source.tar.bz2
+Source0:	http://public.planetmirror.com/pub/%{name}/%{version}/%{name}-%{version}-source.tar.bz2
+# Source0-md5:	7cc9725d94568b24f5ade78fb7e26480
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
