@@ -43,6 +43,7 @@ BuildRequires:	pam-devel
 BuildRequires:	pkgconfig
 PreReq:		%{name}-libs = %{epoch}:%{version}
 Requires(post,preun):	/sbin/chkconfig
+Requires:	pam >= 0.77.3
 Conflicts:	ghostscript < 7.05.4
 Obsoletes:	lpr
 Obsoletes:	LPRng
