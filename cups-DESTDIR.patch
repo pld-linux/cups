@@ -1,12 +1,14 @@
---- cups-1.1.13/Makefile.orig	Thu Jan 24 19:51:04 2002
-+++ cups-1.1.13/Makefile	Tue Feb  5 08:20:11 2002
-@@ -76,33 +76,8 @@
+--- cups-1.1.14/Makefile.orig	Tue Feb 12 20:05:36 2002
++++ cups-1.1.14/Makefile	Sun Feb 17 13:08:13 2002
+@@ -76,32 +76,11 @@
  	echo Installing in templates...
  	(cd templates; $(MAKE) $(MFLAGS) install)
  	echo Installing cups-config script...
 -	$(INSTALL_DIR) $(BINDIR)
 -	$(INSTALL_SCRIPT) cups-config $(BINDIR)/cups-config
--	echo Installing startup script...
++	$(INSTALL_DIR) $(DESTDIR)$(BINDIR)
++	$(INSTALL_SCRIPT) cups-config $(DESTDIR)$(BINDIR)/cups-config
+ 	echo Installing startup script...
 -	if test "x$(INITDIR)" != "x"; then \
 -		$(INSTALL_DIR) $(BUILDROOT)$(INITDIR)/init.d; \
 -		$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDIR)/init.d/cups; \
@@ -21,8 +23,8 @@
 -	fi
 -	if test "x$(INITDIR)" = "x" -a "x$(INITDDIR)" != "x"; then \
 -		$(INSTALL_DIR) $(BUILDROOT)$(INITDDIR); \
--		if test "$(INITDDIR)" = "/System/Library/StartupItems/CUPS"; then \
--			$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDDIR)/CUPS; \
+-		if test "$(INITDDIR)" = "/System/Library/StartupItems/PrintingServices"; then \
+-			$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDDIR)/PrintingServices.sh; \
 -			$(INSTALL_DATA) cups.plist $(BUILDROOT)$(INITDDIR)/StartupParameters.plist; \
 -			$(INSTALL_DIR) $(BUILDROOT)$(INITDDIR)/Resources/English.lproj; \
 -			$(INSTALL_DATA) cups.strings $(BUILDROOT)$(INITDDIR)/Resources/English.lproj/Localizable.strings; \
@@ -30,12 +32,11 @@
 -			$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDDIR)/cups; \
 -		fi \
 -	fi
--
 +	$(INSTALL_DIR) $(DESTDIR)$(bindir)
 +	$(INSTALL_SCRIPT) cups-config $(DESTDIR)$(bindir)/cups-config
  
+ 
  #
- # Run the test suite...
 diff -Nur cups-1.1.12/backend/Makefile cups-1.1.12-new/backend/Makefile
 --- cups-1.1.12/backend/Makefile	Tue Jul 24 21:56:41 2001
 +++ cups-1.1.12-new/backend/Makefile	Sat Nov 24 20:27:51 2001
