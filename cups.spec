@@ -30,7 +30,8 @@ BuildRequires:	openssl-devel >= 0.9.7
 BuildRequires:	pam-devel
 BuildRequires:	pkgconfig
 PreReq:		%{name}-libs = %{version}
-PreReq:		/sbin/chkconfig
+Requires(post,preun):	/sbin/chkconfig
+Conflicts:	ghostscript < 7.05.4
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	lpr
 Obsoletes:	LPRng
