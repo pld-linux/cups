@@ -1,0 +1,228 @@
+diff -Nur cups-1.1.14.orig/cups/http.c cups-1.1.14/cups/http.c
+--- cups-1.1.14.orig/cups/http.c	Wed May 21 14:16:24 2003
++++ cups-1.1.14/cups/http.c	Wed May 21 14:49:40 2003
+@@ -27,6 +27,7 @@
+  *                          default HTTP proxy (if any).
+  *   httpCheck()          - Check to see if there is a pending response from
+  *                          the server.
++ *   httpWait()           - Wait for data available on a connection.
+  *   httpClose()          - Close an HTTP connection...
+  *   httpConnect()        - Connect to a HTTP server.
+  *   httpConnectEncrypt() - Connect to a HTTP server using encryption.
+@@ -239,6 +240,18 @@
+ int				/* O - 0 = no data, 1 = data available */
+ httpCheck(http_t *http)		/* I - HTTP connection */
+ {
++  return (httpWait(http, 0));
++}
++
++
++/*
++ * 'httpWait()' - Wait for data available on a connection.
++ */
++
++int				/* O - 0 = no data, 1 = data available */
++httpWait(http_t *http,		/* I - HTTP connection */
++         int    msec)		/* I - Milliseconds to wait */
++{
+   fd_set	input;		/* Input set for select() */
+   struct timeval timeout;	/* Timeout */
+ 
+@@ -253,6 +266,14 @@
+   if (http->used)
+     return (1);
+ 
++#ifdef HAVE_LIBSSL
++  if (http->tls)
++  {
++    if (SSL_pending((SSL *)(http->tls)))
++      return (1);
++  }
++#endif /* HAVE_LIBSSL */
++			
+  /*
+   * Then try doing a select() to poll the socket...
+   */
+@@ -260,10 +281,15 @@
+   FD_ZERO(&input);
+   FD_SET(http->fd, &input);
+ 
+-  timeout.tv_sec  = 0;
+-  timeout.tv_usec = 0;
++  if (msec >= 0)
++  {
++    timeout.tv_sec  = msec / 1000;
++    timeout.tv_usec = (msec % 1000) * 1000;
+ 
+-  return (select(http->fd + 1, &input, NULL, NULL, &timeout) > 0);
++    return (select(http->fd + 1, &input, NULL, NULL, &timeout) > 0);
++  }
++  else
++    return (select(http->fd + 1, &input, NULL, NULL, NULL) > 0);
+ }
+ 
+ 
+@@ -1132,8 +1158,10 @@
+ {
+   char	buffer[8192];	/* Junk buffer */
+ 
+-
+-  while (httpRead(http, buffer, sizeof(buffer)) > 0);
++  if (http->state != HTTP_WAITING)
++  {
++    while (httpRead(http, buffer, sizeof(buffer)) > 0);
++  }
+ }
+ 
+ 
+@@ -1207,6 +1235,9 @@
+     * Buffer small reads for better performance...
+     */
+ 
++    if (!http->blocking && !httpWait(http, 1000))
++      return (0);
++
+     if (http->data_remaining > sizeof(http->buffer))
+       bytes = sizeof(http->buffer);
+     else
+@@ -1239,7 +1270,10 @@
+       return (-1);
+     }
+     else
++    {
++      http->error = EPIPE;
+       return (0);
++    }
+   }
+ 
+   if (http->used > 0)
+@@ -1259,10 +1293,18 @@
+   }
+ #ifdef HAVE_LIBSSL
+   else if (http->tls)
++  {
++    if (!http->blocking && !httpWait(http, 1000))
++      return (0);
++
+     bytes = SSL_read((SSL *)(http->tls), buffer, length);
++  }
+ #endif /* HAVE_LIBSSL */
+   else
+   {
++    if (!http->blocking && !httpWait(http, 1000))
++      return (0);
++
+     DEBUG_printf(("httpRead: reading %d bytes from socket...\n", length));
+     bytes = recv(http->fd, buffer, length, 0);
+     DEBUG_printf(("httpRead: read %d bytes from socket...\n", bytes));
+@@ -1276,6 +1318,11 @@
+ #else
+     http->error = errno;
+ #endif /* WIN32 */
++  else
++  {
++    http->error = EPIPE;
++    return (0);
++  }
+ 
+   if (http->data_remaining == 0)
+   {
+@@ -1437,6 +1484,9 @@
+       * No newline; see if there is more data to be read...
+       */
+ 
++      if (!http->blocking && !httpWait(http, 1000))
++	return (NULL);
++
+ #ifdef HAVE_LIBSSL
+       if (http->tls)
+         bytes = SSL_read((SSL *)(http->tls), bufend,
+@@ -1473,8 +1523,7 @@
+       }
+       else if (bytes == 0)
+       {
+-        if (http->blocking)
+-	  http->error = EPIPE;
++	http->error = EPIPE;
+ 
+         return (NULL);
+       }
+@@ -1768,6 +1817,7 @@
+ 	case HTTP_POST_RECV :
+ 	case HTTP_PUT :
+ 	    http->state ++;
++	case HTTP_POST_SEND :
+ 	    break;
+ 
+ 	default :
+diff -Nur cups-1.1.14.orig/cups/http.h cups-1.1.14/cups/http.h
+--- cups-1.1.14.orig/cups/http.h	Sun Jan 27 22:16:11 2002
++++ cups-1.1.14/cups/http.h	Wed May 21 14:50:15 2003
+@@ -331,6 +331,10 @@
+ extern char		*httpMD5String(const md5_byte_t *, char [33]);
+ 
+ 
++/**** Backported from CUPS 1.1.19 ****/
++extern int             httpWait(http_t *http, int msec);
++
++
+ /*
+  * C++ magic...
+  */
+diff -Nur cups-1.1.14.orig/cups/ipp.c cups-1.1.14/cups/ipp.c
+--- cups-1.1.14.orig/cups/ipp.c	Tue Feb 12 19:47:11 2002
++++ cups-1.1.14/cups/ipp.c	Wed May 21 14:51:45 2003
+@@ -2009,7 +2009,14 @@
+       if (http->data_remaining == 0)
+       {
+ 	if (http->data_encoding == HTTP_ENCODE_CHUNKED)
+-	  httpGets(len, sizeof(len), http);
++	{
++	  /*
++	   * Get the trailing CR LF after the chunk...
++	   */
++
++	  if (!httpGets(len, sizeof(len), http))
++	    return (-1);
++	}
+ 
+ 	if (http->data_encoding != HTTP_ENCODE_CHUNKED)
+ 	{
+diff -Nur cups-1.1.14.orig/scheduler/client.c cups-1.1.14/scheduler/client.c
+--- cups-1.1.14.orig/scheduler/client.c	Wed May 21 14:16:24 2003
++++ cups-1.1.14/scheduler/client.c	Wed May 21 15:03:31 2003
+@@ -80,6 +80,8 @@
+   client_t		*con;	/* New client pointer */
+   unsigned		address;/* Address of client */
+   struct hostent	*host;	/* Host entry for address */
++  static time_t		last_dos = 0;
++				/* Time of last DoS attack */
+ 
+ 
+   LogMessage(L_DEBUG2, "AcceptClient(%08x) %d NumClients = %d",
+@@ -317,6 +319,14 @@
+ #endif /* HAVE_LIBSSL */
+ 
+  /*
++  * Update the activity time so that we timeout after 30 seconds rather
++  * then the current Timeout setting (300 by default).  This prevents
++  * some DoS situations...
++  */
++
++  con->http.activity = time(NULL) - Timeout + 30;
++
++ /*
+   * Close the socket and clear the file from the input set for select()...
+   */
+ 
+@@ -1378,6 +1388,10 @@
+ 	      }
+ 	    }
+ 	  }
++	  else if (con->http.state == HTTP_POST_RECV)
++	  {
++	    return (0);
++	  }
+ 	  else if (con->http.state != HTTP_POST_SEND)
+ 	  {
+ 	    CloseClient(con);
