@@ -27,6 +27,8 @@ Patch11:	%{name}-debian-strncat.patch
 Patch12:	%{name}-udp-dos.patch
 Patch13:	%{name}-no-authinfo.patch
 Patch14:	%{name}-pdftops2.patch
+Patch15:	%{name}-hpgl-fixes.patch
+Patch16:	%{name}-lppasswd.patch
 URL:		http://www.cups.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -165,6 +167,8 @@ bibliotecas do CUPS.
 %patch12 -p1
 %patch13 -p1
 %patch14 -p1
+%patch15 -p1
+%patch16 -p1
 
 %build
 %{__aclocal}
