@@ -141,13 +141,13 @@ rm -rf $RPM_BUILD_ROOT
 %doc *.gz doc/*.html doc/*.css doc/*.pdf doc/images
 %attr(640,root,root) %config %verify(not size mtime md5) /etc/pam.d/*
 %attr(754,root,root) /etc/rc.d/init.d/cups
-%dir %{_sysconfdir}/etc
-%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/etc/*.conf
-%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/etc/*.convs
-%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/etc/*.types
-%dir %{_sysconfdir}/etc/certs
-%dir %{_sysconfdir}/etc/interfaces
-%dir %{_sysconfdir}/etc/ppd
+%dir %{_sysconfdir}/%{name}
+%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{name}/*.conf
+%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{name}/*.convs
+%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{name}/*.types
+%dir %{_sysconfdir}/%{name}/certs
+%dir %{_sysconfdir}/%{name}/interfaces
+%dir %{_sysconfdir}/%{name}/ppd
 %attr(4755,lp,root) %{_bindir}/lppasswd
 %attr(755,root,root) %{_bindir}/cancel
 %attr(755,root,root) %{_bindir}/disable
