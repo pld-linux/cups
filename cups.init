@@ -19,7 +19,7 @@
 
 # Check that networking is up.
 if is_no "${NETWORKING}"; then
-	msg_Network_Down CUPS
+	msg_network_down CUPS
 	exit 1
 fi
 
@@ -33,7 +33,7 @@ case "$1" in
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/cups
 	else
-		msg_Already_Running CUPS
+		msg_already_running CUPS
 		exit 1
 	fi
         ;;
@@ -44,7 +44,7 @@ case "$1" in
 		killproc cupsd
 		rm -f /var/lock/subsys/cups >/dev/null 2>&1
 	else
-		msg_Not_Running CUPS
+		msg_not_running CUPS
 		exit 1
 	fi	
         ;;
@@ -61,7 +61,7 @@ case "$1" in
 		deltext
 		ok		
 	else
-		msg_Not_Running CUPS
+		msg_not_running CUPS
 		exit 1
 	fi
 	;;
@@ -80,7 +80,7 @@ case "$1" in
         ;;
   *)
         # show "Usage: %s {start|stop|status|restart|reload|force-reload}" $0
-	msg_Usage "$0 {start|stop|status|restart|reload|force-reload}"
+	msg_usage "$0 {start|stop|status|restart|reload|force-reload}"
         exit 1
 esac
 
