@@ -1,5 +1,3 @@
-# TODO:
-# - possible SECURITY: http://securitytracker.com/alerts/2004/Oct/1011579.html (CAN-2004-0923)
 #
 # Conditional build:
 %bcond_without php	# don't build php extension
@@ -10,17 +8,19 @@
 # - build/install java ext ?
 # - perl BRs
 %include	/usr/lib/rpm/macros.perl
+%define		_rc	rc2
 Summary:	Common Unix Printing System
 Summary(pl):	Popularny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.1.21
-Release:	1
+Version:	1.1.22
+Release:	0.%{_rc}.1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
-Source0:	http://ftp.easysw.com/pub/%{name}/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	54e9b0d9c0bdb45b956f88c14793ef65
+#Source0:	http://ftp.easysw.com/pub/%{name}/%{version}/%{name}-%{version}-source.tar.bz2
+Source0:	http://ftp.easysw.com/pub/%{name}/test/%{name}-%{version}%{_rc}-source.tar.bz2
+# Source0-md5:	8b9a7818b016914d32ba015204ff7311
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -227,7 +227,7 @@ Ten pakiet umo¿liwia drukowanie z poziomu CUPS-a na drukarkach
 pod³±czonych do portów równoleg³ych.
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q -n %{name}-%{version}%{_rc}
 %patch1 -p1
 # wtf?
 #%patch2 -p1
