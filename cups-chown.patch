@@ -1,11 +1,11 @@
 --- cups-1.1.19/systemv/Makefile~	2003-08-03 14:07:15.000000000 +0000
 +++ cups-1.1.19/systemv/Makefile	2003-08-03 14:07:53.000000000 +0000
 @@ -78,7 +78,7 @@
- 	$(INSTALL_BIN) lpoptions $(DESTDIR)$(BINDIR)
- 	$(INSTALL_BIN) lpstat $(DESTDIR)$(BINDIR)
- 	$(INSTALL_BIN) lppasswd $(DESTDIR)$(BINDIR)
--	-$(INSTALL_BIN) -m 4755 -o $(CUPS_USER) -g $(CUPS_GROUP) lppasswd $(DESTDIR)$(BINDIR)
-+	-$(INSTALL_BIN) -m 4755 lppasswd $(DESTDIR)$(BINDIR)
+ 	$(INSTALL_BIN) lpoptions $(BINDIR)
+ 	$(INSTALL_BIN) lpstat $(BINDIR)
+ 	$(INSTALL_BIN) lppasswd $(BINDIR)
+-	-$(INSTALL_BIN) -m 4755 -o $(CUPS_USER) -g $(CUPS_GROUP) lppasswd $(BINDIR)
++	-$(INSTALL_BIN) -m 4755 lppasswd $(BINDIR)
  
  
  #
