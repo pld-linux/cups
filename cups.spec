@@ -18,7 +18,7 @@ Release:	0.%{rcver}.1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
-Source0:	ftp://ftp.easysw.com/pub/%{name}/%{?rcver:test}%{!?rcver:%{version}}/%{name}-%{version}%{rcver}-source.tar.bz2
+Source0:	ftp://ftp.easysw.com/pub/%{name}/test/%{name}-%{version}%{rcver}-source.tar.bz2
 # Source0-md5:	3cf609727cbf8d8c097d16100be58a28
 Source1:	%{name}.init
 Source2:	%{name}.pamd
