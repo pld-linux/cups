@@ -1,3 +1,10 @@
+# Conditionals:
+# _without_php	don't build php extension
+# _without_perl	don't build perl extension
+# TODO:
+# - register php module
+# - build/install java ext ?
+# - perl BRs
 Summary:	Common Unix Printing System
 Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
@@ -28,6 +35,7 @@ BuildRequires:	libpng-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	openssl-devel >= 0.9.7
 BuildRequires:	pam-devel
+%{?!_without_php:BuildRequires:	php-devel}
 BuildRequires:	pkgconfig
 PreReq:		%{name}-libs = %{version}
 Requires(post,preun):	/sbin/chkconfig
@@ -142,6 +150,22 @@ Popularny System Druku dla Unixa, biblioteki statyczne.
 Bibliotecas estáticas para desenvolvimento de programas que usam as
 bibliotecas do CUPS.
 
+%package -n perl-cups
+Summary:	perl module for CUPS
+Group:		?
+Requires:	cups-lib = %{version}
+
+%description -n perl-cups
+perl module for Common Unix Printing System.
+
+%package -n php-cups
+Summary:	PHP module for CUPS
+Group:		?
+Requires:	cups-lib = %{version}
+
+%description -n php-cups
+PHP module for Common Unix Printing System.
+
 %prep
 %setup -q
 %patch0 -p1
@@ -160,6 +184,13 @@ bibliotecas do CUPS.
 %configure \
 	--with-docdir=%{_libdir}/%{name}/cgi-bin
 %{__make}
+%{?!_without_php:%{__make} -C scripting/php}
+%if 0%{?!_without_perl:1}
+cd scripting/perl
+%{__perl} Makefile.PL INSTALLDIRS=vendor
+%{__make} OPTIMIZE="%{rpmcflags}"
+cd ../..
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -167,6 +198,17 @@ install -d $RPM_BUILD_ROOT/etc/{{rc.d/init.d,pam.d,logrotate.d},security} \
 	$RPM_BUILD_ROOT/var/log/{,archiv/}cups
 
 %{__make} DESTDIR=$RPM_BUILD_ROOT install
+
+%if 0%{?!_without_php:1}
+%{__make} -C scripting/php install \
+	PHPDIR="$RPM_BUILD_ROOT`php-config --extension-dir`"
+%endif
+
+%if 0%{?!_without_perl:1}
+cd scripting/perl
+%{__make} install DESTDIR=$RPM_BUILD_ROOT
+cd ../..
+%endif
 
 install %{SOURCE1}	$RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install %{SOURCE2}	$RPM_BUILD_ROOT/etc/pam.d/%{name}
@@ -180,7 +222,8 @@ cp doc/images/*	$RPM_BUILD_ROOT/%{_libdir}/%{name}/cgi-bin/images/
 touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
 touch $RPM_BUILD_ROOT/etc/security/blacklist.cups
 
-#ln -s %{_bindir}/smbspool $RPM_BUILD_ROOT/%{_libdir}/%{name}/backend/smb
+# check-files cleanup
+rm -rf $RPM_BUILD_ROOT%{_mandir}/{,fr/}cat?
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -308,3 +351,15 @@ fi
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/*.a
+
+%files -n perl-cups
+%defattr(644,root,root,755)
+%{perl_vendorarch}/*.pm
+%dir %{perl_vendorarch}/auto/CUPS
+%{perl_vendorarch}/auto/CUPS/*.bs
+%{perl_vendorarch}/auto/CUPS/autosplit.ix
+%attr(755,root,root) %{perl_vendorarch}/auto/CUPS/*.so
+
+%files -n php-cups
+%defattr(644,root,root,755)
+%attr(755,root,root) %(php-config --extension-dir)/*
