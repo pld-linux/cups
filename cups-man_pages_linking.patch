@@ -1,0 +1,48 @@
+diff -urN aaa/cups-1.1.18/man/Makefile cups-1.1.18/man/Makefile
+--- aaa/cups-1.1.18/man/Makefile	Thu Jan  2 14:38:12 2003
++++ cups-1.1.18/man/Makefile	Thu Jan  2 14:40:51 2003
+@@ -73,7 +73,7 @@
+ 		$(INSTALL_MAN) $$file $(DESTDIR)$(MANDIR)/man1/`basename $$file man`1; \
+ 	done
+ 	$(RM) $(DESTDIR)$(MANDIR)/man1/cancel.1
+-	$(LN) lp.1 $(DESTDIR)$(MANDIR)/man1/cancel.1
++	echo ".so lp.1" > $(DESTDIR)$(MANDIR)/man1/cancel.1
+ 	$(INSTALL_DIR) $(DESTDIR)$(PMANDIR)/man3
+ 	for file in $(MAN3); do \
+ 		$(INSTALL_MAN) $$file $(DESTDIR)$(PMANDIR)/man3/`basename $$file man`3; \
+@@ -87,9 +87,9 @@
+ 		$(INSTALL_MAN) $$file $(DESTDIR)$(AMANDIR)/man$(MAN8EXT)/`basename $$file man`$(MAN8EXT); \
+ 	done
+ 	$(RM) $(DESTDIR)$(AMANDIR)/man$(MAN8EXT)/reject.$(MAN8EXT)
+-	$(LN) accept.$(MAN8EXT) $(DESTDIR)$(AMANDIR)/man$(MAN8EXT)/reject.$(MAN8EXT)
++	echo ".so accept.$(MAN8EXT)" > $(DESTDIR)$(AMANDIR)/man$(MAN8EXT)/reject.$(MAN8EXT)
+ 	$(RM) $(DESTDIR)$(AMANDIR)/man$(MAN8EXT)/disable.$(MAN8EXT)
+-	$(LN) enable.$(MAN8EXT) $(DESTDIR)$(AMANDIR)/man$(MAN8EXT)/disable.$(MAN8EXT)
++	echo ".so enable.$(MAN8EXT)" > $(DESTDIR)$(AMANDIR)/man$(MAN8EXT)/disable.$(MAN8EXT)
+ 	$(INSTALL_DIR) $(DESTDIR)$(MANDIR)/cat1
+ 	for file in $(CAT1); do \
+ 		$(INSTALL_MAN) $$file $(DESTDIR)$(MANDIR)/cat1; \
+diff -urN aaa/cups-1.1.18/man/fr/Makefile cups-1.1.18/man/fr/Makefile
+--- aaa/cups-1.1.18/man/fr/Makefile	Thu Jan  2 14:38:12 2003
++++ cups-1.1.18/man/fr/Makefile	Thu Jan  2 14:42:36 2003
+@@ -65,7 +65,7 @@
+ 		$(INSTALL_MAN) $$file $(DESTDIR)$(MANDIR)/$(LANGUAGE)/man1/`basename $$file man`1; \
+ 	done
+ 	$(RM) $(DESTDIR)$(MANDIR)/$(LANGUAGE)/man1/cancel.1
+-	$(LN) lp.1 $(DESTDIR)$(MANDIR)/$(LANGUAGE)/man1/cancel.1
++	echo ".so lp.1" > $(DESTDIR)$(MANDIR)/$(LANGUAGE)/man1/cancel.1
+ 	$(INSTALL_DIR) $(DESTDIR)$(PMANDIR)/fr/man3
+ 	for file in $(MAN3); do \
+ 		$(INSTALL_MAN) $$file $(DESTDIR)$(PMANDIR)/fr/man3/`basename $$file man`3; \
+@@ -79,9 +79,9 @@
+ 		$(INSTALL_MAN) $$file $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/`basename $$file man`$(MAN8EXT); \
+ 	done
+ 	$(RM) $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/reject.$(MAN8EXT)
+-	$(LN) accept.$(MAN8EXT) $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/reject.$(MAN8EXT)
++	echo ".so accept.$(MAN8EXT)" > $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/reject.$(MAN8EXT)
+ 	$(RM) $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/disable.$(MAN8EXT)
+-	$(LN) enable.$(MAN8EXT) $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/disable.$(MAN8EXT)
++	echo ".so enable.$(MAN8EXT)" > $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/disable.$(MAN8EXT)
+ 	$(INSTALL_DIR) $(DESTDIR)$(MANDIR)/$(LANGUAGE)/cat1
+ 	for file in $(CAT1); do \
+ 		$(INSTALL_MAN) $$file $(DESTDIR)$(MANDIR)/$(LANGUAGE)/cat1; \
