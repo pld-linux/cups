@@ -112,7 +112,7 @@ if [ "$1" = "0" ]; then
 fi
 
 %clean
-rm -f $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
