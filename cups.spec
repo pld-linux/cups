@@ -18,8 +18,8 @@ Release:	0.%{_rc}.1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
-#Source0:	http://ftp.easysw.com/pub/%{name}/%{version}/%{name}-%{version}-source.tar.bz2
-Source0:	http://ftp.easysw.com/pub/%{name}/test/%{name}-%{version}%{_rc}-source.tar.bz2
+#Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
+Source0:	http://ftp.easysw.com/pub/cups/test/%{name}-%{version}%{_rc}-source.tar.bz2
 # Source0-md5:	8b9a7818b016914d32ba015204ff7311
 Source1:	%{name}.init
 Source2:	%{name}.pamd
@@ -50,8 +50,8 @@ PreReq:		%{name}-libs = %{epoch}:%{version}-%{release}
 Requires(post,preun):	/sbin/chkconfig
 Requires:	pam >= 0.77.3
 Conflicts:	ghostscript < 7.05.4
-Obsoletes:	lpr
 Obsoletes:	LPRng
+Obsoletes:	lpr
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_ulibdir	%{_prefix}/lib
@@ -266,7 +266,7 @@ cd ../..
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/%{_sysconfdir}/{{rc.d/init.d,pam.d,logrotate.d},security} \
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/{{rc.d/init.d,pam.d,logrotate.d},security} \
 	$RPM_BUILD_ROOT/var/log/{,archiv/}cups
 
 %{__make} install \
@@ -292,11 +292,11 @@ cd scripting/perl
 cd ../..
 %endif
 
-install %{SOURCE1}	$RPM_BUILD_ROOT/%{_sysconfdir}/rc.d/init.d/%{name}
-install %{SOURCE2}	$RPM_BUILD_ROOT/%{_sysconfdir}/pam.d/%{name}
-install %{SOURCE3}	$RPM_BUILD_ROOT/%{_sysconfdir}/logrotate.d/%{name}
+install %{SOURCE1}	$RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/%{name}
+install %{SOURCE2}	$RPM_BUILD_ROOT%{_sysconfdir}/pam.d/%{name}
+install %{SOURCE3}	$RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/%{name}
 
-gzip -9nf $RPM_BUILD_ROOT/%{_datadir}/%{name}/model/*.ppd
+gzip -9nf $RPM_BUILD_ROOT%{_datadir}/%{name}/model/*.ppd
 
 # for internal http browser:
 cp doc/*.html	$RPM_BUILD_ROOT%{_ulibdir}/%{name}/cgi-bin
@@ -304,7 +304,7 @@ cp doc/*.css	$RPM_BUILD_ROOT%{_ulibdir}/%{name}/cgi-bin
 cp doc/images/*	$RPM_BUILD_ROOT%{_ulibdir}/%{name}/cgi-bin/images
 
 touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
-touch $RPM_BUILD_ROOT/%{_sysconfdir}/security/blacklist.cups
+touch $RPM_BUILD_ROOT%{_sysconfdir}/security/blacklist.cups
 
 # check-files cleanup
 rm -rf $RPM_BUILD_ROOT%{_mandir}/{,fr/}cat?
