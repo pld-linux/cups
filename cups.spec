@@ -1,3 +1,5 @@
+# TODO:
+# - possible SECURITY: http://securitytracker.com/alerts/2004/Oct/1011579.html (CAN-2004-0923)
 #
 # Conditional build:
 %bcond_without php	# don't build php extension
