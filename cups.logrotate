@@ -3,7 +3,7 @@
 	weekly
 	rotate 4
 	compress
-	create 660 root root
+	create 660 root logs
 	postrotate
 		/etc/rc.d/init.d/cups restart > /dev/null
 	endscript

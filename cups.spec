@@ -13,7 +13,7 @@ Summary(pl):	Popularny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.1.23
-Release:	1
+Release:	2
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
@@ -392,11 +392,11 @@ fi
 %lang(uk) %{_datadir}/locale/uk_UA/cups_uk_UA
 %lang(zh_CN) %{_datadir}/locale/zh_CN/cups_zh_CN
 /var/spool/cups
-%attr(750,root,root) %dir /var/log/archiv/cups
-%attr(750,root,root) %dir /var/log/cups
-%attr(640,root,root) %ghost /var/log/cups/access_log
-%attr(640,root,root) %ghost /var/log/cups/error_log
-%attr(640,root,root) %ghost /var/log/cups/page_log
+%attr(750,root,logs) %dir /var/log/archiv/cups
+%attr(750,root,logs) %dir /var/log/cups
+%attr(640,root,logs) %ghost /var/log/cups/access_log
+%attr(640,root,logs) %ghost /var/log/cups/error_log
+%attr(640,root,logs) %ghost /var/log/cups/page_log
 
 %files lib
 %defattr(644,root,root,755)
