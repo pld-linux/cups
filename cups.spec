@@ -3,7 +3,7 @@ Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.1.14
-Release:	15
+Release:	16
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/System
@@ -77,6 +77,7 @@ Summary(pl):	Aplikacje klienckie dla CUPS
 Group:		Applications/Printing
 Provides:	%{name}-clients = %{epoch}:%{version}-%{release}
 Provides:	lpr
+Conflicts:	LPRng
 
 %description clients
 Common Unix Printing System Clients.
