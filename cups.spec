@@ -11,11 +11,12 @@ Source0:	ftp://ftp.easysw.com/pub/%{name}/%{version}/%{name}-%{version}-1-source
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Patch0:		%{name}-DESTDIR.patch
-BuildRequires:	openssl-devel
-BuildRequires:	pam-devel
-BuildRequires:	zlib-devel
+Patch1:		%{name}-config.patch
 BuildRequires:	libpng-devel
 BuildRequires:	libtiff-devel
+BuildRequires:	openssl-devel >= 0.9.6b
+BuildRequires:	pam-devel
+BuildRequires:	zlib-devel
 Requires:	%{name}-libs = %{version}
 URL:		http://www.cups.org/	
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -35,12 +36,19 @@ support real-world printing under UNIX.
 
 %description -l pl
 CUPS dostarcza standardowy poziom drukowania dla systemÛw bazuj±cych
-na UNIXie. CUPS uøywa protoko≥u IPP - Internet Printint Protocol
-jako podstawy do zarz±dzania zadaniami i kolejkami druku.
+na UNIXie. CUPS uøywa protoko≥u IPP - Internet Printint Protocol jako
+podstawy do zarz±dzania zadaniami i kolejkami druku.
 
 %package libs
 Summary:	Common Unix Printing System Libraries
 Group:		Development/Libraries
+Group(de):	Entwicklung/Libraries
+Group(es):	Desarrollo/Bibliotecas
+Group(fr):	Development/Librairies
+Group(pl):	Programowanie/Biblioteki
+Group(pt_BR):	Desenvolvimento/Bibliotecas
+Group(ru):	Ú¡⁄“¡¬œ‘À¡/‚…¬Ã…œ‘≈À…
+Group(uk):	Úœ⁄“œ¬À¡/‚¶¬Ã¶œ‘≈À…
 
 %description libs
 Common Unix Printing System Libraries
@@ -50,8 +58,12 @@ Summary:	Common Unix Printing System development files
 Summary(pl):	Popularny System Druku dla Unixa, pliki nag≥Ûwkowe
 Group:		Development/Libraries
 Group(de):	Entwicklung/Libraries
+Group(es):	Desarrollo/Bibliotecas
 Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
+Group(pt_BR):	Desenvolvimento/Bibliotecas
+Group(ru):	Ú¡⁄“¡¬œ‘À¡/‚…¬Ã…œ‘≈À…
+Group(uk):	Úœ⁄“œ¬À¡/‚¶¬Ã¶œ‘≈À…
 Requires:	%{name}-libs = %{version}
 
 %description devel
@@ -59,25 +71,31 @@ Common Unix Printing System development files
 
 %description -l pl devel
 Popularny System Druku dla Unixa, pliki nag≥Ûwkowe
- 
+
 %package static
 Summary:	Common Unix Printing System static libraries
 Summary(pl):	Popularny System Druku dla Unixa, biblioteki statyczne
 Group:		Development/Libraries
 Group(de):	Entwicklung/Libraries
+Group(es):	Desarrollo/Bibliotecas
 Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
+Group(pt_BR):	Desenvolvimento/Bibliotecas
+Group(ru):	Ú¡⁄“¡¬œ‘À¡/‚…¬Ã…œ‘≈À…
+Group(uk):	Úœ⁄“œ¬À¡/‚¶¬Ã¶œ‘≈À…
 Requires:	%{name}-devel = %{version}
 
 %description static
-Common Unix Printing System static libraries
+Common Unix Printing System static libraries.
 
 %description -l pl static
-Popularny System Druku dla Unixa, biblioteki statyczne
- 
+Popularny System Druku dla Unixa, biblioteki statyczne.
+
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
+
 %build
 aclocal
 autoconf
@@ -86,12 +104,12 @@ autoconf
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d}
 
 %{__make} DESTDIR=$RPM_BUILD_ROOT install 
 
-install -d		$RPM_BUILD_ROOT/%{_sysconfdir}/{rc.d/init.d,pam.d}
-install %{SOURCE1}	$RPM_BUILD_ROOT/%{_sysconfdir}/rc.d/init.d/cups
-install %{SOURCE2}	$RPM_BUILD_ROOT/%{_sysconfdir}/pam.d/cups
+install %{SOURCE1}	$RPM_BUILD_ROOT/etc/rc.d/init.d/cups
+install %{SOURCE2}	$RPM_BUILD_ROOT/etc/pam.d/cups
 
 gzip -9nf *.txt
 
@@ -111,12 +129,24 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del cups
 fi
 
+%post   libs -p /sbin/ldconfig
+%postun libs -p /sbin/ldconfig
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
 %doc *.gz doc/*.html doc/*.css doc/*.pdf doc/images
+%attr(640,root,root) %config %verify(not size mtime md5) /etc/pam.d/*
+%attr(754,root,root) /etc/rc.d/init.d/cups
+%dir %{_sysconfdir}/cups
+%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/cups/*.conf
+%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/cups/*.convs
+%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/cups/*.types
+%dir %{_sysconfdir}/cups/certs
+%dir %{_sysconfdir}/cups/interfaces
+%dir %{_sysconfdir}/cups/ppd
 %attr(4755,lp,root) %{_bindir}/lppasswd
 %attr(755,root,root) %{_bindir}/cancel
 %attr(755,root,root) %{_bindir}/disable
@@ -127,17 +157,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/lpr
 %attr(755,root,root) %{_bindir}/lprm
 %attr(755,root,root) %{_bindir}/lpstat
-%attr(755,root,root) %{_libdir}/cups
+%dir %{_libdir}/cups
+%dir %{_libdir}/cups/*
+%attr(755,root,root)  %{_libdir}/cups/*/*
 %attr(755,root,root) %{_sbindir}/*
-%attr(640,root,root) %config %verify(not size mtime md5) %{_sysconfdir}/pam.d/*
-%attr(754,root,root) %{_sysconfdir}/rc.d/init.d/cups
-%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/cups/*.conf
-%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/cups/*.convs
-%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/cups/*.types
-%{_sysconfdir}/cups/certs
-%{_sysconfdir}/cups/interfaces
-%{_sysconfdir}/cups/ppd
-%{_docdir}/cups
 %{_datadir}/cups
 %{_mandir}/man[158]/*
 %lang(C)  %{_datadir}/locale/C/cups_C
@@ -151,7 +174,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files libs
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/lib*.so*
+%attr(755,root,root) %{_libdir}/lib*.so.*
 
 %files devel
 %defattr(644,root,root,755)
