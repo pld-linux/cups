@@ -6,7 +6,7 @@ diff -urN cups-1.1.10.orig/conf/cupsd.conf cups-1.1.10/conf/cupsd.conf
  #
  
 -#DocumentRoot /usr/share/doc/cups
-+#DocumentRoot /usr/share/cups/http
++DocumentRoot /usr/lib/cups/cgi-bin
  
  #
  # ErrorLog: the error log file; if this does not start with a leading /
