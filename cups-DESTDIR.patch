@@ -1,0 +1,391 @@
+--- cups-1.1.9/doc/Makefile.orig	Wed Jun 27 23:53:11 2001
++++ cups-1.1.9/doc/Makefile	Wed Aug 15 13:29:19 2001
+@@ -118,14 +118,14 @@
+ #
+ 
+ install:
+-	$(INSTALL_DIR) $(DOCDIR)
+-	$(INSTALL_MAN) $(WEBPAGES) $(DOCDIR)
+-	$(INSTALL_MAN) overview.html overview.pdf $(DOCDIR)
+-	$(INSTALL_MAN) $(DOCUMENTS:.shtml=.html) $(DOCDIR)
+-	$(INSTALL_MAN) $(DOCUMENTS:.shtml=.pdf) $(DOCDIR)
+-	$(INSTALL_DIR) $(DOCDIR)/images
+-	$(INSTALL_MAN) $(WEBIMAGES) $(DOCDIR)/images
+-	$(INSTALL_MAN) $(DOCIMAGES) $(DOCDIR)/images
++	$(INSTALL_DIR) $(DESTDIR)$(DOCDIR)
++	$(INSTALL_MAN) $(WEBPAGES) $(DESTDIR)$(DOCDIR)
++	$(INSTALL_MAN) overview.html overview.pdf $(DESTDIR)$(DOCDIR)
++	$(INSTALL_MAN) $(DOCUMENTS:.shtml=.html) $(DESTDIR)$(DOCDIR)
++	$(INSTALL_MAN) $(DOCUMENTS:.shtml=.pdf) $(DESTDIR)$(DOCDIR)
++	$(INSTALL_DIR) $(DESTDIR)$(DOCDIR)/images
++	$(INSTALL_MAN) $(WEBIMAGES) $(DESTDIR)$(DOCDIR)/images
++	$(INSTALL_MAN) $(DOCIMAGES) $(DESTDIR)$(DOCDIR)/images
+ 
+ 
+ #
+--- cups-1.1.9/man/Makefile.orig	Mon Jul  2 22:18:31 2001
++++ cups-1.1.9/man/Makefile	Wed Aug 15 13:33:36 2001
+@@ -60,42 +60,42 @@
+ #
+ 
+ install:
+-	$(INSTALL_DIR) $(MANDIR)/man1
++	$(INSTALL_DIR) $(DESTDIR)$(MANDIR)/man1
+ 	for file in $(MAN1); do \
+-		$(INSTALL_MAN) $$file $(MANDIR)/man1/`basename $$file man`1; \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(MANDIR)/man1/`basename $$file man`1; \
+ 	done
+ 	$(RM) cancel.1
+ 	$(LN) lp.1 cancel.1
+-	$(INSTALL_MAN) cancel.1 $(MANDIR)/man1
+-	$(INSTALL_DIR) $(MANDIR)/man5
++	$(INSTALL_MAN) cancel.1 $(DESTDIR)$(MANDIR)/man1
++	$(INSTALL_DIR) $(DESTDIR)$(MANDIR)/man5
+ 	for file in $(MAN5); do \
+-		$(INSTALL_MAN) $$file $(MANDIR)/man5/`basename $$file man`5; \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(MANDIR)/man5/`basename $$file man`5; \
+ 	done
+-	$(INSTALL_DIR) $(AMANDIR)/man$(MAN8EXT)
++	$(INSTALL_DIR) $(DESTDIR)$(AMANDIR)/man$(MAN8EXT)
+ 	for file in $(MAN8); do \
+-		$(INSTALL_MAN) $$file $(AMANDIR)/man$(MAN8EXT)/`basename $$file man`$(MAN8EXT); \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(AMANDIR)/man$(MAN8EXT)/`basename $$file man`$(MAN8EXT); \
+ 	done
+ 	$(RM) reject.$(MAN8EXT)
+ 	$(LN) accept.$(MAN8EXT) reject.$(MAN8EXT)
+-	$(INSTALL_MAN) reject.$(MAN8EXT) $(AMANDIR)/man$(MAN8EXT)
++	$(INSTALL_MAN) reject.$(MAN8EXT) $(DESTDIR)$(AMANDIR)/man$(MAN8EXT)
+ 	$(RM) $(AMANDIR)/man$(MAN8EXT)/disable.$(MAN8EXT)
+ 	$(LN) enable.$(MAN8EXT) disable.$(MAN8EXT)
+-	$(INSTALL_MAN) disable.$(MAN8EXT) $(AMANDIR)/man$(MAN8EXT)
+-	$(INSTALL_DIR) $(MANDIR)/cat1
+-	$(INSTALL_MAN) $(CAT1) $(MANDIR)/cat1
++	$(INSTALL_MAN) disable.$(MAN8EXT) $(DESTDIR)$(AMANDIR)/man$(MAN8EXT)
++	$(INSTALL_DIR) $(DESTDIR)$(MANDIR)/cat1
++	$(INSTALL_MAN) $(CAT1) $(DESTDIR)$(MANDIR)/cat1
+ 	$(RM) cancel.$(CAT1EXT)
+ 	$(LN) lp.$(CAT1EXT) cancel.$(CAT1EXT)
+-	$(INSTALL_MAN) cancel.$(CAT1EXT) $(MANDIR)/cat1
+-	$(INSTALL_DIR) $(MANDIR)/cat5
+-	$(INSTALL_MAN) $(CAT5) $(MANDIR)/cat5
+-	$(INSTALL_DIR) $(AMANDIR)/cat$(MAN8EXT)
+-	$(INSTALL_MAN) $(CAT8) $(AMANDIR)/cat$(MAN8EXT)
++	$(INSTALL_MAN) cancel.$(CAT1EXT) $(DESTDIR)$(MANDIR)/cat1
++	$(INSTALL_DIR) $(DESTDIR)$(MANDIR)/cat5
++	$(INSTALL_MAN) $(CAT5) $(DESTDIR)$(MANDIR)/cat5
++	$(INSTALL_DIR) $(DESTDIR)$(AMANDIR)/cat$(MAN8EXT)
++	$(INSTALL_MAN) $(CAT8) $(DESTDIR)$(AMANDIR)/cat$(MAN8EXT)
+ 	$(RM) reject.$(CAT8EXT)
+ 	$(LN) accept.$(CAT8EXT) reject.$(CAT8EXT)
+-	$(INSTALL_MAN) reject.$(CAT8EXT) $(AMANDIR)/cat$(MAN8EXT)
++	$(INSTALL_MAN) reject.$(CAT8EXT) $(DESTDIR)$(AMANDIR)/cat$(MAN8EXT)
+ 	$(RM) disable.$(CAT8EXT)
+ 	$(LN) enable.$(CAT8EXT) disable.$(CAT8EXT)
+-	$(INSTALL_MAN) disable.$(CAT8EXT) $(AMANDIR)/cat$(MAN8EXT)
++	$(INSTALL_MAN) disable.$(CAT8EXT) $(DESTDIR)$(AMANDIR)/cat$(MAN8EXT)
+ 
+ 
+ #
+--- cups-1.1.9/ppd/Makefile.orig	Wed Jun 27 23:53:17 2001
++++ cups-1.1.9/ppd/Makefile	Wed Aug 15 13:34:08 2001
+@@ -52,8 +52,8 @@
+ #
+ 
+ install:
+-	$(INSTALL_DIR) $(DATADIR)/model
+-	$(INSTALL_DATA) $(FILES) $(DATADIR)/model
++	$(INSTALL_DIR) $(DESTDIR)$(DATADIR)/model
++	$(INSTALL_DATA) $(FILES) $(DESTDIR)$(DATADIR)/model
+ 
+ 
+ #
+--- cups-1.1.9/data/Makefile.orig	Wed Jun 27 23:53:10 2001
++++ cups-1.1.9/data/Makefile	Wed Aug 15 13:27:42 2001
+@@ -81,21 +81,12 @@
+ #
+ 
+ install:
+-	$(INSTALL_DIR) $(DATADIR)/banners
+-	$(INSTALL_DATA) $(BANNERS) $(DATADIR)/banners
+-	$(INSTALL_DIR) $(DATADIR)/charsets
+-	$(INSTALL_DATA) $(CHARSETS) $(DATADIR)/charsets
+-	$(INSTALL_DIR) $(DATADIR)/data
+-	$(INSTALL_DATA) $(DATAFILES) $(DATADIR)/data
+-	-if test x$(PAMDIR) != x; then \
+-		$(INSTALL_DIR) $(PAMDIR); \
+-		if test -f /lib/security/pam_unix.so; then \
+-			$(INSTALL_DATA) cups.suse $(PAMDIR)/cups; \
+-		else \
+-			$(INSTALL_DATA) cups.pam $(PAMDIR)/cups; \
+-		fi \
+-	fi
+-
++	$(INSTALL_DIR) $(DESTDIR)$(DATADIR)/banners
++	$(INSTALL_DATA) $(BANNERS) $(DESTDIR)$(DATADIR)/banners
++	$(INSTALL_DIR) $(DESTDIR)$(DATADIR)/charsets
++	$(INSTALL_DATA) $(CHARSETS) $(DESTDIR)$(DATADIR)/charsets
++	$(INSTALL_DIR) $(DESTDIR)$(DATADIR)/data
++	$(INSTALL_DATA) $(DATAFILES) $(DESTDIR)$(DATADIR)/data
+ 
+ #
+ # End of "$Id$".
+--- cups-1.1.9/conf/Makefile.orig	Wed Jun 27 23:53:08 2001
++++ cups-1.1.9/conf/Makefile	Wed Aug 15 13:26:10 2001
+@@ -51,19 +51,12 @@
+ #
+ 
+ install:
+-	$(INSTALL_DIR) $(SERVERROOT)
++	$(INSTALL_DIR) $(DESTDIR)$(SERVERROOT)
+ 	for file in $(KEEP); do \
+-		if test -r $(SERVERROOT)/$$file ; then \
+-			$(INSTALL_DATA) $$file $(SERVERROOT)/$$file.N ; \
+-		else \
+-			$(INSTALL_DATA) $$file $(SERVERROOT) ; \
+-		fi ; \
++		$(INSTALL_DATA) $$file $(DESTDIR)$(SERVERROOT) ; \
+ 	done
+ 	for file in $(REPLACE); do \
+-		if test -r $(SERVERROOT)/$$file ; then \
+-			$(MV) $(SERVERROOT)/$$file $(SERVERROOT)/$$file.O ; \
+-		fi ; \
+-		$(INSTALL_DATA) $$file $(SERVERROOT) ; \
++		$(INSTALL_DATA) $$file $(DESTDIR)$(SERVERROOT) ; \
+ 	done
+ 
+ 
+--- cups-1.1.9/cups/Makefile.orig	Fri Jun 29 14:15:25 2001
++++ cups-1.1.9/cups/Makefile	Wed Aug 15 14:32:11 2001
+@@ -68,13 +68,12 @@
+ #
+ 
+ install:	all
+-	$(INSTALL_DIR) $(INCLUDEDIR)/cups
+-	$(INSTALL_DATA) $(HEADERS) $(INCLUDEDIR)/cups
+-	$(INSTALL_DIR) $(LIBDIR)
+-	$(INSTALL_LIB) $(LIBCUPS) $(LIBDIR)
+-	if test $(LIBCUPS) = "libcups.so.2" -o $(LIBCUPS) = "libcups.sl.2"; then \
+-		$(INSTALL_LIB) libcups.a `basename $(LIBCUPS) .2` $(LIBDIR); \
+-	fi
++	$(INSTALL_DIR) $(DESTDIR)$(INCLUDEDIR)/cups
++	$(INSTALL_DATA) $(HEADERS) $(DESTDIR)$(INCLUDEDIR)/cups
++	$(INSTALL_DIR) $(DESTDIR)$(LIBDIR)
++	$(INSTALL_LIB) $(LIBCUPS) $(DESTDIR)$(LIBDIR)
++	$(LN) $(LIBCUPS) $(DESTDIR)$(LIBDIR)`basename $(LIBCUPS) .2`
++	$(INSTALL_LIB) libcups.a $(DESTDIR)$(LIBDIR)
+ 
+ 
+ #
+--- cups-1.1.9/Makefile.orig	Thu Jun 28 18:20:08 2001
++++ cups-1.1.9/Makefile	Wed Aug 15 13:37:26 2001
+@@ -74,24 +74,6 @@
+ 	(cd ppd; $(MAKE) $(MFLAGS) install)
+ 	echo Installing in templates...
+ 	(cd templates; $(MAKE) $(MFLAGS) install)
+-	echo Installing startup script...
+-	if test "x$INITDIR" != "x"; then \
+-		$(INSTALL_DIR) $(prefix)/$(INITDIR)/init.d; \
+-		$(INSTALL_SCRIPT) cups.sh $(prefix)/$(INITDIR)/init.d/cups; \
+-		$(INSTALL_DIR) $(prefix)/$(INITDIR)/rc0.d; \
+-		$(INSTALL_SCRIPT) cups.sh  $(prefix)/$(INITDIR)/rc0.d/K00cups; \
+-		$(INSTALL_DIR) $(prefix)/$(INITDIR)/rc2.d; \
+-		$(INSTALL_SCRIPT) cups.sh $(prefix)/$(INITDIR)/rc2.d/S99cups; \
+-		$(INSTALL_DIR) $(prefix)/$(INITDIR)/rc3.d; \
+-		$(INSTALL_SCRIPT) cups.sh $(prefix)/$(INITDIR)/rc3.d/S99cups; \
+-		$(INSTALL_DIR) $(prefix)/$(INITDIR)/rc5.d; \
+-		$(INSTALL_SCRIPT) cups.sh $(prefix)/$(INITDIR)/rc5.d/S99cups; \
+-	fi
+-	if test "x$(INITDIR)" = "x" -a "x$(INITDDIR)" != "x"; then \
+-		$(INSTALL_DIR) $(prefix)/$(INITDDIR); \
+-		$(INSTALL_SCRIPT) cups.sh $(prefix)/$(INITDDIR)/cups; \
+-	fi
+-
+ 
+ #
+ # Run the test suite...
+--- cups-1.1.9/fonts/Makefile.orig	Wed Jun 27 23:53:14 2001
++++ cups-1.1.9/fonts/Makefile	Wed Aug 15 13:30:00 2001
+@@ -64,8 +64,8 @@
+ #
+ 
+ install:
+-	$(INSTALL_DIR) $(DATADIR)/fonts
+-	$(INSTALL_DATA) $(FONTS) $(DATADIR)/fonts
++	$(INSTALL_DIR) $(DESTDIR)$(DATADIR)/fonts
++	$(INSTALL_DATA) $(FONTS) $(DESTDIR)$(DATADIR)/fonts
+ 
+ 
+ #
+--- cups-1.1.9/pstoraster/Makefile.orig	Wed Jun 27 23:53:17 2001
++++ cups-1.1.9/pstoraster/Makefile	Wed Aug 15 13:34:28 2001
+@@ -376,10 +376,10 @@
+ #
+ 
+ install:	$(TARGETS)
+-	$(INSTALL_DIR) $(SERVERBIN)/filter
+-	$(INSTALL_BIN) pstoraster $(SERVERBIN)/filter
+-	$(INSTALL_DIR) $(DATADIR)/pstoraster
+-	$(INSTALL_DATA) $(DFILES) $(DATADIR)/pstoraster
++	$(INSTALL_DIR) $(DESTDIR)$(SERVERBIN)/filter
++	$(INSTALL_BIN) pstoraster $(DESTDIR)$(SERVERBIN)/filter
++	$(INSTALL_DIR) $(DESTDIR)$(DATADIR)/pstoraster
++	$(INSTALL_DATA) $(DFILES) $(DESTDIR)$(DATADIR)/pstoraster
+ 
+ 
+ #
+--- cups-1.1.9/scheduler/Makefile.orig	Thu Jun 28 03:05:15 2001
++++ cups-1.1.9/scheduler/Makefile	Wed Aug 15 13:35:39 2001
+@@ -52,16 +52,16 @@
+ #
+ 
+ install:
+-	$(INSTALL_DIR) $(SBINDIR)
+-	$(INSTALL_BIN) cupsd $(SBINDIR)
+-	$(INSTALL_DIR) $(SERVERBIN)/daemon
+-	$(INSTALL_BIN) cups-lpd cups-polld $(SERVERBIN)/daemon
+-	$(INSTALL_DIR) -m 711 -o $(CUPS_USER) -g $(CUPS_GROUP) $(SERVERROOT)/certs
+-	$(INSTALL_DIR) $(SERVERROOT)/interfaces
+-	$(INSTALL_DIR) $(SERVERROOT)/ppd
+-	$(INSTALL_DIR) $(LOGDIR)
+-	$(INSTALL_DIR) -m 700 -o $(CUPS_USER) -g $(CUPS_GROUP) $(REQUESTS)
+-	$(INSTALL_DIR) -m 1700 -o $(CUPS_USER) -g $(CUPS_GROUP) $(REQUESTS)/tmp
++	$(INSTALL_DIR) $(DESTDIR)$(SBINDIR)
++	$(INSTALL_BIN) cupsd $(DESTDIR)$(SBINDIR)
++	$(INSTALL_DIR) $(DESTDIR)$(SERVERBIN)/daemon
++	$(INSTALL_BIN) cups-lpd cups-polld $(DESTDIR)$(SERVERBIN)/daemon
++	$(INSTALL_DIR) $(DESTDIR)$(SERVERROOT)/certs
++	$(INSTALL_DIR) $(DESTDIR)$(SERVERROOT)/interfaces
++	$(INSTALL_DIR) $(DESTDIR)$(SERVERROOT)/ppd
++	$(INSTALL_DIR) $(DESTDIR)$(LOGDIR)
++	$(INSTALL_DIR) $(DESTDIR)$(REQUESTS)
++	$(INSTALL_DIR) $(DESTDIR)$(REQUESTS)/tmp
+ 
+ 
+ #
+--- cups-1.1.9/berkeley/Makefile.orig	Wed Jun 27 23:53:07 2001
++++ cups-1.1.9/berkeley/Makefile	Wed Aug 15 13:22:29 2001
+@@ -48,10 +48,10 @@
+ #
+ 
+ install:
+-	$(INSTALL_DIR) $(BINDIR)
+-	$(INSTALL_BIN) lpq lpr lprm $(BINDIR)
+-	$(INSTALL_DIR) $(SBINDIR)
+-	$(INSTALL_BIN) lpc $(SBINDIR)
++	$(INSTALL_DIR) $(DESTDIR)$(BINDIR)
++	$(INSTALL_BIN) lpq lpr lprm $(DESTDIR)$(BINDIR)
++	$(INSTALL_DIR) $(DESTDIR)$(SBINDIR)
++	$(INSTALL_BIN) lpc $(DESTDIR)$(SBINDIR)
+ 
+ 
+ #
+--- cups-1.1.9/filter/Makefile.orig	Fri Jun 29 14:15:25 2001
++++ cups-1.1.9/filter/Makefile	Wed Aug 15 13:29:45 2001
+@@ -59,15 +59,15 @@
+ #
+ 
+ install:
+-	$(INSTALL_DIR) $(LIBDIR)
+-	$(INSTALL_LIB) $(LIBCUPSIMAGE) $(LIBDIR)
++	$(INSTALL_DIR) $(DESTDIR)$(LIBDIR)
++	$(INSTALL_LIB) $(LIBCUPSIMAGE) $(DESTDIR)$(LIBDIR)
+ 	if test $(LIBCUPSIMAGE) != "libcupsimage.a" -a $(LIBCUPSIMAGE) != "libcupsimage.la"; then \
+-		$(INSTALL_LIB) `basename $(LIBCUPSIMAGE) .2` $(LIBDIR); \
++		$(LN) $(LIBCUPSIMAGE) $(DESTDIR)$(LIBDIR)`basename $(LIBCUPSIMAGE) .2`; \
+ 	fi
+-	$(INSTALL_DIR) $(SERVERBIN)/filter
+-	$(INSTALL_BIN) $(TARGETS) $(SERVERBIN)/filter
+-	$(INSTALL_DIR) $(INCLUDEDIR)/cups
+-	$(INSTALL_DATA) raster.h $(INCLUDEDIR)/cups
++	$(INSTALL_DIR) $(DESTDIR)$(SERVERBIN)/filter
++	$(INSTALL_BIN) $(TARGETS) $(DESTDIR)$(SERVERBIN)/filter
++	$(INSTALL_DIR) $(DESTDIR)$(INCLUDEDIR)/cups
++	$(INSTALL_DATA) raster.h $(DESTDIR)$(INCLUDEDIR)/cups
+ 
+ 
+ #
+--- cups-1.1.9/systemv/Makefile.orig	Thu Jul  5 17:58:47 2001
++++ cups-1.1.9/systemv/Makefile	Wed Aug 15 13:36:08 2001
+@@ -50,10 +50,10 @@
+ #
+ 
+ install:
+-	$(INSTALL_DIR) $(BINDIR)
+-	$(INSTALL_BIN) accept reject lpadmin lpinfo lpmove $(SBINDIR)
+-	$(INSTALL_BIN) cancel disable enable lp lpoptions lpstat $(BINDIR)
+-	$(INSTALL_BIN) -m 4755 -o $(CUPS_USER) -g $(CUPS_GROUP) lppasswd $(BINDIR)
++	$(INSTALL_DIR) $(DESTDIR)$(BINDIR)
++	$(INSTALL_BIN) accept reject lpadmin lpinfo lpmove $(DESTDIR)$(SBINDIR)
++	$(INSTALL_BIN) cancel disable enable lp lpoptions lpstat $(DESTDIR)$(BINDIR)
++	$(INSTALL_BIN) lppasswd $(DESTDIR)$(BINDIR)
+ 
+ 
+ #
+--- cups-1.1.9/locale/Makefile.orig	Wed Jun 27 23:53:15 2001
++++ cups-1.1.9/locale/Makefile	Wed Aug 15 13:30:22 2001
+@@ -50,10 +50,10 @@
+ #
+ 
+ install:
+-	$(INSTALL_DIR) $(LOCALEDIR)
++	$(INSTALL_DIR) $(DESTDIR)$(LOCALEDIR)
+ 	for dir in $(LOCALES) ; do \
+-		$(INSTALL_DIR) $(LOCALEDIR)/$$dir ; \
+-		$(INSTALL_DATA) $$dir/cups_$$dir $(LOCALEDIR)/$$dir ; \
++		$(INSTALL_DIR) $(DESTDIR)$(LOCALEDIR)/$$dir ; \
++		$(INSTALL_DATA) $$dir/cups_$$dir $(DESTDIR)$(LOCALEDIR)/$$dir ; \
+ 	done
+ 
+ 
+--- cups-1.1.9/backend/Makefile.orig	Wed Jun 27 23:53:07 2001
++++ cups-1.1.9/backend/Makefile	Wed Aug 15 13:43:18 2001
+@@ -49,8 +49,8 @@
+ #
+ 
+ install:
+-	$(INSTALL_DIR) $(SERVERBIN)/backend
+-	$(INSTALL_BIN) $(BACKENDS) http $(SERVERBIN)/backend
++	$(INSTALL_DIR) $(DESTDIR)$(SERVERBIN)/backend
++	$(INSTALL_BIN) $(BACKENDS) http $(DESTDIR)$(SERVERBIN)/backend
+ 
+ 
+ #
+--- cups-1.1.9/pdftops/Makefile.orig	Wed Jun 27 23:53:16 2001
++++ cups-1.1.9/pdftops/Makefile	Wed Aug 15 13:33:55 2001
+@@ -43,8 +43,8 @@
+ #
+ 
+ install:
+-	$(INSTALL_DIR) $(SERVERBIN)/filter
+-	$(INSTALL_BIN) pdftops $(SERVERBIN)/filter
++	$(INSTALL_DIR) $(DESTDIR)$(SERVERBIN)/filter
++	$(INSTALL_BIN) pdftops $(DESTDIR)$(SERVERBIN)/filter
+ 
+ 
+ #
+--- cups-1.1.9/cgi-bin/Makefile.orig	Wed Jun 27 23:53:07 2001
++++ cups-1.1.9/cgi-bin/Makefile	Wed Aug 15 13:24:10 2001
+@@ -50,8 +50,8 @@
+ #
+ 
+ install:
+-	$(INSTALL_DIR) $(SERVERBIN)/cgi-bin
+-	$(INSTALL_BIN) $(CGIS) $(SERVERBIN)/cgi-bin
++	$(INSTALL_DIR) $(DESTDIR)$(SERVERBIN)/cgi-bin
++	$(INSTALL_BIN) $(CGIS) $(DESTDIR)$(SERVERBIN)/cgi-bin
+ 
+ 
+ #
+--- cups-1.1.9/templates/Makefile.orig	Wed Jun 27 23:53:19 2001
++++ cups-1.1.9/templates/Makefile	Wed Aug 15 13:36:29 2001
+@@ -91,8 +91,8 @@
+ #
+ 
+ install:
+-	$(INSTALL_DIR) $(DATADIR)/templates
+-	$(INSTALL_DATA) $(FILES) $(DATADIR)/templates
++	$(INSTALL_DIR) $(DESTDIR)$(DATADIR)/templates
++	$(INSTALL_DATA) $(FILES) $(DESTDIR)$(DATADIR)/templates
+ 
+ 
+ #
