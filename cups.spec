@@ -12,18 +12,16 @@ Summary:	Common Unix Printing System
 Summary(pl):	Popularny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
-%define	rcver	rc1
 Version:	1.1.21
-Release:	0.%{rcver}.2
+Release:	1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
-Source0:	ftp://ftp.easysw.com/pub/%{name}/test/%{name}-%{version}%{rcver}-source.tar.bz2
-# Source0-md5:	3cf609727cbf8d8c097d16100be58a28
+Source0:	http://ftp.easysw.com/pub/%{name}/%{version}/%{name}-%{version}-source.tar.bz2
+# Source0-md5:	54e9b0d9c0bdb45b956f88c14793ef65
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
-Patch0:		%{name}-DESTDIR.patch
 Patch1:		%{name}-config.patch
 Patch2:		%{name}-tmpdir.patch
 Patch3:		%{name}-lp-lpr.patch
@@ -31,7 +29,6 @@ Patch4:		%{name}-options.patch
 Patch5:		%{name}-ENCRYPTIONtxt.patch
 Patch6:		%{name}-man_pages_linking.patch
 Patch7:		%{name}-nolibs.patch
-Patch8:		%{name}-chown.patch
 Patch9:		%{name}-nostrip.patch
 Patch10:	%{name}-rpath.patch
 Patch11:	%{name}-gcc34.patch
@@ -228,8 +225,7 @@ Ten pakiet umo¿liwia drukowanie z poziomu CUPS-a na drukarkach
 pod³±czonych do portów równoleg³ych.
 
 %prep
-%setup -q -n %{name}-%{version}%{rcver}
-%patch0 -p1
+%setup -q -n %{name}-%{version}
 %patch1 -p1
 # wtf?
 #%patch2 -p1
@@ -238,7 +234,6 @@ pod³±czonych do portów równoleg³ych.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%patch8 -p1
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
@@ -273,7 +268,9 @@ install -d $RPM_BUILD_ROOT/%{_sysconfdir}/{{rc.d/init.d,pam.d,logrotate.d},secur
 	$RPM_BUILD_ROOT/var/log/{,archiv/}cups
 
 %{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT
+	BUILDROOT=$RPM_BUILD_ROOT \
+	CUPS_USER=$(id -u) \
+	CUPS_GROUP=$(id -g)
 
 if [ "%{_lib}" != "lib" ] ; then
 	install -d $RPM_BUILD_ROOT%{_libdir}
