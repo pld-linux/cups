@@ -3,7 +3,7 @@ Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.1.14
-Release:	18
+Release:	19
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/System
@@ -183,7 +183,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 /sbin/chkconfig --add cups
-if [ -f /var/lock/subsys/cups ]; then
+if [ -f /var/lock/subsys/cupsd ]; then
         /etc/rc.d/init.d/cups restart 1>&2
 else
         echo "Run \"/etc/rc.d/init.d/cups start\" to start cups daemon."
@@ -191,7 +191,7 @@ fi
 
 %preun
 if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/cups ]; then
+	if [ -f /var/lock/subsys/cupsd ]; then
 		/etc/rc.d/init.d/cups stop 1>&2
 	fi
 	/sbin/chkconfig --del cups
