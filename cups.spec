@@ -1,12 +1,9 @@
-# TODO:
-# - SECURITY: http://securitytracker.com/alerts/2004/Sep/1011283.html
-#
 Summary:	Common Unix Printing System
 Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.1.14
-Release:	23
+Release:	24
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/System
@@ -26,6 +23,9 @@ Patch7:		%{name}-tmprace.patch
 Patch8:		%{name}-idefense-v2.patch
 Patch9:		%{name}-pdftops.patch
 Patch10:	%{name}-dos-backport.patch
+Patch11:	%{name}-debian-strncat.patch
+Patch12:	%{name}-udp-dos.patch
+Patch13:	%{name}-no-authinfo.patch
 URL:		http://www.cups.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -42,7 +42,7 @@ Obsoletes:	lpr
 Obsoletes:	LPRng
 
 %description
-CUPS provides a portable printing layer for UNIX®-based operating
+CUPS provides a portable printing layer for UNIX-based operating
 systems. It has been developed by Easy Software Products to promote a
 standard printing solution for all UNIX vendors and users. CUPS
 provides the System V and Berkeley command-line interfaces. CUPS uses
@@ -160,6 +160,9 @@ bibliotecas do CUPS.
 %patch8 -p0
 %patch9 -p0
 %patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
 
 %build
 %{__aclocal}
