@@ -18,6 +18,8 @@ BuildRequires:	libpng-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	openssl-devel >= 0.9.6b
 BuildRequires:	pam-devel
+BuildRequires:	autoconf
+BuildRequires:	automake
 Prereq:		%{name}-libs = %{version}
 Prereq:		/sbin/chkconfig
 Provides:	lpr
