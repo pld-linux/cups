@@ -3,7 +3,7 @@ Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.1.14
-Release:	21
+Release:	22
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/System
@@ -18,6 +18,9 @@ Patch3:		%{name}-lp-lpr.patch
 Patch4:		%{name}-options.patch
 Patch5:		%{name}-pstoraster-gcc-2.96.patch
 Patch6:		%{name}-ENCRYPTIONtxt.patch
+Patch7:		%{name}-tmprace.patch
+Patch8:		%{name}-idefense-v2.patch
+Patch9:		%{name}-pdftops.patch
 URL:		http://www.cups.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -27,8 +30,8 @@ BuildRequires:	libtiff-devel
 BuildRequires:	openssl-devel >= 0.9.6b
 BuildRequires:	pam-devel
 BuildRequires:	pkgconfig
-Prereq:		%{name}-libs = %{version}
-Prereq:		/sbin/chkconfig
+PreReq:		%{name}-libs = %{version}
+Requires(post,preun):	/sbin/chkconfig
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	lpr
 Obsoletes:	LPRng
@@ -148,6 +151,9 @@ bibliotecas do CUPS.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p0
+%patch8 -p0
+%patch9 -p0
 
 %build
 aclocal
@@ -178,6 +184,7 @@ cp doc/images/*	$RPM_BUILD_ROOT/%{_libdir}/%{name}/cgi-bin/images/
 
 touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
 touch $RPM_BUILD_ROOT/etc/security/blacklist.cups
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -227,9 +234,9 @@ fi
 %attr(755,root,root)  %{_libdir}/cups/*/*
 %attr(755,root,root) %{_sbindir}/*
 %{_datadir}/cups
-%{_mandir}/man1/backend.1.gz
-%{_mandir}/man1/filter.1.gz
-%{_mandir}/man1/lppasswd.1.gz
+%{_mandir}/man1/backend.1*
+%{_mandir}/man1/filter.1*
+%{_mandir}/man1/lppasswd.1*
 %{_mandir}/man[58]/*
 %{_datadir}/locale/C/cups_C
 %lang(be) %{_datadir}/locale/be/cups_be
@@ -266,12 +273,12 @@ fi
 %attr(755,root,root) %{_bindir}/lpr
 %attr(755,root,root) %{_bindir}/lprm
 %attr(755,root,root) %{_bindir}/lpstat
-%{_mandir}/man1/lp.1.gz
-%{_mandir}/man1/lpoptions.1.gz
-%{_mandir}/man1/lpq.1.gz
-%{_mandir}/man1/lpr.1.gz
-%{_mandir}/man1/lprm.1.gz
-%{_mandir}/man1/lpstat.1.gz
+%{_mandir}/man1/lp.1*
+%{_mandir}/man1/lpoptions.1*
+%{_mandir}/man1/lpq.1*
+%{_mandir}/man1/lpr.1*
+%{_mandir}/man1/lprm.1*
+%{_mandir}/man1/lpstat.1*
 
 %files image-lib
 %defattr(644,root,root,755)
