@@ -14,7 +14,7 @@ Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 %define	rcver	rc6
 Version:	1.1.20
-Release:	0.%{rcver}.1
+Release:	0.%{rcver}.2
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
@@ -300,7 +300,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 /sbin/chkconfig --add cups
-if [ -f /var/lock/subsys/cupsd ]; then
+if [ -f /var/lock/subsys/cups ]; then
 	/etc/rc.d/init.d/cups restart 1>&2
 else
 	echo "Run \"/etc/rc.d/init.d/cups start\" to start cups daemon."
@@ -308,7 +308,7 @@ fi
 
 %preun
 if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/cupsd ]; then
+	if [ -f /var/lock/subsys/cups ]; then
 		/etc/rc.d/init.d/cups stop 1>&2
 	fi
 	/sbin/chkconfig --del cups
