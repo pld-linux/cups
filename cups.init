@@ -27,11 +27,11 @@ fi
 case "$1" in
   start)
 	# Check if the service is already running?
-	if [ ! -f /var/lock/subsys/cups ]; then
+	if [ ! -f /var/lock/subsys/cupsd ]; then
 		msg_starting CUPS
 		daemon cupsd -c /etc/cups/cupsd.conf
 		RETVAL=$?
-		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/cups
+		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/cupsd
 	else
 		msg_already_running CUPS
 		exit 1
@@ -39,10 +39,10 @@ case "$1" in
         ;;
   stop)
         # Stop daemons.
-	if [ -f /var/lock/subsys/cups ]; then
+	if [ -f /var/lock/subsys/cupsd ]; then
 		msg_stopping CUPS
 		killproc cupsd
-		rm -f /var/lock/subsys/cups >/dev/null 2>&1
+		rm -f /var/lock/subsys/cupsd >/dev/null 2>&1
 	else
 		msg_not_running CUPS
 		exit 1
@@ -53,7 +53,7 @@ case "$1" in
 	$0 start
         ;;
   reload)
-	if [ -f /var/lock/subsys/cups ]; then
+	if [ -f /var/lock/subsys/cupsd ]; then
 		msg_show CUPS
 		msg_reload
 		busy
@@ -75,7 +75,7 @@ case "$1" in
 	exit $?
 	;;
   status)
-	status cups
+	status cupsd
 	exit $?
         ;;
   *)
