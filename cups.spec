@@ -1,4 +1,4 @@
-Summary:	Common Unix Printing System	
+Summary:	Common Unix Printing System
 Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
@@ -18,7 +18,7 @@ Patch3:		%{name}-lp-lpr.patch
 Patch4:		%{name}-options.patch
 Patch5:		%{name}-pstoraster-gcc-2.96.patch
 Patch6:		%{name}-ENCRYPTIONtxt.patch
-URL:		http://www.cups.org/	
+URL:		http://www.cups.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libjpeg-devel
@@ -33,7 +33,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	lpr
 Obsoletes:	LPRng
 
-%description 
+%description
 CUPS provides a portable printing layer for UNIX®-based operating
 systems. It has been developed by Easy Software Products to promote a
 standard printing solution for all UNIX vendors and users. CUPS
@@ -148,7 +148,7 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,logrotate.d} \
 	$RPM_BUILD_ROOT/var/log/{,archiv/}cups
 
-%{__make} DESTDIR=$RPM_BUILD_ROOT install 
+%{__make} DESTDIR=$RPM_BUILD_ROOT install
 
 install %{SOURCE1}	$RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install %{SOURCE2}	$RPM_BUILD_ROOT/etc/pam.d/%{name}
@@ -173,7 +173,7 @@ if [ -f /var/lock/subsys/cups ]; then
 else
         echo "Run \"/etc/rc.d/init.d/cups start\" to start cups daemon."
 fi
-		
+
 %preun
 if [ "$1" = "0" ]; then
 	if [ -f /var/lock/subsys/cups ]; then
