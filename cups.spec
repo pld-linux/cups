@@ -28,7 +28,7 @@ Patch12:	%{name}-udp-dos.patch
 Patch13:	%{name}-no-authinfo.patch
 Patch14:	%{name}-pdftops2.patch
 Patch15:	%{name}-hpgl-fixes.patch
-Patch16:	%{name}-lppasswd.patch
+Patch16:	%{name}-lppasswd-fixes.patch
 URL:		http://www.cups.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
