@@ -12,14 +12,14 @@ Summary:	Common Unix Printing System
 Summary(pl):	Popularny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
-%define	rcver	%{nil}
-Version:	1.1.20
-Release:	4
+%define	rcver	rc1
+Version:	1.1.21
+Release:	0.%{rcver}.1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
-Source0:	ftp://ftp.easysw.com/pub/%{name}/%{version}%{rcver}/%{name}-%{version}%{rcver}-source.tar.bz2
-# Source0-md5:	09d0be2bad1b0617bc0eba6eef81f6e9
+Source0:	ftp://ftp.easysw.com/pub/%{name}/%{?rcver:test}%{!?rcver:%{version}}/%{name}-%{version}%{rcver}-source.tar.bz2
+# Source0-md5:	3cf609727cbf8d8c097d16100be58a28
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -438,8 +438,9 @@ fi
 %attr(755,root,root) %{_bindir}/cups-config
 %{_includedir}/cups
 %{_libdir}/lib*.so
+%{_mandir}/man1/cups-config*
 %{_mandir}/man3/*
-%lang(fr) %{_mandir}/fr/man3/*
+%lang(fr) %{_mandir}/fr/man1/cups-config*
 
 %files static
 %defattr(644,root,root,755)
