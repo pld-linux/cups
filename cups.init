@@ -54,12 +54,9 @@ case "$1" in
         ;;
   reload)
 	if [ -f /var/lock/subsys/cupsd ]; then
-		msg_show CUPS
-		msg_reload
+		msg_reloading CUPS
 		busy
 		killproc cupsd -HUP
-		deltext
-		ok		
 	else
 		msg_not_running CUPS
 		exit 1
