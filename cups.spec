@@ -267,10 +267,10 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del cups
 fi
 
-%post   lib -p /sbin/ldconfig
-%postun lib -p /sbin/ldconfig
-%post   image-lib -p /sbin/ldconfig
-%postun image-lib -p /sbin/ldconfig
+%post	lib -p /sbin/ldconfig
+%postun	lib -p /sbin/ldconfig
+%post	image-lib -p /sbin/ldconfig
+%postun	image-lib -p /sbin/ldconfig
 
 %files
 %defattr(644,root,root,755)
@@ -313,7 +313,7 @@ fi
 %lang(cs) %{_datadir}/locale/cs/cups_cs
 %lang(de) %{_datadir}/locale/de/cups_de
 %{_datadir}/locale/en/cups_en
-%lang(en_US)%{_datadir}/locale/en_US/cups_en_US
+%lang(en_US) %{_datadir}/locale/en_US/cups_en_US
 %lang(es) %{_datadir}/locale/es/cups_es
 %lang(fr) %{_datadir}/locale/fr/cups_fr
 %lang(he) %{_datadir}/locale/he/cups_he
