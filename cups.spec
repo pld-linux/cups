@@ -1,8 +1,8 @@
 Summary:	Common Unix Printing System	
 Summary(pl):	Popularny System Druku dla Unixa
 Name:		cups
-Version:	1.1.9
-Release:	2
+Version:	1.1.10
+Release:	1
 License:	GPL/LGPL
 Group:		Applications/System
 Group(de):	Applikationen/System
@@ -12,17 +12,18 @@ Source1:	%{name}.init
 Source2:	%{name}.pamd
 Patch0:		%{name}-DESTDIR.patch
 Patch1:		%{name}-config.patch
+BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	openssl-devel >= 0.9.6b
 BuildRequires:	pam-devel
-BuildRequires:	zlib-devel
 Requires:	%{name}-libs = %{version}
 URL:		http://www.cups.org/	
 Provides:	lpr
 Obsoletes:	lpr
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
+%define		_sysconfdir		/etc/cups
 
 %description 
 CUPS provides a portable printing layer for UNIX®-based operating
@@ -142,13 +143,13 @@ rm -rf $RPM_BUILD_ROOT
 %doc *.gz doc/*.html doc/*.css doc/*.pdf doc/images
 %attr(640,root,root) %config %verify(not size mtime md5) /etc/pam.d/*
 %attr(754,root,root) /etc/rc.d/init.d/cups
-%dir %{_sysconfdir}/cups
-%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/cups/*.conf
-%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/cups/*.convs
-%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/cups/*.types
-%dir %{_sysconfdir}/cups/certs
-%dir %{_sysconfdir}/cups/interfaces
-%dir %{_sysconfdir}/cups/ppd
+%dir %{_sysconfdir}
+%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/*.conf
+%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/*.convs
+%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/*.types
+%dir %{_sysconfdir}/certs
+%dir %{_sysconfdir}/interfaces
+%dir %{_sysconfdir}/ppd
 %attr(4755,lp,root) %{_bindir}/lppasswd
 %attr(755,root,root) %{_bindir}/cancel
 %attr(755,root,root) %{_bindir}/disable
