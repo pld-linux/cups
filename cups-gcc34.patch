@@ -1,0 +1,42 @@
+--- cups-1.1.20/scripting/php/phpcups.c.orig	2003-08-15 00:29:23.000000000 +0200
++++ cups-1.1.20/scripting/php/phpcups.c	2004-05-12 18:25:10.647426632 +0200
+@@ -818,6 +818,17 @@
+   return(options);
+ }
+ 
++void _zz_internal_log( char *func, char *line )
++{
++  FILE *fp;
++
++  if ((fp = fopen("/var/log/cups/project.log","a")) == NULL)
++	return;
++
++  fprintf(fp,"phpcups: %s - %s\n", func, line );
++  fflush(fp);
++  fclose(fp);
++}
+ 
+ /*
+  *  Function:    cups_print_file
+@@ -1333,21 +1344,6 @@
+   return (num_attrs);
+ }
+ 
+-
+-void _zz_internal_log( char *func, char *line )
+-{
+-  FILE *fp;
+-
+-  if ((fp = fopen("/var/log/cups/project.log","a")) == NULL)
+-	return;
+-
+-  fprintf(fp,"phpcups: %s - %s\n", func, line );
+-  fflush(fp);
+-  fclose(fp);
+-}
+-
+-
+-
+ /*
+  * End of "$Id$".
+  */
