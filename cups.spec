@@ -42,7 +42,7 @@ BuildRequires:	libtiff-devel
 BuildRequires:	openslp-devel
 BuildRequires:	openssl-devel >= 0.9.7c
 BuildRequires:	pam-devel
-%{?!_without_php:BuildRequires:	php-devel}
+%{?with_php:BuildRequires:	php-devel}
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-perlprov
 PreReq:		%{name}-libs = %{epoch}:%{version}
@@ -248,9 +248,9 @@ pod³±czonych do portów równoleg³ych.
 %{__make}
 
 perl -pi -e 's#-I\.\.\/\.\.#-I../.. -I../../cups#g' scripting/php/Makefile
-%{?!_without_php:%{__make} -C scripting/php}
+%{?with_php:%{__make} -C scripting/php}
 
-%if 0%{?!_without_perl:1}
+%if %{with perl}
 cd scripting/perl
 %{__perl} -pi -e 's@-lcups@-L../../cups $1@' Makefile.PL
 %{__perl} Makefile.PL \
@@ -277,12 +277,12 @@ if [ "%{_lib}" != "lib" ] ; then
 	mv $RPM_BUILD_ROOT%{_ulibdir}/*.a $RPM_BUILD_ROOT%{_libdir}
 fi
 
-%if 0%{?!_without_php:1}
+%if %{with php}
 %{__make} -C scripting/php install \
 	PHPDIR="$RPM_BUILD_ROOT`php-config --extension-dir`"
 %endif
 
-%if 0%{?!_without_perl:1}
+%if %{with perl}
 cd scripting/perl
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -441,7 +441,7 @@ fi
 %defattr(644,root,root,755)
 %{_libdir}/*.a
 
-%if 0%{?!_without_perl:1}
+%if %{with perl}
 %files -n perl-cups
 %defattr(644,root,root,755)
 %{perl_vendorarch}/*.pm
@@ -451,7 +451,7 @@ fi
 %attr(755,root,root) %{perl_vendorarch}/auto/CUPS/*.so
 %endif
 
-%if 0%{?!_without_php:1}
+%if %{with php}
 %files -n php-cups
 %defattr(644,root,root,755)
 %attr(755,root,root) %(php-config --extension-dir)/*
