@@ -13,14 +13,13 @@ Summary(pl):	Popularny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.1.23
-%define		_suf	rc1
-Release:	0.%{_suf}.1
+Release:	1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
-#Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-Source0:	http://ftp.easysw.com/pub/cups/test/%{name}-%{version}%{_suf}-source.tar.bz2
-# Source0-md5:	1f23d8949a81bcfed62d3927729e9070
+Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
+# Source0-md5:	4ce09b1dce09b6b9398af0daae9adf63
+#Source0:	http://ftp.easysw.com/pub/cups/test/%{name}-%{version}%{_suf}-source.tar.bz2
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -227,7 +226,7 @@ Ten pakiet umo¿liwia drukowanie z poziomu CUPS-a na drukarkach
 pod³±czonych do portów równoleg³ych.
 
 %prep
-%setup -q -n %{name}-%{version}%{_suf}
+%setup -q -n %{name}-%{version}
 %patch1 -p1
 # wtf?
 #%patch2 -p1
