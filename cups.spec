@@ -27,8 +27,8 @@ BuildRequires:	libtiff-devel
 BuildRequires:	openssl-devel >= 0.9.6b
 BuildRequires:	pam-devel
 BuildRequires:	pkgconfig
-Prereq:		%{name}-libs = %{version}
-Prereq:		/sbin/chkconfig
+PreReq:		%{name}-libs = %{version}
+PreReq:		/sbin/chkconfig
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	lpr
 Obsoletes:	LPRng
@@ -58,7 +58,7 @@ portável para os sistemas operacionais baseados no UNIX®.
 Summary:	Common Unix Printing System Libraries
 Summary(pl):	Biblioteki dla CUPS
 Summary(pt_BR):	Sistema Unix de Impressão - bibliotecas para uso em clientes cups
-Group:		Development/Libraries
+Group:		Libraries
 Provides:	%{name}-libs = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-libs
 Obsoletes:	libcups1
@@ -89,7 +89,7 @@ Aplikacje klienckie dla CUPS.
 Summary:	Common Unix Printing System Libraries - images manipulation
 Summary(pl):	Biblioteki dla CUPS - obs³uga formatów graficznych
 Summary(pt_BR):	Sistema Unix de Impressão - bibliotecas para uso em clientes cups
-Group:		Development/Libraries
+Group:		Libraries
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 Obsoletes:	libcups1
 
@@ -184,9 +184,9 @@ rm -rf $RPM_BUILD_ROOT
 %post
 /sbin/chkconfig --add cups
 if [ -f /var/lock/subsys/cupsd ]; then
-        /etc/rc.d/init.d/cups restart 1>&2
+	/etc/rc.d/init.d/cups restart 1>&2
 else
-        echo "Run \"/etc/rc.d/init.d/cups start\" to start cups daemon."
+	echo "Run \"/etc/rc.d/init.d/cups start\" to start cups daemon."
 fi
 
 %preun
@@ -224,7 +224,7 @@ fi
 %attr(755,root,root) %{_bindir}/enable
 %dir %{_libdir}/cups
 %dir %{_libdir}/cups/*
-%attr(755,root,root)  %{_libdir}/cups/*/*
+%attr(755,root,root) %{_libdir}/cups/*/*
 %attr(755,root,root) %{_sbindir}/*
 %{_datadir}/cups
 %{_mandir}/man1/backend.1*
