@@ -3,7 +3,7 @@ Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.1.10
-Release:	2
+Release:	3
 License:	GPL/LGPL
 Group:		Applications/System
 Group(de):	Applikationen/System
@@ -147,13 +147,16 @@ autoconf
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,logrotate.d}
+install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,logrotate.d} \
+	$RPM_BUILD_ROOT/var/log/{,archiv/}cups
 
 %{__make} DESTDIR=$RPM_BUILD_ROOT install 
 
 install %{SOURCE1}	$RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install %{SOURCE2}	$RPM_BUILD_ROOT/etc/pam.d/%{name}
 install %{SOURCE3}	$RPM_BUILD_ROOT/etc/logrotate.d/%{name}
+
+touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
 
 gzip -9nf *.txt
 
@@ -215,8 +218,12 @@ fi
 %lang(es) %{_datadir}/locale/es/cups_es
 %lang(fr) %{_datadir}/locale/fr/cups_fr
 %lang(it) %{_datadir}/locale/it/cups_it
-/var/log/cups
 /var/spool/cups
+%attr(750,root,root) %dir /var/log/archiv/cups
+%attr(750,root,root) %dir /var/log/cups
+%attr(640,root,root) %ghost /var/log/cups/access_log
+%attr(640,root,root) %ghost /var/log/cups/error_log
+%attr(640,root,root) %ghost /var/log/cups/page_log
 
 %files libs
 %defattr(644,root,root,755)
