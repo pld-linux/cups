@@ -1,7 +1,7 @@
 #
 # Conditional build:
-%bcond_without php	# don't build php extension
-%bcond_without perl	# don't build perl extension
+%bcond_without php	# don't build PHP extension
+%bcond_without perl	# don't build Perl extension
 #
 # TODO:
 # - register php module
