@@ -3,7 +3,7 @@ Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.1.14
-Release:	20
+Release:	21
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/System
@@ -162,7 +162,7 @@ fi
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,logrotate.d} \
+install -d $RPM_BUILD_ROOT/etc/{{rc.d/init.d,pam.d,logrotate.d},security} \
 	$RPM_BUILD_ROOT/var/log/{,archiv/}cups
 
 %{__make} DESTDIR=$RPM_BUILD_ROOT install
@@ -177,7 +177,7 @@ cp doc/*.css	$RPM_BUILD_ROOT/%{_libdir}/%{name}/cgi-bin/
 cp doc/images/*	$RPM_BUILD_ROOT/%{_libdir}/%{name}/cgi-bin/images/
 
 touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
-
+touch $RPM_BUILD_ROOT/etc/security/blacklist.cups
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -214,6 +214,7 @@ fi
 %attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{name}/printers.conf
 %attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{name}/*.convs
 %attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{name}/*.types
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/security/blacklist.cups
 %dir %{_sysconfdir}/%{name}/certs
 %dir %{_sysconfdir}/%{name}/interfaces
 %dir %{_sysconfdir}/%{name}/ppd
