@@ -3,7 +3,7 @@ Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.1.14
-Release:	14
+Release:	15
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/System
@@ -226,19 +226,19 @@ fi
 %attr(755,root,root) %{_sbindir}/*
 %{_datadir}/cups
 %{_mandir}/man[158]/*
-%lang(C)  %{_datadir}/locale/C/cups_C
+%{_datadir}/locale/C/cups_C
 %lang(be) %{_datadir}/locale/be/cups_be
 %lang(cs) %{_datadir}/locale/cs/cups_cs
 %lang(de) %{_datadir}/locale/de/cups_de
-%lang(en) %{_datadir}/locale/en/cups_en
+%{_datadir}/locale/en/cups_en
 %lang(es) %{_datadir}/locale/es/cups_es
 %lang(fr) %{_datadir}/locale/fr/cups_fr
 %lang(he) %{_datadir}/locale/he/cups_he
 %lang(it) %{_datadir}/locale/it/cups_it
-%lang(ru_RU) %{_datadir}/locale/ru_RU.*/cups_ru_RU.*
+%lang(ru) %{_datadir}/locale/ru_RU.*/cups_ru_RU.*
 %lang(sv) %{_datadir}/locale/sv/cups_sv
 %lang(uk) %{_datadir}/locale/uk/cups_uk
-%lang(uk_UA) %{_datadir}/locale/uk_UA.*/cups_uk_UA.*
+%lang(uk) %{_datadir}/locale/uk_UA.*/cups_uk_UA.*
 %lang(zh_CN) %{_datadir}/locale/zh_CN/cups_zh_CN
 /var/spool/cups
 %attr(750,root,root) %dir /var/log/archiv/cups
