@@ -1,44 +1,6 @@
-diff -urN cups-1.1.19.orig/Makefile cups-1.1.19/Makefile
---- cups-1.1.19.orig/Makefile	Tue May 27 23:14:31 2003
-+++ cups-1.1.19/Makefile	Tue May 27 23:29:58 2003
-@@ -87,32 +87,8 @@
- 	echo Installing in templates...
- 	(cd templates; $(MAKE) $(MFLAGS) install)
- 	echo Installing cups-config script...
--	$(INSTALL_DIR) $(BINDIR)
--	$(INSTALL_SCRIPT) cups-config $(BINDIR)/cups-config
--	echo Installing startup script...
--	if test "x$(INITDIR)" != "x"; then \
--		$(INSTALL_DIR) $(BUILDROOT)$(INITDIR)/init.d; \
--		$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDIR)/init.d/cups; \
--		$(INSTALL_DIR) $(BUILDROOT)$(INITDIR)/rc0.d; \
--		$(INSTALL_SCRIPT) cups.sh  $(BUILDROOT)$(INITDIR)/rc0.d/K00cups; \
--		$(INSTALL_DIR) $(BUILDROOT)$(INITDIR)/rc2.d; \
--		$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDIR)/rc2.d/S99cups; \
--		$(INSTALL_DIR) $(BUILDROOT)$(INITDIR)/rc3.d; \
--		$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDIR)/rc3.d/S99cups; \
--		$(INSTALL_DIR) $(BUILDROOT)$(INITDIR)/rc5.d; \
--		$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDIR)/rc5.d/S99cups; \
--	fi
--	if test "x$(INITDIR)" = "x" -a "x$(INITDDIR)" != "x"; then \
--		$(INSTALL_DIR) $(BUILDROOT)$(INITDDIR); \
--		if test "$(INITDDIR)" = "/System/Library/StartupItems/PrintingServices"; then \
--			$(INSTALL_SCRIPT) cups.osx $(BUILDROOT)$(INITDDIR)/PrintingServices; \
--			$(INSTALL_DATA) cups.plist $(BUILDROOT)$(INITDDIR)/StartupParameters.plist; \
--			$(INSTALL_DIR) $(BUILDROOT)$(INITDDIR)/Resources/English.lproj; \
--			$(INSTALL_DATA) cups.strings $(BUILDROOT)$(INITDDIR)/Resources/English.lproj/Localizable.strings; \
--		else \
--			$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDDIR)/cups; \
--		fi \
--	fi
-+	$(INSTALL_DIR) $(DESTDIR)$(BINDIR)
-+	$(INSTALL_SCRIPT) cups-config $(DESTDIR)$(BINDIR)/cups-config
- 
- #
- # Install source and header files...
-diff -urN cups-1.1.19.orig/backend/Makefile cups-1.1.19/backend/Makefile
---- cups-1.1.19.orig/backend/Makefile	Tue May 27 23:14:31 2003
-+++ cups-1.1.19/backend/Makefile	Tue May 27 23:15:51 2003
+diff -urN cups-1.1.21rc1.org/backend/Makefile cups-1.1.21rc1/backend/Makefile
+--- cups-1.1.21rc1.org/backend/Makefile	2004-06-11 11:49:11.476926896 +0200
++++ cups-1.1.21rc1/backend/Makefile	2004-06-11 11:49:30.038105168 +0200
 @@ -59,12 +59,12 @@
  #
  
@@ -56,9 +18,9 @@ diff -urN cups-1.1.19.orig/backend/Makefile cups-1.1.19/backend/Makefile
  
  
  #
-diff -urN cups-1.1.19.orig/berkeley/Makefile cups-1.1.19/berkeley/Makefile
---- cups-1.1.19.orig/berkeley/Makefile	Tue May 27 23:14:31 2003
-+++ cups-1.1.19/berkeley/Makefile	Tue May 27 23:15:51 2003
+diff -urN cups-1.1.21rc1.org/berkeley/Makefile cups-1.1.21rc1/berkeley/Makefile
+--- cups-1.1.21rc1.org/berkeley/Makefile	2004-06-11 11:49:11.500923248 +0200
++++ cups-1.1.21rc1/berkeley/Makefile	2004-06-11 11:49:30.039105016 +0200
 @@ -56,12 +56,12 @@
  #
  
@@ -78,9 +40,9 @@ diff -urN cups-1.1.19.orig/berkeley/Makefile cups-1.1.19/berkeley/Makefile
  
  
  #
-diff -urN cups-1.1.19.orig/cgi-bin/Makefile cups-1.1.19/cgi-bin/Makefile
---- cups-1.1.19.orig/cgi-bin/Makefile	Tue May 27 23:14:31 2003
-+++ cups-1.1.19/cgi-bin/Makefile	Tue May 27 23:15:51 2003
+diff -urN cups-1.1.21rc1.org/cgi-bin/Makefile cups-1.1.21rc1/cgi-bin/Makefile
+--- cups-1.1.21rc1.org/cgi-bin/Makefile	2004-06-11 11:49:11.502922944 +0200
++++ cups-1.1.21rc1/cgi-bin/Makefile	2004-06-11 11:49:30.041104712 +0200
 @@ -58,9 +58,9 @@
  #
  
@@ -93,9 +55,9 @@ diff -urN cups-1.1.19.orig/cgi-bin/Makefile cups-1.1.19/cgi-bin/Makefile
  	done
  
  
-diff -urN cups-1.1.19.orig/conf/Makefile cups-1.1.19/conf/Makefile
---- cups-1.1.19.orig/conf/Makefile	Tue May 27 23:14:31 2003
-+++ cups-1.1.19/conf/Makefile	Tue May 27 23:15:51 2003
+diff -urN cups-1.1.21rc1.org/conf/Makefile cups-1.1.21rc1/conf/Makefile
+--- cups-1.1.21rc1.org/conf/Makefile	2004-06-11 11:49:11.507922184 +0200
++++ cups-1.1.21rc1/conf/Makefile	2004-06-11 11:50:42.161140800 +0200
 @@ -51,23 +51,23 @@
  #
  
@@ -116,22 +78,22 @@ diff -urN cups-1.1.19.orig/conf/Makefile cups-1.1.19/conf/Makefile
 -		if test -r $(SERVERROOT)/$$file ; then \
 -			$(MV) $(SERVERROOT)/$$file $(SERVERROOT)/$$file.O ; \
 +		if test -r $(DESTDIR)$(SERVERROOT)/$$file ; then \
-+			$(MV) $(DESTDIR)$(SERVERROOT)/$$file $(DESTDIR)$(SERVERROOT)/$$file.O ; \
++			$(MV) $(SERVERROOT)/$$file $(DESTDIR)$(SERVERROOT)/$$file.O ; \
  		fi ; \
 -		$(INSTALL_DATA) $$file $(SERVERROOT) ; \
 +		$(INSTALL_DATA) $$file $(DESTDIR)$(SERVERROOT) ; \
  	done
  	-if test x$(PAMDIR) != x$(BUILDROOT); then \
 -		$(INSTALL_DIR) $(PAMDIR); \
--		$(INSTALL_DATA) pam.conf $(PAMDIR)/cups; \
+-		$(INSTALL_DATA) $(PAMFILE) $(PAMDIR)/cups; \
 +		$(INSTALL_DIR) $(DESTDIR)$(PAMDIR); \
-+		$(INSTALL_DATA) pam.conf $(DESTDIR)$(PAMDIR)/cups; \
++		$(INSTALL_DATA) $(PAMFILE) $(DESTDIR)$(PAMDIR)/cups; \
  	fi
  
  
-diff -urN cups-1.1.19.orig/cups/Makefile cups-1.1.19/cups/Makefile
---- cups-1.1.19.orig/cups/Makefile	Tue May 27 23:14:31 2003
-+++ cups-1.1.19/cups/Makefile	Tue May 27 23:15:51 2003
+diff -urN cups-1.1.21rc1.org/cups/Makefile cups-1.1.21rc1/cups/Makefile
+--- cups-1.1.21rc1.org/cups/Makefile	2004-06-11 11:49:11.529918840 +0200
++++ cups-1.1.21rc1/cups/Makefile	2004-06-11 11:49:30.046103952 +0200
 @@ -80,26 +80,26 @@
  #
  
@@ -170,9 +132,9 @@ diff -urN cups-1.1.19.orig/cups/Makefile cups-1.1.19/cups/Makefile
  	done
  
  
-diff -urN cups-1.1.19.orig/data/Makefile cups-1.1.19/data/Makefile
---- cups-1.1.19.orig/data/Makefile	Tue May 27 23:14:31 2003
-+++ cups-1.1.19/data/Makefile	Tue May 27 23:15:51 2003
+diff -urN cups-1.1.21rc1.org/data/Makefile cups-1.1.21rc1/data/Makefile
+--- cups-1.1.21rc1.org/data/Makefile	2004-06-11 11:49:11.561913976 +0200
++++ cups-1.1.21rc1/data/Makefile	2004-06-11 11:49:30.048103648 +0200
 @@ -84,17 +84,17 @@
  #
  
@@ -197,42 +159,9 @@ diff -urN cups-1.1.19.orig/data/Makefile cups-1.1.19/data/Makefile
  	done
  
  
-diff -urN cups-1.1.19.orig/doc/Makefile cups-1.1.19/doc/Makefile
---- cups-1.1.19.orig/doc/Makefile	Tue May 27 23:14:31 2003
-+++ cups-1.1.19/doc/Makefile	Tue May 27 23:15:51 2003
-@@ -123,21 +123,21 @@
- #
- 
- install:
--	$(INSTALL_DIR) $(DOCDIR)
-+	$(INSTALL_DIR) $(DESTDIR)$(DOCDIR)
- 	for file in $(WEBPAGES); do \
--		$(INSTALL_MAN) $$file $(DOCDIR); \
-+		$(INSTALL_MAN) $$file $(DESTDIR)$(DOCDIR); \
- 	done
--	$(INSTALL_MAN) overview.html $(DOCDIR)
--	$(INSTALL_MAN) overview.pdf $(DOCDIR)
-+	$(INSTALL_MAN) overview.html $(DESTDIR)$(DOCDIR)
-+	$(INSTALL_MAN) overview.pdf $(DESTDIR)$(DOCDIR)
- 	for file in $(DOCUMENTS:.shtml=.html); do \
--		$(INSTALL_MAN) $$file $(DOCDIR); \
-+		$(INSTALL_MAN) $$file $(DESTDIR)$(DOCDIR); \
- 	done
- 	for file in $(DOCUMENTS:.shtml=.pdf); do \
--		$(INSTALL_MAN) $$file $(DOCDIR); \
-+		$(INSTALL_MAN) $$file $(DESTDIR)$(DOCDIR); \
- 	done
--	$(INSTALL_DIR) $(DOCDIR)/images
-+	$(INSTALL_DIR) $(DESTDIR)$(DOCDIR)/images
- 	for file in $(WEBIMAGES) $(DOCIMAGES); do \
--		$(INSTALL_MAN) $$file $(DOCDIR)/images; \
-+		$(INSTALL_MAN) $$file $(DESTDIR)$(DOCDIR)/images; \
- 	done
- 	cd de; $(MAKE) $(MFLAGS) install
- 	cd fr; $(MAKE) $(MFLAGS) install
-diff -urN cups-1.1.19.orig/doc/de/Makefile cups-1.1.19/doc/de/Makefile
---- cups-1.1.19.orig/doc/de/Makefile	Tue May 27 23:14:31 2003
-+++ cups-1.1.19/doc/de/Makefile	Tue May 27 23:48:58 2003
+diff -urN cups-1.1.21rc1.org/doc/de/Makefile cups-1.1.21rc1/doc/de/Makefile
+--- cups-1.1.21rc1.org/doc/de/Makefile	2004-06-11 11:49:11.657899384 +0200
++++ cups-1.1.21rc1/doc/de/Makefile	2004-06-11 11:49:30.052103040 +0200
 @@ -75,13 +75,13 @@
  #
  
@@ -251,9 +180,9 @@ diff -urN cups-1.1.19.orig/doc/de/Makefile cups-1.1.19/doc/de/Makefile
  	done
  
  
-diff -urN cups-1.1.19.orig/doc/fr/Makefile cups-1.1.19/doc/fr/Makefile
---- cups-1.1.19.orig/doc/fr/Makefile	Tue May 27 23:14:31 2003
-+++ cups-1.1.19/doc/fr/Makefile	Tue May 27 23:15:51 2003
+diff -urN cups-1.1.21rc1.org/doc/fr/Makefile cups-1.1.21rc1/doc/fr/Makefile
+--- cups-1.1.21rc1.org/doc/fr/Makefile	2004-06-11 11:49:11.748885552 +0200
++++ cups-1.1.21rc1/doc/fr/Makefile	2004-06-11 11:49:30.054102736 +0200
 @@ -105,21 +105,21 @@
  #
  
@@ -284,10 +213,43 @@ diff -urN cups-1.1.19.orig/doc/fr/Makefile cups-1.1.19/doc/fr/Makefile
  	done
  
  
-diff -urN cups-1.1.19.orig/filter/Makefile cups-1.1.19/filter/Makefile
---- cups-1.1.19.orig/filter/Makefile	Tue May 27 23:14:31 2003
-+++ cups-1.1.19/filter/Makefile	Tue May 27 23:15:51 2003
-@@ -70,30 +70,30 @@
+diff -urN cups-1.1.21rc1.org/doc/Makefile cups-1.1.21rc1/doc/Makefile
+--- cups-1.1.21rc1.org/doc/Makefile	2004-06-11 11:49:11.658899232 +0200
++++ cups-1.1.21rc1/doc/Makefile	2004-06-11 11:49:30.050103344 +0200
+@@ -125,21 +125,21 @@
+ #
+ 
+ install:
+-	$(INSTALL_DIR) $(DOCDIR)
++	$(INSTALL_DIR) $(DESTDIR)$(DOCDIR)
+ 	for file in $(WEBPAGES); do \
+-		$(INSTALL_MAN) $$file $(DOCDIR); \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(DOCDIR); \
+ 	done
+-	$(INSTALL_MAN) overview.html $(DOCDIR)
+-	$(INSTALL_MAN) overview.pdf $(DOCDIR)
++	$(INSTALL_MAN) overview.html $(DESTDIR)$(DOCDIR)
++	$(INSTALL_MAN) overview.pdf $(DESTDIR)$(DOCDIR)
+ 	for file in $(DOCUMENTS:.shtml=.html); do \
+-		$(INSTALL_MAN) $$file $(DOCDIR); \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(DOCDIR); \
+ 	done
+ 	for file in $(DOCUMENTS:.shtml=.pdf); do \
+-		$(INSTALL_MAN) $$file $(DOCDIR); \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(DOCDIR); \
+ 	done
+-	$(INSTALL_DIR) $(DOCDIR)/images
++	$(INSTALL_DIR) $(DESTDIR)$(DOCDIR)/images
+ 	for file in $(WEBIMAGES) $(DOCIMAGES); do \
+-		$(INSTALL_MAN) $$file $(DOCDIR)/images; \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(DOCDIR)/images; \
+ 	done
+ 	cd de; $(MAKE) $(MFLAGS) install
+ 	cd fr; $(MAKE) $(MFLAGS) install
+diff -urN cups-1.1.21rc1.org/filter/Makefile cups-1.1.21rc1/filter/Makefile
+--- cups-1.1.21rc1.org/filter/Makefile	2004-06-11 11:49:11.803877192 +0200
++++ cups-1.1.21rc1/filter/Makefile	2004-06-11 11:49:30.056102432 +0200
+@@ -71,30 +71,30 @@
  #
  
  install:	all installhdrs
@@ -332,9 +294,9 @@ diff -urN cups-1.1.19.orig/filter/Makefile cups-1.1.19/filter/Makefile
  
  
  #
-diff -urN cups-1.1.19.orig/fonts/Makefile cups-1.1.19/fonts/Makefile
---- cups-1.1.19.orig/fonts/Makefile	Tue May 27 23:14:31 2003
-+++ cups-1.1.19/fonts/Makefile	Tue May 27 23:15:51 2003
+diff -urN cups-1.1.21rc1.org/fonts/Makefile cups-1.1.21rc1/fonts/Makefile
+--- cups-1.1.21rc1.org/fonts/Makefile	2004-06-11 11:49:11.866867616 +0200
++++ cups-1.1.21rc1/fonts/Makefile	2004-06-11 11:49:30.057102280 +0200
 @@ -51,9 +51,9 @@
  #
  
@@ -347,9 +309,9 @@ diff -urN cups-1.1.19.orig/fonts/Makefile cups-1.1.19/fonts/Makefile
  	done
  
  
-diff -urN cups-1.1.19.orig/locale/Makefile cups-1.1.19/locale/Makefile
---- cups-1.1.19.orig/locale/Makefile	Tue May 27 23:14:31 2003
-+++ cups-1.1.19/locale/Makefile	Tue May 27 23:15:51 2003
+diff -urN cups-1.1.21rc1.org/locale/Makefile cups-1.1.21rc1/locale/Makefile
+--- cups-1.1.21rc1.org/locale/Makefile	2004-06-11 11:49:11.869867160 +0200
++++ cups-1.1.21rc1/locale/Makefile	2004-06-11 11:49:30.059101976 +0200
 @@ -50,10 +50,10 @@
  #
  
@@ -364,91 +326,47 @@ diff -urN cups-1.1.19.orig/locale/Makefile cups-1.1.19/locale/Makefile
  	done
  
  
-diff -urN cups-1.1.19.orig/man/Makefile cups-1.1.19/man/Makefile
---- cups-1.1.19.orig/man/Makefile	Tue May 27 23:14:31 2003
-+++ cups-1.1.19/man/Makefile	Tue May 27 23:15:51 2003
-@@ -68,50 +68,50 @@
- #
+diff -urN cups-1.1.21rc1.org/Makefile cups-1.1.21rc1/Makefile
+--- cups-1.1.21rc1.org/Makefile	2004-06-11 11:49:11.494924160 +0200
++++ cups-1.1.21rc1/Makefile	2004-06-11 11:49:30.036105472 +0200
+@@ -87,32 +87,8 @@
+ 	echo Installing in templates...
+ 	(cd templates; $(MAKE) $(MFLAGS) install)
+ 	echo Installing cups-config script...
+-	$(INSTALL_DIR) $(BINDIR)
+-	$(INSTALL_SCRIPT) cups-config $(BINDIR)/cups-config
+-	echo Installing startup script...
+-	if test "x$(INITDIR)" != "x"; then \
+-		$(INSTALL_DIR) $(BUILDROOT)$(INITDIR)/init.d; \
+-		$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDIR)/init.d/cups; \
+-		$(INSTALL_DIR) $(BUILDROOT)$(INITDIR)/rc0.d; \
+-		$(INSTALL_SCRIPT) cups.sh  $(BUILDROOT)$(INITDIR)/rc0.d/K00cups; \
+-		$(INSTALL_DIR) $(BUILDROOT)$(INITDIR)/rc2.d; \
+-		$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDIR)/rc2.d/S99cups; \
+-		$(INSTALL_DIR) $(BUILDROOT)$(INITDIR)/rc3.d; \
+-		$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDIR)/rc3.d/S99cups; \
+-		$(INSTALL_DIR) $(BUILDROOT)$(INITDIR)/rc5.d; \
+-		$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDIR)/rc5.d/S99cups; \
+-	fi
+-	if test "x$(INITDIR)" = "x" -a "x$(INITDDIR)" != "x"; then \
+-		$(INSTALL_DIR) $(BUILDROOT)$(INITDDIR); \
+-		if test "$(INITDDIR)" = "/System/Library/StartupItems/PrintingServices"; then \
+-			$(INSTALL_SCRIPT) cups.osx $(BUILDROOT)$(INITDDIR)/PrintingServices; \
+-			$(INSTALL_DATA) cups.plist $(BUILDROOT)$(INITDDIR)/StartupParameters.plist; \
+-			$(INSTALL_DIR) $(BUILDROOT)$(INITDDIR)/Resources/English.lproj; \
+-			$(INSTALL_DATA) cups.strings $(BUILDROOT)$(INITDDIR)/Resources/English.lproj/Localizable.strings; \
+-		else \
+-			$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDDIR)/cups; \
+-		fi \
+-	fi
++	$(INSTALL_DIR) $(DESTDIR)$(BINDIR)
++	$(INSTALL_SCRIPT) cups-config $(DESTDIR)$(BINDIR)/cups-config
  
- install:	all
--	$(INSTALL_DIR) $(MANDIR)/man1
-+	$(INSTALL_DIR) $(DESTDIR)$(MANDIR)/man1
- 	for file in $(MAN1); do \
--		$(INSTALL_MAN) $$file $(MANDIR)/man1/`basename $$file man`1; \
-+		$(INSTALL_MAN) $$file $(DESTDIR)$(MANDIR)/man1/`basename $$file man`1; \
- 	done
--	$(RM) $(MANDIR)/man1/cancel.1
--	$(LN) lp.1 $(MANDIR)/man1/cancel.1
--	$(INSTALL_DIR) $(PMANDIR)/man3
-+	$(RM) $(DESTDIR)$(MANDIR)/man1/cancel.1
-+	$(LN) lp.1 $(DESTDIR)$(MANDIR)/man1/cancel.1
-+	$(INSTALL_DIR) $(DESTDIR)$(PMANDIR)/man3
- 	for file in $(MAN3); do \
--		$(INSTALL_MAN) $$file $(PMANDIR)/man3/`basename $$file man`3; \
-+		$(INSTALL_MAN) $$file $(DESTDIR)$(PMANDIR)/man3/`basename $$file man`3; \
- 	done
--	$(INSTALL_DIR) $(MANDIR)/man5
-+	$(INSTALL_DIR) $(DESTDIR)$(MANDIR)/man5
- 	for file in $(MAN5); do \
--		$(INSTALL_MAN) $$file $(MANDIR)/man5/`basename $$file man`5; \
-+		$(INSTALL_MAN) $$file $(DESTDIR)$(MANDIR)/man5/`basename $$file man`5; \
- 	done
--	$(INSTALL_DIR) $(AMANDIR)/man$(MAN8EXT)
-+	$(INSTALL_DIR) $(DESTDIR)$(AMANDIR)/man$(MAN8EXT)
- 	for file in $(MAN8); do \
--		$(INSTALL_MAN) $$file $(AMANDIR)/man$(MAN8EXT)/`basename $$file man`$(MAN8EXT); \
-+		$(INSTALL_MAN) $$file $(DESTDIR)$(AMANDIR)/man$(MAN8EXT)/`basename $$file man`$(MAN8EXT); \
- 	done
--	$(RM) $(AMANDIR)/man$(MAN8EXT)/reject.$(MAN8EXT)
--	$(LN) accept.$(MAN8EXT) $(AMANDIR)/man$(MAN8EXT)/reject.$(MAN8EXT)
--	$(RM) $(AMANDIR)/man$(MAN8EXT)/disable.$(MAN8EXT)
--	$(LN) enable.$(MAN8EXT) $(AMANDIR)/man$(MAN8EXT)/disable.$(MAN8EXT)
--	$(INSTALL_DIR) $(MANDIR)/cat1
-+	$(RM) $(DESTDIR)$(AMANDIR)/man$(MAN8EXT)/reject.$(MAN8EXT)
-+	$(LN) accept.$(MAN8EXT) $(DESTDIR)$(AMANDIR)/man$(MAN8EXT)/reject.$(MAN8EXT)
-+	$(RM) $(DESTDIR)$(AMANDIR)/man$(MAN8EXT)/disable.$(MAN8EXT)
-+	$(LN) enable.$(MAN8EXT) $(DESTDIR)$(AMANDIR)/man$(MAN8EXT)/disable.$(MAN8EXT)
-+	$(INSTALL_DIR) $(DESTDIR)$(MANDIR)/cat1
- 	for file in $(CAT1); do \
--		$(INSTALL_MAN) $$file $(MANDIR)/cat1; \
-+		$(INSTALL_MAN) $$file $(DESTDIR)$(MANDIR)/cat1; \
- 	done
--	$(RM) $(MANDIR)/cat1/cancel.$(CAT1EXT)
--	$(LN) lp.$(CAT1EXT) $(MANDIR)/cat1/cancel.$(CAT1EXT)
--	$(INSTALL_DIR) $(PMANDIR)/cat3
-+	$(RM) $(DESTDIR)$(MANDIR)/cat1/cancel.$(CAT1EXT)
-+	$(LN) lp.$(CAT1EXT) $(DESTDIR)$(MANDIR)/cat1/cancel.$(CAT1EXT)
-+	$(INSTALL_DIR) $(DESTDIR)$(PMANDIR)/cat3
- 	for file in $(CAT3); do \
--		$(INSTALL_MAN) $$file $(PMANDIR)/cat3; \
-+		$(INSTALL_MAN) $$file $(DESTDIR)$(PMANDIR)/cat3; \
- 	done
--	$(INSTALL_DIR) $(MANDIR)/cat5
-+	$(INSTALL_DIR) $(DESTDIR)$(MANDIR)/cat5
- 	for file in $(CAT5); do \
--		$(INSTALL_MAN) $$file $(MANDIR)/cat5; \
-+		$(INSTALL_MAN) $$file $(DESTDIR)$(MANDIR)/cat5; \
- 	done
--	$(INSTALL_DIR) $(AMANDIR)/cat$(MAN8EXT)
-+	$(INSTALL_DIR) $(DESTDIR)$(AMANDIR)/cat$(MAN8EXT)
- 	for file in $(CAT8); do \
--		$(INSTALL_MAN) $$file $(AMANDIR)/cat$(MAN8EXT); \
-+		$(INSTALL_MAN) $$file $(DESTDIR)$(AMANDIR)/cat$(MAN8EXT); \
- 	done
--	$(RM) $(AMANDIR)/cat$(MAN8EXT)/reject.$(CAT8EXT)
--	$(LN) accept.$(CAT8EXT) $(AMANDIR)/cat$(MAN8EXT)/reject.$(CAT8EXT)
--	$(RM) $(AMANDIR)/cat$(MAN8EXT)/disable.$(CAT8EXT)
--	$(LN) enable.$(CAT8EXT) $(AMANDIR)/cat$(MAN8EXT)/disable.$(CAT8EXT)
-+	$(RM) $(DESTDIR)$(AMANDIR)/cat$(MAN8EXT)/reject.$(CAT8EXT)
-+	$(LN) accept.$(CAT8EXT) $(DESTDIR)$(AMANDIR)/cat$(MAN8EXT)/reject.$(CAT8EXT)
-+	$(RM) $(DESTDIR)$(AMANDIR)/cat$(MAN8EXT)/disable.$(CAT8EXT)
-+	$(LN) enable.$(CAT8EXT) $(DESTDIR)$(AMANDIR)/cat$(MAN8EXT)/disable.$(CAT8EXT)
- 	for dir in $(LANGDIRS); do \
- 		echo "Installing all in man/$$dir..."; \
- 		(cd $$dir; $(MAKE) $(MFLAGS) install); \
-diff -urN cups-1.1.19.orig/man/fr/Makefile cups-1.1.19/man/fr/Makefile
---- cups-1.1.19.orig/man/fr/Makefile	Tue May 27 23:14:31 2003
-+++ cups-1.1.19/man/fr/Makefile	Tue May 27 23:15:51 2003
+ #
+ # Install source and header files...
+diff -urN cups-1.1.21rc1.org/man/fr/Makefile cups-1.1.21rc1/man/fr/Makefile
+--- cups-1.1.21rc1.org/man/fr/Makefile	2004-06-11 11:49:11.879865640 +0200
++++ cups-1.1.21rc1/man/fr/Makefile	2004-06-11 11:49:30.064101216 +0200
 @@ -60,50 +60,50 @@
  #
  
@@ -528,9 +446,107 @@ diff -urN cups-1.1.19.orig/man/fr/Makefile cups-1.1.19/man/fr/Makefile
  
  
  #
-diff -urN cups-1.1.19.orig/pdftops/Makefile cups-1.1.19/pdftops/Makefile
---- cups-1.1.19.orig/pdftops/Makefile	Tue May 27 23:14:31 2003
-+++ cups-1.1.19/pdftops/Makefile	Tue May 27 23:15:51 2003
+diff -urN cups-1.1.21rc1.org/man/Makefile cups-1.1.21rc1/man/Makefile
+--- cups-1.1.21rc1.org/man/Makefile	2004-06-11 11:49:11.900862448 +0200
++++ cups-1.1.21rc1/man/Makefile	2004-06-11 11:52:59.767221496 +0200
+@@ -68,58 +68,58 @@
+ #
+ 
+ install:	all
+-	$(INSTALL_DIR) $(MANDIR)/man1
++	$(INSTALL_DIR) $(DESTDIR)$(MANDIR)/man1
+ 	for file in $(MAN1); do \
+-		echo Installing $$file in $(MANDIR)/man1...; \
+-		$(INSTALL_MAN) $$file $(MANDIR)/man1/`basename $$file man`1; \
++		echo Installing $$file in $(DESTDIR)$(MANDIR)/man1...; \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(MANDIR)/man1/`basename $$file man`1; \
+ 	done
+-	$(RM) $(MANDIR)/man1/cancel.1
+-	$(LN) lp.1 $(MANDIR)/man1/cancel.1
+-	$(INSTALL_DIR) $(PMANDIR)/man3
++	$(RM) $(DESTDIR)$(MANDIR)/man1/cancel.1
++	$(LN) lp.1 $(DESTDIR)$(MANDIR)/man1/cancel.1
++	$(INSTALL_DIR) $(DESTDIR)$(PMANDIR)/man3
+ 	for file in $(MAN3); do \
+-		echo Installing $$file in $(PMANDIR)/man3...; \
+-		$(INSTALL_MAN) $$file $(PMANDIR)/man3/`basename $$file man`3; \
++		echo Installing $$file in $(DESTDIR)$(PMANDIR)/man3...; \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(PMANDIR)/man3/`basename $$file man`3; \
+ 	done
+-	$(INSTALL_DIR) $(MANDIR)/man5
++	$(INSTALL_DIR) $(DESTDIR)$(MANDIR)/man5
+ 	for file in $(MAN5); do \
+-		echo Installing $$file in $(MANDIR)/man5...; \
+-		$(INSTALL_MAN) $$file $(MANDIR)/man5/`basename $$file man`5; \
++		echo Installing $$file in $(DESTDIR)$(MANDIR)/man5...; \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(MANDIR)/man5/`basename $$file man`5; \
+ 	done
+-	$(INSTALL_DIR) $(AMANDIR)/man$(MAN8EXT)
++	$(INSTALL_DIR) $(DESTDIR)$(AMANDIR)/man$(MAN8EXT)
+ 	for file in $(MAN8); do \
+-		echo Installing $$file in $(AMANDIR)/man$(MAN8EXT)...; \
+-		$(INSTALL_MAN) $$file $(AMANDIR)/man$(MAN8EXT)/`basename $$file man`$(MAN8EXT); \
++		echo Installing $$file in $(DESTDIR)$(AMANDIR)/man$(MAN8EXT)...; \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(AMANDIR)/man$(MAN8EXT)/`basename $$file man`$(MAN8EXT); \
+ 	done
+-	$(RM) $(AMANDIR)/man$(MAN8EXT)/reject.$(MAN8EXT)
+-	$(LN) accept.$(MAN8EXT) $(AMANDIR)/man$(MAN8EXT)/reject.$(MAN8EXT)
+-	$(RM) $(AMANDIR)/man$(MAN8EXT)/disable.$(MAN8EXT)
+-	$(LN) enable.$(MAN8EXT) $(AMANDIR)/man$(MAN8EXT)/disable.$(MAN8EXT)
+-	$(INSTALL_DIR) $(MANDIR)/cat1
++	$(RM) $(DESTDIR)$(AMANDIR)/man$(MAN8EXT)/reject.$(MAN8EXT)
++	$(LN) accept.$(MAN8EXT) $(DESTDIR)$(AMANDIR)/man$(MAN8EXT)/reject.$(MAN8EXT)
++	$(RM) $(DESTDIR)$(AMANDIR)/man$(MAN8EXT)/disable.$(MAN8EXT)
++	$(LN) enable.$(MAN8EXT) $(DESTDIR)$(AMANDIR)/man$(MAN8EXT)/disable.$(MAN8EXT)
++	$(INSTALL_DIR) $(DESTDIR)$(MANDIR)/cat1
+ 	for file in $(CAT1); do \
+-		echo Installing $$file in $(MANDIR)/cat1...; \
+-		$(INSTALL_MAN) $$file $(MANDIR)/cat1; \
++		echo Installing $$file in $(DESTDIR)$(MANDIR)/cat1...; \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(MANDIR)/cat1; \
+ 	done
+-	$(RM) $(MANDIR)/cat1/cancel.$(CAT1EXT)
+-	$(LN) lp.$(CAT1EXT) $(MANDIR)/cat1/cancel.$(CAT1EXT)
+-	$(INSTALL_DIR) $(PMANDIR)/cat3
++	$(RM) $(DESTDIR)$(MANDIR)/cat1/cancel.$(CAT1EXT)
++	$(LN) lp.$(CAT1EXT) $(DESTDIR)$(MANDIR)/cat1/cancel.$(CAT1EXT)
++	$(INSTALL_DIR) $(DESTDIR)$(PMANDIR)/cat3
+ 	for file in $(CAT3); do \
+-		echo Installing $$file in $(PMANDIR)/cat3...; \
+-		$(INSTALL_MAN) $$file $(PMANDIR)/cat3; \
++		echo Installing $$file in $(DESTDIR)$(PMANDIR)/cat3...; \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(PMANDIR)/cat3; \
+ 	done
+-	$(INSTALL_DIR) $(MANDIR)/cat5
++	$(INSTALL_DIR) $(DESTDIR)$(MANDIR)/cat5
+ 	for file in $(CAT5); do \
+-		echo Installing $$file in $(MANDIR)/cat5...; \
+-		$(INSTALL_MAN) $$file $(MANDIR)/cat5; \
++		echo Installing $$file in $(DESTDIR)$(MANDIR)/cat5...; \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(MANDIR)/cat5; \
+ 	done
+-	$(INSTALL_DIR) $(AMANDIR)/cat$(MAN8EXT)
++	$(INSTALL_DIR) $(DESTDIR)$(AMANDIR)/cat$(MAN8EXT)
+ 	for file in $(CAT8); do \
+-		echo Installing $$file in $(AMANDIR)/cat$(MAN8EXT)...; \
+-		$(INSTALL_MAN) $$file $(AMANDIR)/cat$(MAN8EXT); \
++		echo Installing $$file in $(DESTDIR)$(AMANDIR)/cat$(MAN8EXT)...; \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(AMANDIR)/cat$(MAN8EXT); \
+ 	done
+-	$(RM) $(AMANDIR)/cat$(MAN8EXT)/reject.$(CAT8EXT)
+-	$(LN) accept.$(CAT8EXT) $(AMANDIR)/cat$(MAN8EXT)/reject.$(CAT8EXT)
+-	$(RM) $(AMANDIR)/cat$(MAN8EXT)/disable.$(CAT8EXT)
+-	$(LN) enable.$(CAT8EXT) $(AMANDIR)/cat$(MAN8EXT)/disable.$(CAT8EXT)
++	$(RM) $(DESTDIR)$(AMANDIR)/cat$(MAN8EXT)/reject.$(CAT8EXT)
++	$(LN) accept.$(CAT8EXT) $(DESTDIR)$(AMANDIR)/cat$(MAN8EXT)/reject.$(CAT8EXT)
++	$(RM) $(DESTDIR)$(AMANDIR)/cat$(MAN8EXT)/disable.$(CAT8EXT)
++	$(LN) enable.$(CAT8EXT) $(DESTDIR)$(AMANDIR)/cat$(MAN8EXT)/disable.$(CAT8EXT)
+ 	for dir in $(LANGDIRS); do \
+ 		echo "Installing all in man/$$dir..."; \
+ 		(cd $$dir; $(MAKE) $(MFLAGS) install); \
+diff -urN cups-1.1.21rc1.org/pdftops/Makefile cups-1.1.21rc1/pdftops/Makefile
+--- cups-1.1.21rc1.org/pdftops/Makefile	2004-06-11 11:49:11.986849376 +0200
++++ cups-1.1.21rc1/pdftops/Makefile	2004-06-11 11:49:30.066100912 +0200
 @@ -91,8 +91,8 @@
  #
  
@@ -542,9 +558,9 @@ diff -urN cups-1.1.19.orig/pdftops/Makefile cups-1.1.19/pdftops/Makefile
  
  
  #
-diff -urN cups-1.1.19.orig/ppd/Makefile cups-1.1.19/ppd/Makefile
---- cups-1.1.19.orig/ppd/Makefile	Tue May 27 23:14:31 2003
-+++ cups-1.1.19/ppd/Makefile	Tue May 27 23:15:51 2003
+diff -urN cups-1.1.21rc1.org/ppd/Makefile cups-1.1.21rc1/ppd/Makefile
+--- cups-1.1.21rc1.org/ppd/Makefile	2004-06-11 11:49:12.008846032 +0200
++++ cups-1.1.21rc1/ppd/Makefile	2004-06-11 11:49:30.068100608 +0200
 @@ -52,9 +52,9 @@
  #
  
@@ -557,9 +573,9 @@ diff -urN cups-1.1.19.orig/ppd/Makefile cups-1.1.19/ppd/Makefile
  	done
  
  
-diff -urN cups-1.1.19.orig/scheduler/Makefile cups-1.1.19/scheduler/Makefile
---- cups-1.1.19.orig/scheduler/Makefile	Tue May 27 23:14:31 2003
-+++ cups-1.1.19/scheduler/Makefile	Tue May 27 23:21:03 2003
+diff -urN cups-1.1.21rc1.org/scheduler/Makefile cups-1.1.21rc1/scheduler/Makefile
+--- cups-1.1.21rc1.org/scheduler/Makefile	2004-06-11 11:49:12.029842840 +0200
++++ cups-1.1.21rc1/scheduler/Makefile	2004-06-11 11:49:30.069100456 +0200
 @@ -61,17 +61,17 @@
  #
  
@@ -589,9 +605,9 @@ diff -urN cups-1.1.19.orig/scheduler/Makefile cups-1.1.19/scheduler/Makefile
  
  
  #
-diff -urN cups-1.1.19.orig/systemv/Makefile cups-1.1.19/systemv/Makefile
---- cups-1.1.19.orig/systemv/Makefile	Tue May 27 23:14:31 2003
-+++ cups-1.1.19/systemv/Makefile	Tue May 27 23:25:14 2003
+diff -urN cups-1.1.21rc1.org/systemv/Makefile cups-1.1.21rc1/systemv/Makefile
+--- cups-1.1.21rc1.org/systemv/Makefile	2004-06-11 11:49:12.240810768 +0200
++++ cups-1.1.21rc1/systemv/Makefile	2004-06-11 11:49:30.072100000 +0200
 @@ -59,26 +59,26 @@
  #
  
@@ -639,25 +655,25 @@ diff -urN cups-1.1.19.orig/systemv/Makefile cups-1.1.19/systemv/Makefile
  
  
  #
-diff -urN cups-1.1.19.orig/templates/Makefile cups-1.1.19/templates/Makefile
---- cups-1.1.19.orig/templates/Makefile	Tue May 27 23:14:31 2003
-+++ cups-1.1.19/templates/Makefile	Tue May 27 23:15:51 2003
+diff -urN cups-1.1.21rc1.org/templates/be/Makefile cups-1.1.21rc1/templates/be/Makefile
+--- cups-1.1.21rc1.org/templates/be/Makefile	2004-06-11 11:49:12.246809856 +0200
++++ cups-1.1.21rc1/templates/be/Makefile	2004-06-11 11:55:44.852124776 +0200
 @@ -95,9 +95,9 @@
  #
  
  install:
--	$(INSTALL_DIR) $(DATADIR)/templates
-+	$(INSTALL_DIR) $(DESTDIR)$(DATADIR)/templates
+-	$(INSTALL_DIR) $(DATADIR)/templates/be
++	$(INSTALL_DIR) $(DESTDIR)$(DATADIR)/templates/be
  	for file in $(FILES); do \
--		$(INSTALL_DATA) $$file $(DATADIR)/templates; \
-+		$(INSTALL_DATA) $$file $(DESTDIR)$(DATADIR)/templates; \
+-		$(INSTALL_DATA) $$file $(DATADIR)/templates/be; \
++		$(INSTALL_DATA) $$file $(DESTDIR)$(DATADIR)/templates/be; \
  	done
- 	cd de; $(MAKE) $(MFLAGS) install
- 	cd fr; $(MAKE) $(MFLAGS) install
-diff -urN cups-1.1.19.orig/templates/de/Makefile cups-1.1.19/templates/de/Makefile
---- cups-1.1.19.orig/templates/de/Makefile	Tue May 27 23:14:31 2003
-+++ cups-1.1.19/templates/de/Makefile	Tue May 27 23:52:26 2003
-@@ -94,9 +94,9 @@
+ 
+ 
+diff -urN cups-1.1.21rc1.org/templates/de/Makefile cups-1.1.21rc1/templates/de/Makefile
+--- cups-1.1.21rc1.org/templates/de/Makefile	2004-06-11 11:49:12.288803472 +0200
++++ cups-1.1.21rc1/templates/de/Makefile	2004-06-11 11:49:30.077099240 +0200
+@@ -95,9 +95,9 @@
  #
  
  install:
@@ -669,10 +685,10 @@ diff -urN cups-1.1.19.orig/templates/de/Makefile cups-1.1.19/templates/de/Makefi
  	done
  
  
-diff -urN cups-1.1.19.orig/templates/fr/Makefile cups-1.1.19/templates/fr/Makefile
---- cups-1.1.19.orig/templates/fr/Makefile	Tue May 27 23:14:31 2003
-+++ cups-1.1.19/templates/fr/Makefile	Tue May 27 23:15:51 2003
-@@ -94,9 +94,9 @@
+diff -urN cups-1.1.21rc1.org/templates/fr/Makefile cups-1.1.21rc1/templates/fr/Makefile
+--- cups-1.1.21rc1.org/templates/fr/Makefile	2004-06-11 11:49:12.366791616 +0200
++++ cups-1.1.21rc1/templates/fr/Makefile	2004-06-11 11:49:30.080098784 +0200
+@@ -95,9 +95,9 @@
  #
  
  install:
@@ -684,3 +700,18 @@ diff -urN cups-1.1.19.orig/templates/fr/Makefile cups-1.1.19/templates/fr/Makefi
  	done
  
  
+diff -urN cups-1.1.21rc1.org/templates/Makefile cups-1.1.21rc1/templates/Makefile
+--- cups-1.1.21rc1.org/templates/Makefile	2004-06-11 11:49:12.332796784 +0200
++++ cups-1.1.21rc1/templates/Makefile	2004-06-11 11:49:30.074099696 +0200
+@@ -96,9 +96,9 @@
+ #
+ 
+ install:
+-	$(INSTALL_DIR) $(DATADIR)/templates
++	$(INSTALL_DIR) $(DESTDIR)$(DATADIR)/templates
+ 	for file in $(FILES); do \
+-		$(INSTALL_DATA) $$file $(DATADIR)/templates; \
++		$(INSTALL_DATA) $$file $(DESTDIR)$(DATADIR)/templates; \
+ 	done
+ 	cd be; $(MAKE) $(MFLAGS) install
+ 	cd de; $(MAKE) $(MFLAGS) install
