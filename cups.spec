@@ -42,6 +42,7 @@ BuildRequires:	openssl-devel >= 0.9.7c
 BuildRequires:	pam-devel
 %{?!_without_php:BuildRequires:	php-devel}
 BuildRequires:	pkgconfig
+BuildRequires:	rpm-perlprov
 PreReq:		%{name}-libs = %{epoch}:%{version}
 Requires(post,preun):	/sbin/chkconfig
 Requires:	pam >= 0.77.3
