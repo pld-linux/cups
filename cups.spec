@@ -1,13 +1,14 @@
 Summary:	Common Unix Printing System	
 Name:		cups
 Version:	1.1.4
-Release:	2
+Release:	3
 Vendor:		PLD
 License:	GPL/LGPL
 Group:		Applications/System
 Group(de):	Applikationen/System
 Group(pl):	Aplikacje/System
 Source0:	ftp://ftp.easysw.com/pub/%{name}/%{version}/%{name}-%{version}-source.tar.bz2
+Source1:	%{name}.init
 Patch0:		%{name}-chown.patch
 URL:		http://www.cups.org/	
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -73,8 +74,18 @@ rm -rf $RPM_BUILD_ROOT
         SERVERBIN=$RPM_BUILD_ROOT%{_libdir}/cups \
 	SERVERROOT=$RPM_BUILD_ROOT%{_sysconfdir}/cups \
     install 
+
+install -d $RPM_BUILD_ROOT/%{_sysconfdir}/rc.d/init.d
+install %{SOURCE1} $RPM_BUILD_ROOT/%{_sysconfdir}/rc.d/init.d/cups
+
+%post
+/sbin/chkconfig --add cups
     
+%preun
+/sbin/chkconfig --del cups
+
 %clean
+rm -f $RPM_BUILD_ROOT
 
 %files 
 %defattr(644,root,root,755)
@@ -86,14 +97,25 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/reject
 %attr(755,root,root) %{_libdir}/cups
 %attr(755,root,root) %{_sbindir}
-%{_datadir}/cups
-%{_mandir}/man[158]
 %lang(C)  %{_datadir}/locale/C/cups_C
 %lang(de) %{_datadir}/locale/de/cups_de
 %lang(en) %{_datadir}/locale/en/cups_en
 %lang(es) %{_datadir}/locale/es/cups_es
 %lang(fr) %{_datadir}/locale/fr/cups_fr
 %lang(it) %{_datadir}/locale/it/cups_it
+%{_sysconfdir}/pam.d
+%{_sysconfdir}/cups/certs
+%{_sysconfdir}/cups/interfaces
+%{_sysconfdir}/cups/ppd
+%config(noreplace) %{_sysconfdir}/cups/*.conf
+%config(noreplace) %{_sysconfdir}/cups/*.convs
+%config(noreplace) %{_sysconfdir}/cups/*.types
+%{_sysconfdir}/rc.d/init.d/cups
+%{_docdir}/cups
+%{_datadir}/cups
+%{_mandir}/man[158]
+/var/log/cups
+/var/spool/cups
 
 %files devel
 %defattr(644,root,root,755)
