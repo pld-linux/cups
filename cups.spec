@@ -2,8 +2,8 @@ Summary:	Common Unix Printing System
 Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.1.14
-Release:	21
+Version:	1.1.16
+Release:	1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/System
@@ -16,8 +16,7 @@ Patch1:		%{name}-config.patch
 Patch2:		%{name}-tmpdir.patch
 Patch3:		%{name}-lp-lpr.patch
 Patch4:		%{name}-options.patch
-Patch5:		%{name}-pstoraster-gcc-2.96.patch
-Patch6:		%{name}-ENCRYPTIONtxt.patch
+Patch5:		%{name}-ENCRYPTIONtxt.patch
 URL:		http://www.cups.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -143,20 +142,16 @@ bibliotecas do CUPS.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
+# wtf?
+#%patch2 -p1
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
-%patch6 -p1
 
 %build
 %{__aclocal}
 %{__autoconf}
-if [ -f %{_pkgconfigdir}/libpng12.pc ] ; then
-	CFLAGS="%{rpmcflags} `pkg-config libpng12 --cflags`"
-	CPPFLAGS="`pkg-config libpng12 --cflags`"
-fi
-%configure CPPFLAGS="$CPPFLAGS" \
+%configure \
 	--with-docdir=%{_libdir}/%{name}/cgi-bin
 %{__make}
 
@@ -231,6 +226,10 @@ fi
 %{_mandir}/man1/filter.1.gz
 %{_mandir}/man1/lppasswd.1.gz
 %{_mandir}/man[58]/*
+%lang(fr) %{_mandir}/fr/man1/backend.1.gz
+%lang(fr) %{_mandir}/fr/man1/filter.1.gz
+%lang(fr) %{_mandir}/fr/man1/lppasswd.1.gz
+%lang(fr) %{_mandir}/fr/man[58]/*
 %{_datadir}/locale/C/cups_C
 %lang(be) %{_datadir}/locale/be/cups_be
 %lang(cs) %{_datadir}/locale/cs/cups_cs
@@ -272,6 +271,12 @@ fi
 %{_mandir}/man1/lpr.1.gz
 %{_mandir}/man1/lprm.1.gz
 %{_mandir}/man1/lpstat.1.gz
+%lang(fr) %{_mandir}/fr/man1/lp.1.gz
+%lang(fr) %{_mandir}/fr/man1/lpoptions.1.gz
+%lang(fr) %{_mandir}/fr/man1/lpq.1.gz
+%lang(fr) %{_mandir}/fr/man1/lpr.1.gz
+%lang(fr) %{_mandir}/fr/man1/lprm.1.gz
+%lang(fr) %{_mandir}/fr/man1/lpstat.1.gz
 
 %files image-lib
 %defattr(644,root,root,755)
@@ -283,6 +288,7 @@ fi
 %{_includedir}/cups
 %{_libdir}/lib*.so
 %{_mandir}/man3/*
+%lang(fr) %{_mandir}/fr/man3/*
 
 %files static
 %defattr(644,root,root,755)
