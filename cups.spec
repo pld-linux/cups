@@ -101,10 +101,10 @@ install %{SOURCE1} $RPM_BUILD_ROOT/%{_sysconfdir}/rc.d/init.d/cups
 gzip -9nf *.txt
 
 %post
-/sbin/chkconfig --add cups
+%chkconfig_add
     
 %preun
-/sbin/chkconfig --del cups
+%chkconfig_del
 
 %clean
 rm -f $RPM_BUILD_ROOT
