@@ -63,7 +63,6 @@ Provides:	%{name}-libs = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-libs
 Obsoletes:	libcups1
 
-
 %description lib
 Common Unix Printing System Libraries.
 
