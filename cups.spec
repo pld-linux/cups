@@ -216,7 +216,8 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/{{rc.d/init.d,pam.d,logrotate.d},security} \
 	$RPM_BUILD_ROOT/var/log/{,archiv/}cups
 
-%{__make} DESTDIR=$RPM_BUILD_ROOT install
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT
 
 %if 0%{?!_without_php:1}
 %{__make} -C scripting/php install \
@@ -225,7 +226,8 @@ install -d $RPM_BUILD_ROOT/etc/{{rc.d/init.d,pam.d,logrotate.d},security} \
 
 %if 0%{?!_without_perl:1}
 cd scripting/perl
-%{__make} install DESTDIR=$RPM_BUILD_ROOT
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT
 cd ../..
 %endif
 
@@ -234,9 +236,9 @@ install %{SOURCE2}	$RPM_BUILD_ROOT/etc/pam.d/%{name}
 install %{SOURCE3}	$RPM_BUILD_ROOT/etc/logrotate.d/%{name}
 
 # for internal http browser:
-cp doc/*.html	$RPM_BUILD_ROOT/%{_libdir}/%{name}/cgi-bin/
-cp doc/*.css	$RPM_BUILD_ROOT/%{_libdir}/%{name}/cgi-bin/
-cp doc/images/*	$RPM_BUILD_ROOT/%{_libdir}/%{name}/cgi-bin/images/
+cp doc/*.html	$RPM_BUILD_ROOT%{_libdir}/%{name}/cgi-bin/
+cp doc/*.css	$RPM_BUILD_ROOT%{_libdir}/%{name}/cgi-bin/
+cp doc/images/*	$RPM_BUILD_ROOT%{_libdir}/%{name}/cgi-bin/images/
 
 touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
 touch $RPM_BUILD_ROOT/etc/security/blacklist.cups
