@@ -151,7 +151,11 @@ bibliotecas do CUPS.
 %build
 aclocal
 autoconf
-%configure \
+if [ -f %{_pkgconfigdir}/libpng12.pc ] ; then
+	CFLAGS="%{rpmcflags} `pkg-config libpng12 --cflags`"
+	CPPFLAGS="`pkg-config libpng12 --cflags`"
+fi
+%configure CPPFLAGS="$CPPFLAGS" \
 	--with-docdir=%{_libdir}/%{name}/cgi-bin
 %{__make}
 
