@@ -12,13 +12,14 @@ Summary:	Common Unix Printing System
 Summary(pl):	Popularny System Druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.1.19
-Release:	5
+%define	rcver	rc3
+Version:	1.1.20
+Release:	0.%{rcver}.1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
-# Source0-md5:	04cbeed9a8acfe23624f1cb6be9c3eac
-Source0:	ftp://ftp.easysw.com/pub/%{name}/%{version}/%{name}-%{version}-source.tar.bz2
+Source0:	ftp://ftp.easysw.com/pub/%{name}/%{version}%{rcver}/%{name}-%{version}%{rcver}-source.tar.bz2
+# Source0-md5:	dd98455b83a620497db4d2730ac96292
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -180,7 +181,7 @@ PHP module for Common Unix Printing System.
 Modu³ PHP do Popularnego Systemu Druku dla Uniksa.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}%{rcver}
 %patch0 -p1
 %patch1 -p1
 # wtf?
@@ -199,6 +200,7 @@ Modu³ PHP do Popularnego Systemu Druku dla Uniksa.
 	--with-docdir=%{_libdir}/%{name}/cgi-bin
 %{__make}
 
+perl -pi -e 's#-I\.\.\/\.\.#-I../.. -I../../cups#g' scripting/php/Makefile
 %{?!_without_php:%{__make} -C scripting/php}
 
 %if 0%{?!_without_perl:1}
