@@ -3,7 +3,7 @@ Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de ImpressЦo
 Name:		cups
 Version:	1.1.12
-Release:	3
+Release:	4
 License:	GPL/LGPL
 Group:		Applications/System
 Group(de):	Applikationen/System
@@ -67,6 +67,7 @@ Group(pl):	Programowanie/Biblioteki
 Group(pt_BR):	Desenvolvimento/Bibliotecas
 Group(ru):	Разработка/Библиотеки
 Group(uk):	Розробка/Б╕бл╕отеки
+Obsoletes:	libcups1
 
 %description libs
 Common Unix Printing System Libraries.
@@ -90,6 +91,7 @@ Group(pt_BR):	Desenvolvimento/Bibliotecas
 Group(ru):	Разработка/Библиотеки
 Group(uk):	Розробка/Б╕бл╕отеки
 Requires:	%{name}-libs = %{version}
+Obsoletes:	libcups1-devel
 
 %description devel
 Common Unix Printing System development files.
