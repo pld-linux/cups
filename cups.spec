@@ -78,7 +78,7 @@ Summary:	Common Unix Printing System Libraries - images manipulation
 Summary(pl):	Biblioteki dla CUPS - obs³uga formatów graficznych
 Summary(pt_BR):	Sistema Unix de Impressão - bibliotecas para uso em clientes cups
 Group:		Development/Libraries
-Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
+Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 Obsoletes:	libcups1
 
 %description image-lib
