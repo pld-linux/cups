@@ -1,5 +1,44 @@
---- cups-1.1.18/backend/Makefile.wiget	Tue Dec 17 19:56:33 2002
-+++ cups-1.1.18/backend/Makefile	Fri Dec 20 16:50:53 2002
+diff -urN cups-1.1.19.orig/Makefile cups-1.1.19/Makefile
+--- cups-1.1.19.orig/Makefile	Tue May 27 23:14:31 2003
++++ cups-1.1.19/Makefile	Tue May 27 23:29:58 2003
+@@ -87,32 +87,8 @@
+ 	echo Installing in templates...
+ 	(cd templates; $(MAKE) $(MFLAGS) install)
+ 	echo Installing cups-config script...
+-	$(INSTALL_DIR) $(BINDIR)
+-	$(INSTALL_SCRIPT) cups-config $(BINDIR)/cups-config
+-	echo Installing startup script...
+-	if test "x$(INITDIR)" != "x"; then \
+-		$(INSTALL_DIR) $(BUILDROOT)$(INITDIR)/init.d; \
+-		$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDIR)/init.d/cups; \
+-		$(INSTALL_DIR) $(BUILDROOT)$(INITDIR)/rc0.d; \
+-		$(INSTALL_SCRIPT) cups.sh  $(BUILDROOT)$(INITDIR)/rc0.d/K00cups; \
+-		$(INSTALL_DIR) $(BUILDROOT)$(INITDIR)/rc2.d; \
+-		$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDIR)/rc2.d/S99cups; \
+-		$(INSTALL_DIR) $(BUILDROOT)$(INITDIR)/rc3.d; \
+-		$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDIR)/rc3.d/S99cups; \
+-		$(INSTALL_DIR) $(BUILDROOT)$(INITDIR)/rc5.d; \
+-		$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDIR)/rc5.d/S99cups; \
+-	fi
+-	if test "x$(INITDIR)" = "x" -a "x$(INITDDIR)" != "x"; then \
+-		$(INSTALL_DIR) $(BUILDROOT)$(INITDDIR); \
+-		if test "$(INITDDIR)" = "/System/Library/StartupItems/PrintingServices"; then \
+-			$(INSTALL_SCRIPT) cups.osx $(BUILDROOT)$(INITDDIR)/PrintingServices; \
+-			$(INSTALL_DATA) cups.plist $(BUILDROOT)$(INITDDIR)/StartupParameters.plist; \
+-			$(INSTALL_DIR) $(BUILDROOT)$(INITDDIR)/Resources/English.lproj; \
+-			$(INSTALL_DATA) cups.strings $(BUILDROOT)$(INITDDIR)/Resources/English.lproj/Localizable.strings; \
+-		else \
+-			$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDDIR)/cups; \
+-		fi \
+-	fi
++	$(INSTALL_DIR) $(DESTDIR)$(BINDIR)
++	$(INSTALL_SCRIPT) cups-config $(DESTDIR)$(BINDIR)/cups-config
+ 
+ #
+ # Install source and header files...
+diff -urN cups-1.1.19.orig/backend/Makefile cups-1.1.19/backend/Makefile
+--- cups-1.1.19.orig/backend/Makefile	Tue May 27 23:14:31 2003
++++ cups-1.1.19/backend/Makefile	Tue May 27 23:15:51 2003
 @@ -59,12 +59,12 @@
  #
  
@@ -17,8 +56,9 @@
  
  
  #
---- cups-1.1.18/berkeley/Makefile.wiget	Tue Dec 17 19:56:34 2002
-+++ cups-1.1.18/berkeley/Makefile	Fri Dec 20 16:50:53 2002
+diff -urN cups-1.1.19.orig/berkeley/Makefile cups-1.1.19/berkeley/Makefile
+--- cups-1.1.19.orig/berkeley/Makefile	Tue May 27 23:14:31 2003
++++ cups-1.1.19/berkeley/Makefile	Tue May 27 23:15:51 2003
 @@ -56,12 +56,12 @@
  #
  
@@ -38,8 +78,9 @@
  
  
  #
---- cups-1.1.18/cgi-bin/Makefile.wiget	Tue Dec 17 19:56:36 2002
-+++ cups-1.1.18/cgi-bin/Makefile	Fri Dec 20 16:50:53 2002
+diff -urN cups-1.1.19.orig/cgi-bin/Makefile cups-1.1.19/cgi-bin/Makefile
+--- cups-1.1.19.orig/cgi-bin/Makefile	Tue May 27 23:14:31 2003
++++ cups-1.1.19/cgi-bin/Makefile	Tue May 27 23:15:51 2003
 @@ -58,9 +58,9 @@
  #
  
@@ -52,8 +93,9 @@
  	done
  
  
---- cups-1.1.18/conf/Makefile.wiget	Tue Dec 17 19:56:37 2002
-+++ cups-1.1.18/conf/Makefile	Fri Dec 20 16:50:53 2002
+diff -urN cups-1.1.19.orig/conf/Makefile cups-1.1.19/conf/Makefile
+--- cups-1.1.19.orig/conf/Makefile	Tue May 27 23:14:31 2003
++++ cups-1.1.19/conf/Makefile	Tue May 27 23:15:51 2003
 @@ -51,23 +51,23 @@
  #
  
@@ -87,9 +129,10 @@
  	fi
  
  
---- cups-1.1.18/cups/Makefile.wiget	Tue Dec 17 19:56:40 2002
-+++ cups-1.1.18/cups/Makefile	Fri Dec 20 16:50:53 2002
-@@ -79,26 +79,26 @@
+diff -urN cups-1.1.19.orig/cups/Makefile cups-1.1.19/cups/Makefile
+--- cups-1.1.19.orig/cups/Makefile	Tue May 27 23:14:31 2003
++++ cups-1.1.19/cups/Makefile	Tue May 27 23:15:51 2003
+@@ -80,26 +80,26 @@
  #
  
  install:	all	installhdrs
@@ -127,9 +170,10 @@
  	done
  
  
---- cups-1.1.18/data/Makefile.wiget	Tue Dec 17 19:56:46 2002
-+++ cups-1.1.18/data/Makefile	Fri Dec 20 16:50:53 2002
-@@ -85,17 +85,17 @@
+diff -urN cups-1.1.19.orig/data/Makefile cups-1.1.19/data/Makefile
+--- cups-1.1.19.orig/data/Makefile	Tue May 27 23:14:31 2003
++++ cups-1.1.19/data/Makefile	Tue May 27 23:15:51 2003
+@@ -84,17 +84,17 @@
  #
  
  install:
@@ -153,9 +197,64 @@
  	done
  
  
---- cups-1.1.18/doc/fr/Makefile.wiget	Tue Dec 17 19:57:51 2002
-+++ cups-1.1.18/doc/fr/Makefile	Fri Dec 20 16:50:53 2002
-@@ -107,21 +107,21 @@
+diff -urN cups-1.1.19.orig/doc/Makefile cups-1.1.19/doc/Makefile
+--- cups-1.1.19.orig/doc/Makefile	Tue May 27 23:14:31 2003
++++ cups-1.1.19/doc/Makefile	Tue May 27 23:15:51 2003
+@@ -123,21 +123,21 @@
+ #
+ 
+ install:
+-	$(INSTALL_DIR) $(DOCDIR)
++	$(INSTALL_DIR) $(DESTDIR)$(DOCDIR)
+ 	for file in $(WEBPAGES); do \
+-		$(INSTALL_MAN) $$file $(DOCDIR); \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(DOCDIR); \
+ 	done
+-	$(INSTALL_MAN) overview.html $(DOCDIR)
+-	$(INSTALL_MAN) overview.pdf $(DOCDIR)
++	$(INSTALL_MAN) overview.html $(DESTDIR)$(DOCDIR)
++	$(INSTALL_MAN) overview.pdf $(DESTDIR)$(DOCDIR)
+ 	for file in $(DOCUMENTS:.shtml=.html); do \
+-		$(INSTALL_MAN) $$file $(DOCDIR); \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(DOCDIR); \
+ 	done
+ 	for file in $(DOCUMENTS:.shtml=.pdf); do \
+-		$(INSTALL_MAN) $$file $(DOCDIR); \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(DOCDIR); \
+ 	done
+-	$(INSTALL_DIR) $(DOCDIR)/images
++	$(INSTALL_DIR) $(DESTDIR)$(DOCDIR)/images
+ 	for file in $(WEBIMAGES) $(DOCIMAGES); do \
+-		$(INSTALL_MAN) $$file $(DOCDIR)/images; \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(DOCDIR)/images; \
+ 	done
+ 	cd de; $(MAKE) $(MFLAGS) install
+ 	cd fr; $(MAKE) $(MFLAGS) install
+diff -urN cups-1.1.19.orig/doc/de/Makefile cups-1.1.19/doc/de/Makefile
+--- cups-1.1.19.orig/doc/de/Makefile	Tue May 27 23:14:31 2003
++++ cups-1.1.19/doc/de/Makefile	Tue May 27 23:48:58 2003
+@@ -75,13 +75,13 @@
+ #
+ 
+ install:
+-	$(INSTALL_DIR) $(DOCDIR)/de
++	$(INSTALL_DIR) $(DESTDIR)$(DOCDIR)/de
+ 	for file in $(WEBPAGES); do \
+-		$(INSTALL_MAN) $$file $(DOCDIR)/de; \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(DOCDIR)/de; \
+ 	done
+-	$(INSTALL_DIR) $(DOCDIR)/de/images
++	$(INSTALL_DIR) $(DESTDIR)$(DOCDIR)/de/images
+ 	for file in $(WEBIMAGES); do \
+-		$(INSTALL_MAN) $$file $(DOCDIR)/de/images; \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(DOCDIR)/de/images; \
+ 	done
+ 
+ 
+diff -urN cups-1.1.19.orig/doc/fr/Makefile cups-1.1.19/doc/fr/Makefile
+--- cups-1.1.19.orig/doc/fr/Makefile	Tue May 27 23:14:31 2003
++++ cups-1.1.19/doc/fr/Makefile	Tue May 27 23:15:51 2003
+@@ -105,21 +105,21 @@
  #
  
  install:
@@ -185,40 +284,9 @@
  	done
  
  
---- cups-1.1.18/doc/Makefile.wiget	Tue Dec 17 23:08:09 2002
-+++ cups-1.1.18/doc/Makefile	Fri Dec 20 16:50:53 2002
-@@ -123,21 +123,21 @@
- #
- 
- install:
--	$(INSTALL_DIR) $(DOCDIR)
-+	$(INSTALL_DIR) $(DESTDIR)$(DOCDIR)
- 	for file in $(WEBPAGES); do \
--		$(INSTALL_MAN) $$file $(DOCDIR); \
-+		$(INSTALL_MAN) $$file $(DESTDIR)$(DOCDIR); \
- 	done
--	$(INSTALL_MAN) overview.html $(DOCDIR)
--	$(INSTALL_MAN) overview.pdf $(DOCDIR)
-+	$(INSTALL_MAN) overview.html $(DESTDIR)$(DOCDIR)
-+	$(INSTALL_MAN) overview.pdf $(DESTDIR)$(DOCDIR)
- 	for file in $(DOCUMENTS:.shtml=.html); do \
--		$(INSTALL_MAN) $$file $(DOCDIR); \
-+		$(INSTALL_MAN) $$file $(DESTDIR)$(DOCDIR); \
- 	done
- 	for file in $(DOCUMENTS:.shtml=.pdf); do \
--		$(INSTALL_MAN) $$file $(DOCDIR); \
-+		$(INSTALL_MAN) $$file $(DESTDIR)$(DOCDIR); \
- 	done
--	$(INSTALL_DIR) $(DOCDIR)/images
-+	$(INSTALL_DIR) $(DESTDIR)$(DOCDIR)/images
- 	for file in $(WEBIMAGES) $(DOCIMAGES); do \
--		$(INSTALL_MAN) $$file $(DOCDIR)/images; \
-+		$(INSTALL_MAN) $$file $(DESTDIR)$(DOCDIR)/images; \
- 	done
- 	cd fr; $(MAKE) $(MFLAGS) install
- 
---- cups-1.1.18/filter/Makefile.wiget	Tue Dec 17 19:59:24 2002
-+++ cups-1.1.18/filter/Makefile	Fri Dec 20 16:50:53 2002
+diff -urN cups-1.1.19.orig/filter/Makefile cups-1.1.19/filter/Makefile
+--- cups-1.1.19.orig/filter/Makefile	Tue May 27 23:14:31 2003
++++ cups-1.1.19/filter/Makefile	Tue May 27 23:15:51 2003
 @@ -70,30 +70,30 @@
  #
  
@@ -264,8 +332,9 @@
  
  
  #
---- cups-1.1.18/fonts/Makefile.wiget	Tue Dec 17 19:59:31 2002
-+++ cups-1.1.18/fonts/Makefile	Fri Dec 20 16:50:53 2002
+diff -urN cups-1.1.19.orig/fonts/Makefile cups-1.1.19/fonts/Makefile
+--- cups-1.1.19.orig/fonts/Makefile	Tue May 27 23:14:31 2003
++++ cups-1.1.19/fonts/Makefile	Tue May 27 23:15:51 2003
 @@ -51,9 +51,9 @@
  #
  
@@ -278,9 +347,10 @@
  	done
  
  
---- cups-1.1.18/locale/Makefile.wiget	Tue Dec 17 19:59:44 2002
-+++ cups-1.1.18/locale/Makefile	Fri Dec 20 16:50:53 2002
-@@ -51,10 +51,10 @@
+diff -urN cups-1.1.19.orig/locale/Makefile cups-1.1.19/locale/Makefile
+--- cups-1.1.19.orig/locale/Makefile	Tue May 27 23:14:31 2003
++++ cups-1.1.19/locale/Makefile	Tue May 27 23:15:51 2003
+@@ -50,10 +50,10 @@
  #
  
  install:
@@ -294,89 +364,9 @@
  	done
  
  
---- cups-1.1.18/man/fr/Makefile.wiget	Tue Dec 17 19:59:59 2002
-+++ cups-1.1.18/man/fr/Makefile	Fri Dec 20 16:50:54 2002
-@@ -60,50 +60,50 @@
- #
- 
- install:	all
--	$(INSTALL_DIR) $(MANDIR)/$(LANGUAGE)/man1
-+	$(INSTALL_DIR) $(DESTDIR)$(MANDIR)/$(LANGUAGE)/man1
- 	for file in $(MAN1); do \
--		$(INSTALL_MAN) $$file $(MANDIR)/$(LANGUAGE)/man1/`basename $$file man`1; \
-+		$(INSTALL_MAN) $$file $(DESTDIR)$(MANDIR)/$(LANGUAGE)/man1/`basename $$file man`1; \
- 	done
--	$(RM) $(MANDIR)/$(LANGUAGE)/man1/cancel.1
--	$(LN) lp.1 $(MANDIR)/$(LANGUAGE)/man1/cancel.1
--	$(INSTALL_DIR) $(PMANDIR)/fr/man3
-+	$(RM) $(DESTDIR)$(MANDIR)/$(LANGUAGE)/man1/cancel.1
-+	$(LN) lp.1 $(DESTDIR)$(MANDIR)/$(LANGUAGE)/man1/cancel.1
-+	$(INSTALL_DIR) $(DESTDIR)$(PMANDIR)/fr/man3
- 	for file in $(MAN3); do \
--		$(INSTALL_MAN) $$file $(PMANDIR)/fr/man3/`basename $$file man`3; \
-+		$(INSTALL_MAN) $$file $(DESTDIR)$(PMANDIR)/fr/man3/`basename $$file man`3; \
- 	done
--	$(INSTALL_DIR) $(MANDIR)/$(LANGUAGE)/man5
-+	$(INSTALL_DIR) $(DESTDIR)$(MANDIR)/$(LANGUAGE)/man5
- 	for file in $(MAN5); do \
--		$(INSTALL_MAN) $$file $(MANDIR)/$(LANGUAGE)/man5/`basename $$file man`5; \
-+		$(INSTALL_MAN) $$file $(DESTDIR)$(MANDIR)/$(LANGUAGE)/man5/`basename $$file man`5; \
- 	done
--	$(INSTALL_DIR) $(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)
-+	$(INSTALL_DIR) $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)
- 	for file in $(MAN8); do \
--		$(INSTALL_MAN) $$file $(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/`basename $$file man`$(MAN8EXT); \
-+		$(INSTALL_MAN) $$file $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/`basename $$file man`$(MAN8EXT); \
- 	done
--	$(RM) $(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/reject.$(MAN8EXT)
--	$(LN) accept.$(MAN8EXT) $(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/reject.$(MAN8EXT)
--	$(RM) $(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/disable.$(MAN8EXT)
--	$(LN) enable.$(MAN8EXT) $(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/disable.$(MAN8EXT)
--	$(INSTALL_DIR) $(MANDIR)/$(LANGUAGE)/cat1
-+	$(RM) $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/reject.$(MAN8EXT)
-+	$(LN) accept.$(MAN8EXT) $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/reject.$(MAN8EXT)
-+	$(RM) $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/disable.$(MAN8EXT)
-+	$(LN) enable.$(MAN8EXT) $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/disable.$(MAN8EXT)
-+	$(INSTALL_DIR) $(DESTDIR)$(MANDIR)/$(LANGUAGE)/cat1
- 	for file in $(CAT1); do \
--		$(INSTALL_MAN) $$file $(MANDIR)/$(LANGUAGE)/cat1; \
-+		$(INSTALL_MAN) $$file $(DESTDIR)$(MANDIR)/$(LANGUAGE)/cat1; \
- 	done
--	$(RM) $(MANDIR)/$(LANGUAGE)/cat1/cancel.$(CAT1EXT)
--	$(LN) lp.$(CAT1EXT) $(MANDIR)/$(LANGUAGE)/cat1/cancel.$(CAT1EXT)
--	$(INSTALL_DIR) $(PMANDIR)/fr/cat3
-+	$(RM) $(DESTDIR)$(MANDIR)/$(LANGUAGE)/cat1/cancel.$(CAT1EXT)
-+	$(LN) lp.$(CAT1EXT) $(DESTDIR)$(MANDIR)/$(LANGUAGE)/cat1/cancel.$(CAT1EXT)
-+	$(INSTALL_DIR) $(DESTDIR)$(PMANDIR)/fr/cat3
- 	for file in $(CAT3); do \
--		$(INSTALL_MAN) $$file $(PMANDIR)/fr/cat3; \
-+		$(INSTALL_MAN) $$file $(DESTDIR)$(PMANDIR)/fr/cat3; \
- 	done
--	$(INSTALL_DIR) $(MANDIR)/$(LANGUAGE)/cat5
-+	$(INSTALL_DIR) $(DESTDIR)$(MANDIR)/$(LANGUAGE)/cat5
- 	for file in $(CAT5); do \
--		$(INSTALL_MAN) $$file $(MANDIR)/$(LANGUAGE)/cat5; \
-+		$(INSTALL_MAN) $$file $(DESTDIR)$(MANDIR)/$(LANGUAGE)/cat5; \
- 	done
--	$(INSTALL_DIR) $(AMANDIR)/$(LANGUAGE)/cat$(MAN8EXT)
-+	$(INSTALL_DIR) $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/cat$(MAN8EXT)
- 	for file in $(CAT8); do \
--		$(INSTALL_MAN) $$file $(AMANDIR)/$(LANGUAGE)/cat$(MAN8EXT); \
-+		$(INSTALL_MAN) $$file $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/cat$(MAN8EXT); \
- 	done
--	$(RM) $(AMANDIR)/$(LANGUAGE)/cat$(MAN8EXT)/reject.$(CAT8EXT)
--	$(LN) accept.$(CAT8EXT) $(AMANDIR)/$(LANGUAGE)/cat$(MAN8EXT)/reject.$(CAT8EXT)
--	$(RM) $(AMANDIR)/$(LANGUAGE)/cat$(MAN8EXT)/disable.$(CAT8EXT)
--	$(LN) enable.$(CAT8EXT) $(AMANDIR)/$(LANGUAGE)/cat$(MAN8EXT)/disable.$(CAT8EXT)
-+	$(RM) $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/cat$(MAN8EXT)/reject.$(CAT8EXT)
-+	$(LN) accept.$(CAT8EXT) $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/cat$(MAN8EXT)/reject.$(CAT8EXT)
-+	$(RM) $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/cat$(MAN8EXT)/disable.$(CAT8EXT)
-+	$(LN) enable.$(CAT8EXT) $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/cat$(MAN8EXT)/disable.$(CAT8EXT)
- 
- 
- #
---- cups-1.1.18/man/Makefile.wiget	Tue Dec 17 19:59:55 2002
-+++ cups-1.1.18/man/Makefile	Fri Dec 20 16:50:54 2002
+diff -urN cups-1.1.19.orig/man/Makefile cups-1.1.19/man/Makefile
+--- cups-1.1.19.orig/man/Makefile	Tue May 27 23:14:31 2003
++++ cups-1.1.19/man/Makefile	Tue May 27 23:15:51 2003
 @@ -68,50 +68,50 @@
  #
  
@@ -456,8 +446,91 @@
  	for dir in $(LANGDIRS); do \
  		echo "Installing all in man/$$dir..."; \
  		(cd $$dir; $(MAKE) $(MFLAGS) install); \
---- cups-1.1.18/pdftops/Makefile.wiget	Tue Dec 17 20:00:04 2002
-+++ cups-1.1.18/pdftops/Makefile	Fri Dec 20 16:50:54 2002
+diff -urN cups-1.1.19.orig/man/fr/Makefile cups-1.1.19/man/fr/Makefile
+--- cups-1.1.19.orig/man/fr/Makefile	Tue May 27 23:14:31 2003
++++ cups-1.1.19/man/fr/Makefile	Tue May 27 23:15:51 2003
+@@ -60,50 +60,50 @@
+ #
+ 
+ install:	all
+-	$(INSTALL_DIR) $(MANDIR)/$(LANGUAGE)/man1
++	$(INSTALL_DIR) $(DESTDIR)$(MANDIR)/$(LANGUAGE)/man1
+ 	for file in $(MAN1); do \
+-		$(INSTALL_MAN) $$file $(MANDIR)/$(LANGUAGE)/man1/`basename $$file man`1; \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(MANDIR)/$(LANGUAGE)/man1/`basename $$file man`1; \
+ 	done
+-	$(RM) $(MANDIR)/$(LANGUAGE)/man1/cancel.1
+-	$(LN) lp.1 $(MANDIR)/$(LANGUAGE)/man1/cancel.1
+-	$(INSTALL_DIR) $(PMANDIR)/fr/man3
++	$(RM) $(DESTDIR)$(MANDIR)/$(LANGUAGE)/man1/cancel.1
++	$(LN) lp.1 $(DESTDIR)$(MANDIR)/$(LANGUAGE)/man1/cancel.1
++	$(INSTALL_DIR) $(DESTDIR)$(PMANDIR)/fr/man3
+ 	for file in $(MAN3); do \
+-		$(INSTALL_MAN) $$file $(PMANDIR)/fr/man3/`basename $$file man`3; \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(PMANDIR)/fr/man3/`basename $$file man`3; \
+ 	done
+-	$(INSTALL_DIR) $(MANDIR)/$(LANGUAGE)/man5
++	$(INSTALL_DIR) $(DESTDIR)$(MANDIR)/$(LANGUAGE)/man5
+ 	for file in $(MAN5); do \
+-		$(INSTALL_MAN) $$file $(MANDIR)/$(LANGUAGE)/man5/`basename $$file man`5; \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(MANDIR)/$(LANGUAGE)/man5/`basename $$file man`5; \
+ 	done
+-	$(INSTALL_DIR) $(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)
++	$(INSTALL_DIR) $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)
+ 	for file in $(MAN8); do \
+-		$(INSTALL_MAN) $$file $(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/`basename $$file man`$(MAN8EXT); \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/`basename $$file man`$(MAN8EXT); \
+ 	done
+-	$(RM) $(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/reject.$(MAN8EXT)
+-	$(LN) accept.$(MAN8EXT) $(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/reject.$(MAN8EXT)
+-	$(RM) $(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/disable.$(MAN8EXT)
+-	$(LN) enable.$(MAN8EXT) $(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/disable.$(MAN8EXT)
+-	$(INSTALL_DIR) $(MANDIR)/$(LANGUAGE)/cat1
++	$(RM) $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/reject.$(MAN8EXT)
++	$(LN) accept.$(MAN8EXT) $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/reject.$(MAN8EXT)
++	$(RM) $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/disable.$(MAN8EXT)
++	$(LN) enable.$(MAN8EXT) $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/man$(MAN8EXT)/disable.$(MAN8EXT)
++	$(INSTALL_DIR) $(DESTDIR)$(MANDIR)/$(LANGUAGE)/cat1
+ 	for file in $(CAT1); do \
+-		$(INSTALL_MAN) $$file $(MANDIR)/$(LANGUAGE)/cat1; \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(MANDIR)/$(LANGUAGE)/cat1; \
+ 	done
+-	$(RM) $(MANDIR)/$(LANGUAGE)/cat1/cancel.$(CAT1EXT)
+-	$(LN) lp.$(CAT1EXT) $(MANDIR)/$(LANGUAGE)/cat1/cancel.$(CAT1EXT)
+-	$(INSTALL_DIR) $(PMANDIR)/fr/cat3
++	$(RM) $(DESTDIR)$(MANDIR)/$(LANGUAGE)/cat1/cancel.$(CAT1EXT)
++	$(LN) lp.$(CAT1EXT) $(DESTDIR)$(MANDIR)/$(LANGUAGE)/cat1/cancel.$(CAT1EXT)
++	$(INSTALL_DIR) $(DESTDIR)$(PMANDIR)/fr/cat3
+ 	for file in $(CAT3); do \
+-		$(INSTALL_MAN) $$file $(PMANDIR)/fr/cat3; \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(PMANDIR)/fr/cat3; \
+ 	done
+-	$(INSTALL_DIR) $(MANDIR)/$(LANGUAGE)/cat5
++	$(INSTALL_DIR) $(DESTDIR)$(MANDIR)/$(LANGUAGE)/cat5
+ 	for file in $(CAT5); do \
+-		$(INSTALL_MAN) $$file $(MANDIR)/$(LANGUAGE)/cat5; \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(MANDIR)/$(LANGUAGE)/cat5; \
+ 	done
+-	$(INSTALL_DIR) $(AMANDIR)/$(LANGUAGE)/cat$(MAN8EXT)
++	$(INSTALL_DIR) $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/cat$(MAN8EXT)
+ 	for file in $(CAT8); do \
+-		$(INSTALL_MAN) $$file $(AMANDIR)/$(LANGUAGE)/cat$(MAN8EXT); \
++		$(INSTALL_MAN) $$file $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/cat$(MAN8EXT); \
+ 	done
+-	$(RM) $(AMANDIR)/$(LANGUAGE)/cat$(MAN8EXT)/reject.$(CAT8EXT)
+-	$(LN) accept.$(CAT8EXT) $(AMANDIR)/$(LANGUAGE)/cat$(MAN8EXT)/reject.$(CAT8EXT)
+-	$(RM) $(AMANDIR)/$(LANGUAGE)/cat$(MAN8EXT)/disable.$(CAT8EXT)
+-	$(LN) enable.$(CAT8EXT) $(AMANDIR)/$(LANGUAGE)/cat$(MAN8EXT)/disable.$(CAT8EXT)
++	$(RM) $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/cat$(MAN8EXT)/reject.$(CAT8EXT)
++	$(LN) accept.$(CAT8EXT) $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/cat$(MAN8EXT)/reject.$(CAT8EXT)
++	$(RM) $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/cat$(MAN8EXT)/disable.$(CAT8EXT)
++	$(LN) enable.$(CAT8EXT) $(DESTDIR)$(AMANDIR)/$(LANGUAGE)/cat$(MAN8EXT)/disable.$(CAT8EXT)
+ 
+ 
+ #
+diff -urN cups-1.1.19.orig/pdftops/Makefile cups-1.1.19/pdftops/Makefile
+--- cups-1.1.19.orig/pdftops/Makefile	Tue May 27 23:14:31 2003
++++ cups-1.1.19/pdftops/Makefile	Tue May 27 23:15:51 2003
 @@ -91,8 +91,8 @@
  #
  
@@ -469,8 +542,9 @@
  
  
  #
---- cups-1.1.18/ppd/Makefile.wiget	Tue Dec 17 20:00:06 2002
-+++ cups-1.1.18/ppd/Makefile	Fri Dec 20 16:50:54 2002
+diff -urN cups-1.1.19.orig/ppd/Makefile cups-1.1.19/ppd/Makefile
+--- cups-1.1.19.orig/ppd/Makefile	Tue May 27 23:14:31 2003
++++ cups-1.1.19/ppd/Makefile	Tue May 27 23:15:51 2003
 @@ -52,9 +52,9 @@
  #
  
@@ -483,9 +557,10 @@
  	done
  
  
---- cups-1.1.18/scheduler/Makefile.wiget	Tue Dec 17 20:00:12 2002
-+++ cups-1.1.18/scheduler/Makefile	Fri Dec 20 16:50:54 2002
-@@ -60,17 +60,17 @@
+diff -urN cups-1.1.19.orig/scheduler/Makefile cups-1.1.19/scheduler/Makefile
+--- cups-1.1.19.orig/scheduler/Makefile	Tue May 27 23:14:31 2003
++++ cups-1.1.19/scheduler/Makefile	Tue May 27 23:21:03 2003
+@@ -61,17 +61,17 @@
  #
  
  install:	all
@@ -498,8 +573,8 @@
 -	$(INSTALL_DIR) $(SERVERROOT)/interfaces
 -	$(INSTALL_DIR) $(SERVERROOT)/ppd
 -	$(INSTALL_DIR) $(LOGDIR)
--	$(INSTALL_DIR) -m 700 $(REQUESTS)
--	$(INSTALL_DIR) -m 1700 $(REQUESTS)/tmp
+-	$(INSTALL_DIR) -m 710 $(REQUESTS)
+-	$(INSTALL_DIR) -m 1770 $(REQUESTS)/tmp
 +	$(INSTALL_DIR) $(DESTDIR)$(SBINDIR)
 +	$(INSTALL_BIN) cupsd $(DESTDIR)$(SBINDIR)
 +	$(INSTALL_DIR) $(DESTDIR)$(SERVERBIN)/daemon
@@ -509,13 +584,14 @@
 +	$(INSTALL_DIR) $(DESTDIR)$(SERVERROOT)/interfaces
 +	$(INSTALL_DIR) $(DESTDIR)$(SERVERROOT)/ppd
 +	$(INSTALL_DIR) $(DESTDIR)$(LOGDIR)
-+	$(INSTALL_DIR) -m 700 $(DESTDIR)$(REQUESTS)
-+	$(INSTALL_DIR) -m 1700 $(DESTDIR)$(REQUESTS)/tmp
++	$(INSTALL_DIR) -m 710 $(DESTDIR)$(REQUESTS)
++	$(INSTALL_DIR) -m 1770 $(DESTDIR)$(REQUESTS)/tmp
  
  
  #
---- cups-1.1.18/systemv/Makefile.wiget	Tue Dec 17 20:00:19 2002
-+++ cups-1.1.18/systemv/Makefile	Fri Dec 20 16:53:10 2002
+diff -urN cups-1.1.19.orig/systemv/Makefile cups-1.1.19/systemv/Makefile
+--- cups-1.1.19.orig/systemv/Makefile	Tue May 27 23:14:31 2003
++++ cups-1.1.19/systemv/Makefile	Tue May 27 23:25:14 2003
 @@ -59,26 +59,26 @@
  #
  
@@ -530,7 +606,7 @@
 -	$(INSTALL_BIN) lpmove $(SBINDIR)
 -	$(INSTALL_DIR) $(BINDIR)
 -	$(INSTALL_BIN) cancel $(BINDIR)
--	$(INSTALL_BIN) cupstestppd $(SBINDIR)
+-	$(INSTALL_BIN) cupstestppd $(BINDIR)
 -	$(RM) $(BINDIR)/disable
 -	$(LN) ../sbin/accept $(BINDIR)/disable
 -	$(RM) $(BINDIR)/enable
@@ -550,7 +626,7 @@
 +	$(INSTALL_BIN) lpmove $(DESTDIR)$(SBINDIR)
 +	$(INSTALL_DIR) $(DESTDIR)$(BINDIR)
 +	$(INSTALL_BIN) cancel $(DESTDIR)$(BINDIR)
-+	$(INSTALL_BIN) cupstestppd $(DESTDIR)$(SBINDIR)
++	$(INSTALL_BIN) cupstestppd $(DESTDIR)$(BINDIR)
 +	$(RM) $(DESTDIR)$(BINDIR)/disable
 +	$(LN) ../sbin/accept $(DESTDIR)$(BINDIR)/disable
 +	$(RM) $(DESTDIR)$(BINDIR)/enable
@@ -563,8 +639,39 @@
  
  
  #
---- cups-1.1.18/templates/fr/Makefile.wiget	Tue Dec 17 20:00:23 2002
-+++ cups-1.1.18/templates/fr/Makefile	Fri Dec 20 16:50:54 2002
+diff -urN cups-1.1.19.orig/templates/Makefile cups-1.1.19/templates/Makefile
+--- cups-1.1.19.orig/templates/Makefile	Tue May 27 23:14:31 2003
++++ cups-1.1.19/templates/Makefile	Tue May 27 23:15:51 2003
+@@ -95,9 +95,9 @@
+ #
+ 
+ install:
+-	$(INSTALL_DIR) $(DATADIR)/templates
++	$(INSTALL_DIR) $(DESTDIR)$(DATADIR)/templates
+ 	for file in $(FILES); do \
+-		$(INSTALL_DATA) $$file $(DATADIR)/templates; \
++		$(INSTALL_DATA) $$file $(DESTDIR)$(DATADIR)/templates; \
+ 	done
+ 	cd de; $(MAKE) $(MFLAGS) install
+ 	cd fr; $(MAKE) $(MFLAGS) install
+diff -urN cups-1.1.19.orig/templates/de/Makefile cups-1.1.19/templates/de/Makefile
+--- cups-1.1.19.orig/templates/de/Makefile	Tue May 27 23:14:31 2003
++++ cups-1.1.19/templates/de/Makefile	Tue May 27 23:52:26 2003
+@@ -94,9 +94,9 @@
+ #
+ 
+ install:
+-	$(INSTALL_DIR) $(DATADIR)/templates/de
++	$(INSTALL_DIR) $(DESTDIR)$(DATADIR)/templates/de
+ 	for file in $(FILES); do \
+-		$(INSTALL_DATA) $$file $(DATADIR)/templates/de; \
++		$(INSTALL_DATA) $$file $(DESTDIR)$(DATADIR)/templates/de; \
+ 	done
+ 
+ 
+diff -urN cups-1.1.19.orig/templates/fr/Makefile cups-1.1.19/templates/fr/Makefile
+--- cups-1.1.19.orig/templates/fr/Makefile	Tue May 27 23:14:31 2003
++++ cups-1.1.19/templates/fr/Makefile	Tue May 27 23:15:51 2003
 @@ -94,9 +94,9 @@
  #
  
@@ -577,54 +684,3 @@
  	done
  
  
---- cups-1.1.18/templates/Makefile.wiget	Tue Dec 17 20:00:22 2002
-+++ cups-1.1.18/templates/Makefile	Fri Dec 20 16:50:54 2002
-@@ -95,9 +95,9 @@
- #
- 
- install:
--	$(INSTALL_DIR) $(DATADIR)/templates
-+	$(INSTALL_DIR) $(DESTDIR)$(DATADIR)/templates
- 	for file in $(FILES); do \
--		$(INSTALL_DATA) $$file $(DATADIR)/templates; \
-+		$(INSTALL_DATA) $$file $(DESTDIR)$(DATADIR)/templates; \
- 	done
- 	cd fr; $(MAKE) $(MFLAGS) install
- 
---- cups-1.1.18/Makefile.wiget	Tue Dec 17 19:56:25 2002
-+++ cups-1.1.18/Makefile	Fri Dec 20 16:50:54 2002
-@@ -87,32 +87,8 @@
- 	echo Installing in templates...
- 	(cd templates; $(MAKE) $(MFLAGS) install)
- 	echo Installing cups-config script...
--	$(INSTALL_DIR) $(BINDIR)
--	$(INSTALL_SCRIPT) cups-config $(BINDIR)/cups-config
--	echo Installing startup script...
--	if test "x$(INITDIR)" != "x"; then \
--		$(INSTALL_DIR) $(BUILDROOT)$(INITDIR)/init.d; \
--		$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDIR)/init.d/cups; \
--		$(INSTALL_DIR) $(BUILDROOT)$(INITDIR)/rc0.d; \
--		$(INSTALL_SCRIPT) cups.sh  $(BUILDROOT)$(INITDIR)/rc0.d/K00cups; \
--		$(INSTALL_DIR) $(BUILDROOT)$(INITDIR)/rc2.d; \
--		$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDIR)/rc2.d/S99cups; \
--		$(INSTALL_DIR) $(BUILDROOT)$(INITDIR)/rc3.d; \
--		$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDIR)/rc3.d/S99cups; \
--		$(INSTALL_DIR) $(BUILDROOT)$(INITDIR)/rc5.d; \
--		$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDIR)/rc5.d/S99cups; \
--	fi
--	if test "x$(INITDIR)" = "x" -a "x$(INITDDIR)" != "x"; then \
--		$(INSTALL_DIR) $(BUILDROOT)$(INITDDIR); \
--		if test "$(INITDDIR)" = "/System/Library/StartupItems/PrintingServices"; then \
--			$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDDIR)/PrintingServices; \
--			$(INSTALL_DATA) cups.plist $(BUILDROOT)$(INITDDIR)/StartupParameters.plist; \
--			$(INSTALL_DIR) $(BUILDROOT)$(INITDDIR)/Resources/English.lproj; \
--			$(INSTALL_DATA) cups.strings $(BUILDROOT)$(INITDDIR)/Resources/English.lproj/Localizable.strings; \
--		else \
--			$(INSTALL_SCRIPT) cups.sh $(BUILDROOT)$(INITDDIR)/cups; \
--		fi \
--	fi
-+	$(INSTALL_DIR) $(DESTDIR)$(BINDIR)
-+	$(INSTALL_SCRIPT) cups-config $(DESTDIR)$(BINDIR)/cups-config
- 
- #
- # Install source and header files...
