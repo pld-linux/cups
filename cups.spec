@@ -26,6 +26,7 @@ Patch10:	%{name}-dos-backport.patch
 Patch11:	%{name}-debian-strncat.patch
 Patch12:	%{name}-udp-dos.patch
 Patch13:	%{name}-no-authinfo.patch
+Patch14:	%{name}-pdftops2.patch
 URL:		http://www.cups.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -163,6 +164,7 @@ bibliotecas do CUPS.
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
+%patch14 -p1
 
 %build
 %{__aclocal}
