@@ -2,12 +2,17 @@ Summary:	Common Unix Printing System
 Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de ImpressЦo
 Name:		cups
-Version:	1.1.12
+Version:	1.1.13
 Release:	4
+Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/System
 Group(de):	Applikationen/System
+Group(es):	Aplicaciones/Sistema
+Group(fr):	Aplicaciones/SystХme
 Group(pl):	Aplikacje/System
+Group(pt):	AplicaГУes/Sistema
+Group(pt_BR):	AplicaГУes/Sistema
 Source0:	ftp://ftp.easysw.com/pub/%{name}/%{version}/%{name}-%{version}-source.tar.bz2
 Source1:	%{name}.init
 Source2:	%{name}.pamd
@@ -20,13 +25,13 @@ Patch4:		%{name}-options.patch
 Patch5:		%{name}-pstoraster-gcc-2.96.patch
 Patch6:		%{name}-ENCRYPTIONtxt.patch
 URL:		http://www.cups.org/	
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	openssl-devel >= 0.9.6b
 BuildRequires:	pam-devel
-BuildRequires:	autoconf
-BuildRequires:	automake
 Prereq:		%{name}-libs = %{version}
 Prereq:		/sbin/chkconfig
 Provides:	lpr
@@ -60,11 +65,12 @@ Summary:	Common Unix Printing System Libraries
 Summary(pl):	Biblioteki dla CUPS
 Summary(pt_BR):	Sistema Unix de ImpressЦo - bibliotecas para uso em clientes cups
 Group:		Development/Libraries
-Group(de):	Entwicklung/Libraries
+Group(de):	Entwicklung/Bibliotheken
 Group(es):	Desarrollo/Bibliotecas
 Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
 Group(pt_BR):	Desenvolvimento/Bibliotecas
+Group(pt):	Desenvolvimento/Bibliotecas
 Group(ru):	Разработка/Библиотеки
 Group(uk):	Розробка/Б╕бл╕отеки
 Obsoletes:	libcups1
@@ -83,11 +89,12 @@ Summary:	Common Unix Printing System development files
 Summary(pl):	Popularny System Druku dla Unixa, pliki nagЁСwkowe
 Summary(pt_BR):	Sistema Unix de ImpressЦo - ambiente de desenvolvimento
 Group:		Development/Libraries
-Group(de):	Entwicklung/Libraries
+Group(de):	Entwicklung/Bibliotheken
 Group(es):	Desarrollo/Bibliotecas
 Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
 Group(pt_BR):	Desenvolvimento/Bibliotecas
+Group(pt):	Desenvolvimento/Bibliotecas
 Group(ru):	Разработка/Библиотеки
 Group(uk):	Розробка/Б╕бл╕отеки
 Requires:	%{name}-libs = %{version}
@@ -109,11 +116,12 @@ Summary:	Common Unix Printing System static libraries
 Summary(pl):	Popularny System Druku dla Unixa, biblioteki statyczne
 Summary(pt_BR):	Common Unix Printing System - bibliotecas estАticas
 Group:		Development/Libraries
-Group(de):	Entwicklung/Libraries
+Group(de):	Entwicklung/Bibliotheken
 Group(es):	Desarrollo/Bibliotecas
 Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
 Group(pt_BR):	Desenvolvimento/Bibliotecas
+Group(pt):	Desenvolvimento/Bibliotecas
 Group(ru):	Разработка/Библиотеки
 Group(uk):	Розробка/Б╕бл╕отеки
 Requires:	%{name}-devel = %{version}
