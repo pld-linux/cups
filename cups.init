@@ -29,7 +29,7 @@ case "$1" in
 	# Check if the service is already running?
 	if [ ! -f /var/lock/subsys/cups ]; then
 		msg_starting CUPS
-		daemon cupsd
+		daemon cupsd -c /etc/cups/cups.conf
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/cups
 	else
