@@ -216,7 +216,7 @@ fi
 %dir %{_sysconfdir}/%{name}/certs
 %dir %{_sysconfdir}/%{name}/interfaces
 %dir %{_sysconfdir}/%{name}/ppd
-%attr(644,root,root) %{_sysconfdir}/logrotate.d/%{name}
+%attr(644,root,root) /etc/logrotate.d/%{name}
 %attr(4755,lp,root) %{_bindir}/lppasswd
 %attr(755,root,root) %{_bindir}/disable
 %attr(755,root,root) %{_bindir}/enable
