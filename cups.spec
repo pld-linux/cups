@@ -3,7 +3,7 @@ Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impress„o
 Name:		cups
 Version:	1.1.14
-Release:	1
+Release:	2
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/System
@@ -70,7 +70,7 @@ podstawy do zarz±dzania zadaniami i kolejkami druku.
 O sistema Unix de impress„o (CUPS) fornece uma camada de impress„o
 port·vel para os sistemas operacionais baseados no UNIXÆ.
 
-%package libs
+%package lib
 Summary:	Common Unix Printing System Libraries
 Summary(pl):	Biblioteki dla CUPS
 Summary(pt_BR):	Sistema Unix de Impress„o - bibliotecas para uso em clientes cups
@@ -91,15 +91,50 @@ Group(ru):	Ú¡⁄“¡¬œ‘À¡/‚…¬Ã…œ‘≈À…
 Group(sl):	Razvoj/Knjiænice
 Group(sv):	Utveckling/Bibliotek
 Group(uk):	Úœ⁄“œ¬À¡/‚¶¬Ã¶œ‘≈À…
+Provides:	%{name}-libs = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-libs
 Obsoletes:	libcups1
 
-%description libs
+
+%description lib
 Common Unix Printing System Libraries.
 
-%description libs -l pl
+%description lib -l pl
 Biblioteki dla CUPS.
 
-%description libs -l pt_BR
+%description lib -l pt_BR
+Bibliotecas CUPS requeridas pelos clientes CUPS.
+
+%package image-lib
+Summary:	Common Unix Printing System Libraries - images manipulation
+Summary(pl):	Biblioteki dla CUPS - obs≥uga formatÛw graficznych
+Summary(pt_BR):	Sistema Unix de Impress„o - bibliotecas para uso em clientes cups
+Group:		Development/Libraries
+Group(cs):	V˝vojovÈ prost¯edky/Knihovny
+Group(da):	Udvikling/Biblioteker
+Group(de):	Entwicklung/Bibliotheken
+Group(es):	Desarrollo/Bibliotecas
+Group(fr):	Development/Librairies
+Group(is):	ﬁrÛunartÛl/Agerasˆfn
+Group(it):	Sviluppo/Librerie
+Group(ja):	≥´»Ø/•È•§•÷•È•Í
+Group(no):	Utvikling/Bibliotek
+Group(pl):	Programowanie/Biblioteki
+Group(pt_BR):	Desenvolvimento/Bibliotecas
+Group(pt):	Desenvolvimento/Bibliotecas
+Group(ru):	Ú¡⁄“¡¬œ‘À¡/‚…¬Ã…œ‘≈À…
+Group(sl):	Razvoj/Knjiænice
+Group(sv):	Utveckling/Bibliotek
+Group(uk):	Úœ⁄“œ¬À¡/‚¶¬Ã¶œ‘≈À…
+Obsoletes:	libcups1
+
+%description image-lib
+Common Unix Printing System Libraries - images manupalation.
+
+%description image-lib -l pl
+Biblioteki dla CUPS - obs≥uga formatÛw graficznych.
+
+%description image-lib -l pt_BR
 Bibliotecas CUPS requeridas pelos clientes CUPS.
 
 %package devel
@@ -123,7 +158,8 @@ Group(ru):	Ú¡⁄“¡¬œ‘À¡/‚…¬Ã…œ‘≈À…
 Group(sl):	Razvoj/Knjiænice
 Group(sv):	Utveckling/Bibliotek
 Group(uk):	Úœ⁄“œ¬À¡/‚¶¬Ã¶œ‘≈À…
-Requires:	%{name}-libs = %{version}
+Requires:	%{name}-lib = %{version}
+Requires:	%{name}-image-lib = %{version}
 Obsoletes:	libcups1-devel
 
 %description devel
@@ -226,8 +262,10 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del cups
 fi
 
-%post   libs -p /sbin/ldconfig
-%postun libs -p /sbin/ldconfig
+%post   lib -p /sbin/ldconfig
+%postun lib -p /sbin/ldconfig
+%post   image-lib -p /sbin/ldconfig
+%postun image-lib -p /sbin/ldconfig
 
 %files
 %defattr(644,root,root,755)
@@ -260,11 +298,19 @@ fi
 %{_datadir}/cups
 %{_mandir}/man[158]/*
 %lang(C)  %{_datadir}/locale/C/cups_C
+%lang(be) %{_datadir}/locale/be/cups_be
+%lang(cs) %{_datadir}/locale/cs/cups_cs
 %lang(de) %{_datadir}/locale/de/cups_de
 %lang(en) %{_datadir}/locale/en/cups_en
 %lang(es) %{_datadir}/locale/es/cups_es
 %lang(fr) %{_datadir}/locale/fr/cups_fr
+%lang(he) %{_datadir}/locale/he/cups_he
 %lang(it) %{_datadir}/locale/it/cups_it
+%lang(ru_RU) %{_datadir}/locale/ru_RU.*/cups_ru_RU.*
+%lang(sv) %{_datadir}/locale/sv/cups_sv
+%lang(uk) %{_datadir}/locale/uk/cups_uk
+%lang(uk_UA) %{_datadir}/locale/uk_UA.*/cups_uk_UA.*
+%lang(zh_CN) %{_datadir}/locale/zh_CN/cups_zh_CN
 /var/spool/cups
 %attr(750,root,root) %dir /var/log/archiv/cups
 %attr(750,root,root) %dir /var/log/cups
@@ -272,15 +318,20 @@ fi
 %attr(640,root,root) %ghost /var/log/cups/error_log
 %attr(640,root,root) %ghost /var/log/cups/page_log
 
-%files libs
+%files lib
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/lib*.so.*
+%attr(755,root,root) %{_libdir}/libcups.so.*
+
+%files image-lib
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libcupsimage.so.*
 
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/cups-config
 %{_includedir}/cups
 %{_libdir}/lib*.so
+%{_mandir}/man3/*
 
 %files static
 %defattr(644,root,root,755)
