@@ -31,6 +31,7 @@ Prereq:		%{name}-libs = %{version}
 Prereq:		/sbin/chkconfig
 Provides:	lpr
 Obsoletes:	lpr
+Obsoletes:	LPRng
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description 
