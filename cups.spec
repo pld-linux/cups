@@ -23,8 +23,6 @@ Provides:	lpr
 Obsoletes:	lpr
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_sysconfdir		/etc/cups
-
 %description 
 CUPS provides a portable printing layer for UNIX®-based operating
 systems. It has been developed by Easy Software Products to promote a
@@ -143,13 +141,13 @@ rm -rf $RPM_BUILD_ROOT
 %doc *.gz doc/*.html doc/*.css doc/*.pdf doc/images
 %attr(640,root,root) %config %verify(not size mtime md5) /etc/pam.d/*
 %attr(754,root,root) /etc/rc.d/init.d/cups
-%dir %{_sysconfdir}
-%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/*.conf
-%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/*.convs
-%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/*.types
-%dir %{_sysconfdir}/certs
-%dir %{_sysconfdir}/interfaces
-%dir %{_sysconfdir}/ppd
+%dir %{_sysconfdir}/etc
+%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/etc/*.conf
+%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/etc/*.convs
+%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/etc/*.types
+%dir %{_sysconfdir}/etc/certs
+%dir %{_sysconfdir}/etc/interfaces
+%dir %{_sysconfdir}/etc/ppd
 %attr(4755,lp,root) %{_bindir}/lppasswd
 %attr(755,root,root) %{_bindir}/cancel
 %attr(755,root,root) %{_bindir}/disable
