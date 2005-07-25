@@ -246,6 +246,7 @@ pod³±czonych do portów równoleg³ych.
 %{__autoconf}
 %configure \
 	--libdir=%{_ulibdir} \
+	%{?debug:--enable-debug} \
 	--with-docdir=%{_ulibdir}/%{name}/cgi-bin
 %{__make}
 
