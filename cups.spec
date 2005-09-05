@@ -3,7 +3,7 @@ Summary(pl):	Popularny System Druku dla Unixa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.1.14
-Release:	24
+Release:	25
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/System
@@ -29,6 +29,7 @@ Patch13:	%{name}-no-authinfo.patch
 Patch14:	%{name}-pdftops2.patch
 Patch15:	%{name}-hpgl-fixes.patch
 Patch16:	%{name}-lppasswd-fixes.patch
+Patch17:	%{name}-CAN-2005-2097.patch
 URL:		http://www.cups.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -169,6 +170,7 @@ bibliotecas do CUPS.
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
+%patch17 -p1
 
 %build
 %{__aclocal}
