@@ -13,7 +13,7 @@ Summary(pl):	Popularny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.1.23
-Release:	4
+Release:	5
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
@@ -35,11 +35,13 @@ Patch8:		%{name}-gcc34.patch
 Patch9:		%{name}-tmpdir.patch
 Patch10:	%{name}-gcc4.patch
 Patch11:	%{name}-CAN-2005-2097.patch
+Patch12:	%{name}-anonymous_jobs.patch
 URL:		http://www.cups.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
+BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	openslp-devel
 BuildRequires:	openssl-devel >= 0.9.7d
@@ -242,6 +244,7 @@ pod³±czonych do portów równoleg³ych.
 #%patch9 -p1
 %patch10 -p1
 %patch11 -p1
+%patch12 -p1
 
 %build
 %{__aclocal}
