@@ -6,6 +6,7 @@
 # chkconfig:	2345 90 10
 # description:	Startup/shutdown script for the Common UNIX \
 #		Printing System (CUPS).
+# processname:	cupsd
 #
 
 # Source function library
