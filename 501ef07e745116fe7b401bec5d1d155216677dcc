@@ -1,0 +1,2 @@
+- moved all clients (for users _and_ admins) to clients subpackage.
+  all these clients are able to work via network
