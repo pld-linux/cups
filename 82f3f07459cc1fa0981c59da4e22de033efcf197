@@ -1,0 +1,2 @@
+- %{_libdir}/cups moved to %{_prefix}/lib/cups (makes difference on AMD64),
+  so filter paths are not arch-dependant
