@@ -49,8 +49,8 @@ BuildRequires:	pam-devel
 %{?with_php:BuildRequires:	php-devel}
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-perlprov
-PreReq:		%{name}-libs = %{epoch}:%{version}-%{release}
 Requires(post,preun):	/sbin/chkconfig
+Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Requires:	pam >= 0.77.3
 Conflicts:	ghostscript < 7.05.4
 Obsoletes:	LPRng
@@ -344,19 +344,19 @@ fi
 %defattr(644,root,root,755)
 #%doc *.gz doc/*.html doc/*.css doc/images
 %doc *.txt
-%attr(640,root,root) %config %verify(not size mtime md5) /etc/pam.d/*
+%attr(640,root,root) %config %verify(not md5 mtime size) /etc/pam.d/*
 %attr(754,root,root) /etc/rc.d/init.d/cups
 %dir %{_sysconfdir}/%{name}
-%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{name}/classes.conf
-%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{name}/cupsd.conf
-%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{name}/printers.conf
-%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{name}/*.convs
-%attr(640,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{name}/*.types
+%attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/classes.conf
+%attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/cupsd.conf
+%attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/printers.conf
+%attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/*.convs
+%attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/*.types
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/security/blacklist.cups
 %dir %{_sysconfdir}/%{name}/certs
 %dir %{_sysconfdir}/%{name}/interfaces
 %dir %{_sysconfdir}/%{name}/ppd
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/logrotate.d/%{name}
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
 %attr(4755,lp,root) %{_bindir}/lppasswd
 %attr(755,root,root) %{_bindir}/cupstestppd
 %attr(755,root,root) %{_bindir}/disable
@@ -412,7 +412,7 @@ fi
 
 %files clients
 %defattr(644,root,root,755)
-%attr(644,root,lp) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{name}/client.conf
+%attr(644,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/client.conf
 %attr(755,root,root) %{_bindir}/cancel
 %attr(755,root,root) %{_bindir}/lp
 %attr(755,root,root) %{_bindir}/lpoptions
