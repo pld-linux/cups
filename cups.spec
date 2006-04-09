@@ -13,13 +13,13 @@ Summary(pl):	Popularny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.2
-%define		_rc rc1
+%define		_rc rc2
 Release:	0.%{_rc}.1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
 Source0:	http://ftp.easysw.com/pub/cups/%{version}%{_rc}/%{name}-%{version}%{_rc}-source.tar.bz2
-# Source0-md5:	e1cebe3393c360eb7972efa0715befa1
+# Source0-md5:	a16f213bfa43e85c6076d6e0d9f6db3e
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
