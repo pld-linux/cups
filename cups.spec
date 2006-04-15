@@ -384,6 +384,8 @@ fi
 %lang(es) %{_mandir}/es/man1/filter.1*
 %lang(es) %{_mandir}/es/man1/lppasswd.1*
 %lang(es) %{_mandir}/es/man[58]/*
+# not glibc dir
+%dir %{_datadir}/locale/C
 %{_datadir}/locale/C/cups_C
 %lang(be) %{_datadir}/locale/be/cups_be
 %lang(cs) %{_datadir}/locale/cs/cups_cs
@@ -394,9 +396,13 @@ fi
 %lang(fr) %{_datadir}/locale/fr/cups_fr
 %lang(he) %{_datadir}/locale/he/cups_he
 %lang(it) %{_datadir}/locale/it/cups_it
+# not glibc dir
+%dir %lang(ru) %{_datadir}/locale/ru_RU
 %lang(ru) %{_datadir}/locale/ru_RU/cups_ru_RU
 %lang(sv) %{_datadir}/locale/sv/cups_sv
 %lang(uk) %{_datadir}/locale/uk/cups_uk
+# not glibc dir
+%dir %lang(uk) %{_datadir}/locale/uk_UA
 %lang(uk) %{_datadir}/locale/uk_UA/cups_uk_UA
 %lang(zh_CN) %{_datadir}/locale/zh_CN/cups_zh_CN
 /var/spool/cups
