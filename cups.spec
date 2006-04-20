@@ -49,12 +49,14 @@ BuildRequires:	pam-devel
 %{?with_php:BuildRequires:	php-devel}
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-perlprov
+BuildRequires:	rpmbuild(macros) >= 1.268
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Requires:	pam >= 0.77.3
-Conflicts:	ghostscript < 7.05.4
+Requires:	rc-scripts
 Obsoletes:	LPRng
 Obsoletes:	lpr
+Conflicts:	ghostscript < 7.05.4
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_ulibdir	%{_prefix}/lib
@@ -86,7 +88,7 @@ Summary(pl):	Biblioteki dla CUPS
 Summary(pt_BR):	Sistema Unix de Impressão - bibliotecas para uso em clientes cups
 Group:		Libraries
 Provides:	%{name}-libs = %{epoch}:%{version}-%{release}
-Obsoletes:	%{name}-libs
+Obsoletes:	cups-libs
 Obsoletes:	libcups1
 
 %description lib
@@ -273,7 +275,7 @@ cd ../..
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/etc/{{rc.d/init.d,pam.d,logrotate.d},security} \
+install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,logrotate.d,security} \
 	$RPM_BUILD_ROOT/var/log/{,archiv/}cups
 
 %{__make} install \
@@ -321,17 +323,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 /sbin/chkconfig --add cups
-if [ -f /var/lock/subsys/cups ]; then
-	/etc/rc.d/init.d/cups restart 1>&2
-else
-	echo "Run \"/etc/rc.d/init.d/cups start\" to start cups daemon."
-fi
+%service cups restart "cups daemon"
 
 %preun
 if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/cups ]; then
-		/etc/rc.d/init.d/cups stop 1>&2
-	fi
+	%service cups stop
 	/sbin/chkconfig --del cups
 fi
 
