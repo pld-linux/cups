@@ -8,6 +8,7 @@
 # - build/install java ext ?
 # - perl BRs
 %include	/usr/lib/rpm/macros.perl
+%define		pdir CUPS
 Summary:	Common Unix Printing System
 Summary(pl):	Popularny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
@@ -315,8 +316,15 @@ cp doc/images/*	$RPM_BUILD_ROOT%{_ulibdir}/%{name}/cgi-bin/images
 touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
 touch $RPM_BUILD_ROOT/etc/security/blacklist.cups
 
+# windows drivers can be put there.
+install -d $RPM_BUILD_ROOT%{_datadir}/cups/drivers
+
+# post-strip can't work on readonly files
+chmod u+w $RPM_BUILD_ROOT%{perl_vendorarch}/auto/CUPS/CUPS.so
+
 # check-files cleanup
 rm -rf $RPM_BUILD_ROOT%{_mandir}/{,es/,fr/}cat?
+rm -f $RPM_BUILD_ROOT/etc/rc.d/rc?.d/???cups
 
 %clean
 rm -rf $RPM_BUILD_ROOT
