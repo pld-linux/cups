@@ -4,7 +4,6 @@
 %bcond_without	perl	# don't build Perl extension
 #
 # TODO:
-# - register php module
 # - build/install java ext ?
 # - perl BRs
 %include	/usr/lib/rpm/macros.perl
@@ -47,7 +46,7 @@ BuildRequires:	libtiff-devel
 BuildRequires:	openslp-devel
 BuildRequires:	openssl-devel >= 0.9.7d
 BuildRequires:	pam-devel
-%{?with_php:BuildRequires:	php-devel}
+%{?with_php:BuildRequires:	php-devel >= 4:5.0.0}
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-perlprov
 BuildRequires:	rpmbuild(macros) >= 1.268
@@ -61,6 +60,11 @@ Conflicts:	ghostscript < 7.05.4
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_ulibdir	%{_prefix}/lib
+
+%if %{with php}
+%define		_php_configdir /etc/php
+%define		_php_extensiondir %(php-config --extension-dir)
+%endif
 
 %description
 CUPS provides a portable printing layer for UNIX-based operating
@@ -185,6 +189,7 @@ Summary:	PHP module for CUPS
 Summary(pl):	Modu³ PHP CUPS
 Group:		Development/Languages/PHP
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
+Requires:	php-common >= 4:5.0.0
 
 %description -n php-cups
 PHP module for Common Unix Printing System.
@@ -291,8 +296,13 @@ if [ "%{_lib}" != "lib" ] ; then
 fi
 
 %if %{with php}
+install -d $RPM_BUILD_ROOT%{_php_configdir}/conf.d
 %{__make} -C scripting/php install \
-	PHPDIR="$RPM_BUILD_ROOT`php-config --extension-dir`"
+	PHPDIR="$RPM_BUILD_ROOT%{_php_extensiondir}"
+cat <<'EOF' > $RPM_BUILD_ROOT%{_php_configdir}/conf.d/cups.ini
+; Enable cups extension module
+extension=phpcups.so
+EOF
 %endif
 
 %if %{with perl}
@@ -343,6 +353,16 @@ fi
 %postun	lib -p /sbin/ldconfig
 %post	image-lib -p /sbin/ldconfig
 %postun	image-lib -p /sbin/ldconfig
+
+%post -n php-cups
+[ ! -f /etc/apache/conf.d/??_mod_php.conf ] || %service -q apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php.conf ] || %service -q httpd restart
+
+%postun -n php-cups
+if [ "$1" = 0 ]; then
+	[ ! -f /etc/apache/conf.d/??_mod_php.conf ] || %service -q apache restart
+	[ ! -f /etc/httpd/httpd.conf/??_mod_php.conf ] || %service -q httpd restart
+fi
 
 %files
 %defattr(644,root,root,755)
@@ -489,7 +509,8 @@ fi
 %if %{with php}
 %files -n php-cups
 %defattr(644,root,root,755)
-%attr(755,root,root) %(php-config --extension-dir)/*
+%config(noreplace) %verify(not md5 mtime size) %{_php_configdir}/conf.d/cups.ini
+%attr(755,root,root) %{_php_extensiondir}/*.so
 %endif
 
 %files backend-usb
