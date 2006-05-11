@@ -531,6 +531,7 @@ fi
 %if %{with php}
 %files -n php-cups
 %defattr(644,root,root,755)
+%doc scripting/php/README
 %attr(755,root,root) %{_php_extensiondir}/*
 %config(noreplace) %verify(not md5 mtime size) %{_php_configdir}/conf.d/phpcups.ini
 %endif
