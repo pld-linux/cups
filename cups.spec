@@ -13,7 +13,7 @@ Summary(pl):	Popularny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.2.0
-Release:	0.5
+Release:	0.7
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
@@ -384,7 +384,7 @@ fi
 %attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/*.convs
 %attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/*.types
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/security/blacklist.cups
-#%dir %{_sysconfdir}/%{name}/certs
+%dir %attr(700,root,lp) %{_sysconfdir}/%{name}/ssl
 %dir %{_sysconfdir}/%{name}/interfaces
 %dir %attr(755,root,lp) %{_sysconfdir}/%{name}/ppd
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
