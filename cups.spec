@@ -4,7 +4,6 @@
 %bcond_without	perl	# don't build Perl extension
 #
 # TODO:
-# - register php module
 # - build/install java ext ?
 # - perl BRs
 %include	/usr/lib/rpm/macros.perl
@@ -12,14 +11,13 @@ Summary:	Common Unix Printing System
 Summary(pl):	Popularny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.2
-%define		_rc rc3
-Release:	0.%{_rc}.1
+Version:	1.2.0
+Release:	0.1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
-Source0:	http://ftp.easysw.com/pub/cups/%{version}%{_rc}/%{name}-%{version}%{_rc}-source.tar.bz2
-# Source0-md5:	730b77b994d1be29e5bf1f884424e9ae
+Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
+# Source0-md5:	a168b0b1c8bb946060e659e1df2927c5
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -231,7 +229,7 @@ Ten pakiet umo¿liwia drukowanie z poziomu CUPS-a na drukarkach
 pod³±czonych do portów równoleg³ych.
 
 %prep
-%setup -q -n %{name}-%{version}%{_rc}
+%setup -q
 #patch0 -p1 todo
 %patch1 -p1
 %patch2 -p1
@@ -258,7 +256,7 @@ pod³±czonych do portów równoleg³ych.
 %{__make}
 
 %{__perl} -pi -e 's#-I\.\.\/\.\.#-I../.. -I../../cups#g' scripting/php/Makefile
-%{?with_php:%{__make} -C scripting/php}
+%{?with_php:%{__make} -C scripting/php PHPCONFIG=%{_bindir}/php-config}
 
 %if %{with perl}
 cd scripting/perl
@@ -292,6 +290,11 @@ fi
 %if %{with php}
 %{__make} -C scripting/php install \
 	PHPDIR="$RPM_BUILD_ROOT`php-config --extension-dir`"
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/php/conf.d
+cat > $RPM_BUILD_ROOT%{_sysconfdir}/php/conf.d/phpcups.ini << EOF
+; Enable phpcups extension module
+extension=phpcups.so
+EOF
 %endif
 
 %if %{with perl}
@@ -403,7 +406,7 @@ fi
 #%lang(he) %{_datadir}/locale/he/cups_he
 #%lang(it) %{_datadir}/locale/it/cups_it
 #%lang(ru) %{_datadir}/locale/ru_RU/cups_ru_RU
-%lang(sv) %{_datadir}/locale/sv/cups_sv
+%lang(sv) %{_datadir}/locale/sv/cups_sv.po
 #%lang(uk) %{_datadir}/locale/uk/cups_uk
 #%lang(uk) %{_datadir}/locale/uk_UA/cups_uk_UA
 #%lang(zh_CN) %{_datadir}/locale/zh_CN/cups_zh_CN
@@ -488,6 +491,7 @@ fi
 %files -n php-cups
 %defattr(644,root,root,755)
 %attr(755,root,root) %(php-config --extension-dir)/*
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/php/conf.d/phpcups.ini
 %endif
 
 %files backend-usb
