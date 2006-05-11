@@ -1,11 +1,11 @@
+# TODO:
+# - build/install java ext ?
+# - perl BRs
 #
 # Conditional build:
 %bcond_without	php	# don't build PHP extension
 %bcond_without	perl	# don't build Perl extension
 #
-# TODO:
-# - build/install java ext ?
-# - perl BRs
 %include	/usr/lib/rpm/macros.perl
 %define		pdir CUPS
 Summary:	Common Unix Printing System
@@ -13,7 +13,7 @@ Summary(pl):	Popularny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.2.0
-Release:	0.1
+Release:	0.5
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
@@ -331,6 +331,9 @@ touch $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/{classes,printers}.conf
 # windows drivers can be put there.
 install -d $RPM_BUILD_ROOT%{_datadir}/cups/drivers
 
+touch $RPM_BUILD_ROOT/var/cache/cups/{job,remote}.cache
+install -d $RPM_BUILD_ROOT/etc/cups/ssl
+
 # post-strip can't work on readonly files
 chmod u+w $RPM_BUILD_ROOT%{perl_vendorarch}/auto/CUPS/CUPS.so
 
@@ -374,8 +377,8 @@ fi
 %attr(640,root,root) %config %verify(not md5 mtime size) /etc/pam.d/*
 %attr(754,root,root) /etc/rc.d/init.d/cups
 /etc/dbus-1/system.d/cups.conf
-%dir %{_sysconfdir}/%{name}
-%attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/classes.conf
+%dir %attr(755,root,lp) %{_sysconfdir}/%{name}
+%attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/classes.conf
 %attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/cupsd.conf
 %attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/printers.conf
 %attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/*.convs
@@ -383,7 +386,7 @@ fi
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/security/blacklist.cups
 #%dir %{_sysconfdir}/%{name}/certs
 %dir %{_sysconfdir}/%{name}/interfaces
-%dir %{_sysconfdir}/%{name}/ppd
+%dir %attr(755,root,lp) %{_sysconfdir}/%{name}/ppd
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
 %attr(4755,lp,root) %{_bindir}/lppasswd
 %attr(755,root,root) %{_bindir}/cupstestppd
@@ -402,6 +405,7 @@ fi
 %{_datadir}/cups/charmaps
 %{_datadir}/cups/charsets
 %{_datadir}/cups/data
+%{_datadir}/cups/drivers
 %{_datadir}/cups/fonts
 %{_datadir}/cups/model
 %dir %{_datadir}/cups/templates
@@ -442,7 +446,12 @@ fi
 #%lang(uk) %{_datadir}/locale/uk/cups_uk
 #%lang(uk) %{_datadir}/locale/uk_UA/cups_uk_UA
 #%lang(zh_CN) %{_datadir}/locale/zh_CN/cups_zh_CN
-/var/spool/cups
+%dir %attr(710,root,lp) /var/spool/cups
+%dir %attr(755,root,lp) /var/run/cups
+%dir %attr(511,lp,sys) /var/run/cups/certs
+%dir %attr(775,root,lp) /var/cache/cups
+%attr(640,root,lp) %ghost /var/cache/cups/job.cache
+%attr(640,root,lp) %ghost /var/cache/cups/remote.cache
 %attr(750,root,logs) %dir /var/log/archiv/cups
 %attr(750,root,logs) %dir /var/log/cups
 %attr(640,root,logs) %ghost /var/log/cups/access_log
