@@ -245,7 +245,7 @@ pod³±czonych do portów równoleg³ych.
 #patch3 -p1 obsoleted
 %patch4 -p1
 #patch5 -p1 to check
-#patch6 -p1 to check
+patch6 -p1
 %patch7 -p1
 #patch8 -p1 to check
 # wtf?
