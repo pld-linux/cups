@@ -337,6 +337,7 @@ chmod u+w $RPM_BUILD_ROOT%{perl_vendorarch}/auto/CUPS/CUPS.so
 # check-files cleanup
 rm -rf $RPM_BUILD_ROOT%{_mandir}/{,es/,fr/}cat?
 rm -rf $RPM_BUILD_ROOT/etc/{init.d,rc?.d}/*
+rm -rf $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/cupsd.conf.default
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -396,7 +397,19 @@ fi
 %exclude %{_ulibdir}/cups/backend/serial
 %exclude %{_ulibdir}/cups/backend/parallel
 %attr(755,root,root) %{_sbindir}/cupsd
-%{_datadir}/cups
+%dir %{_datadir}/cups
+%{_datadir}/cups/banners
+%{_datadir}/cups/charmaps
+%{_datadir}/cups/charsets
+%{_datadir}/cups/data
+%{_datadir}/cups/fonts
+%{_datadir}/cups/model
+%dir %{_datadir}/cups/templates
+%{_datadir}/cups/templates/*.tmpl
+%lang(es) %{_datadir}/cups/templates/es
+%lang(ja) %{_datadir}/cups/templates/ja
+%lang(pl) %{_datadir}/cups/templates/pl
+%lang(sv) %{_datadir}/cups/templates/sv
 %{_mandir}/man7/backend.7*
 %{_mandir}/man1/cupstestppd.1*
 %{_mandir}/man1/cupstestdsc.1*
