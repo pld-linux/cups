@@ -39,12 +39,12 @@ URL:		http://www.cups.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	dbus-devel
+BuildRequires:	gnutls-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	openslp-devel
-BuildRequires:	openssl-devel >= 0.9.7d
 BuildRequires:	pam-devel
 %{?with_php:BuildRequires:	php-devel >= 4:5.0.0}
 BuildRequires:	pkgconfig
