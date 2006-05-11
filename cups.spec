@@ -12,14 +12,13 @@ Summary:	Common Unix Printing System
 Summary(pl):	Popularny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.1.23
-Release:	5
+Version:	1.2.0
+Release:	0.1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
 Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	4ce09b1dce09b6b9398af0daae9adf63
-#Source0:	http://ftp.easysw.com/pub/cups/test/%{name}-%{version}%{_suf}-source.tar.bz2
+# Source0-md5:	a168b0b1c8bb946060e659e1df2927c5
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -39,6 +38,7 @@ Patch12:	%{name}-anonymous_jobs.patch
 URL:		http://www.cups.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
+BuildRequires:	dbus-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
@@ -239,32 +239,33 @@ pod³±czonych do portów równoleg³ych.
 
 %prep
 %setup -q
-%patch0 -p1
+#patch0 -p1 todo
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
+#patch3 -p1 obsoleted
 %patch4 -p1
-%patch5 -p1
-%patch6 -p1
+#patch5 -p1 to check
+#patch6 -p1 to check
 %patch7 -p1
-%patch8 -p1
+#patch8 -p1 to check
 # wtf?
 #%patch9 -p1
-%patch10 -p1
-%patch11 -p1
-%patch12 -p1
+#patch10 -p1 to check
+#patch11 -p1 obsoleted
+#patch12 -p1 to check
 
 %build
 %{__aclocal}
 %{__autoconf}
 %configure \
 	--libdir=%{_ulibdir} \
+	--enable-dbus \
 	%{?debug:--enable-debug} \
 	--with-docdir=%{_ulibdir}/%{name}/cgi-bin
 %{__make}
 
 %{__perl} -pi -e 's#-I\.\.\/\.\.#-I../.. -I../../cups#g' scripting/php/Makefile
-%{?with_php:%{__make} -C scripting/php}
+%{?with_php:%{__make} -C scripting/php PHPCONFIG=%{_bindir}/php-config}
 
 %if %{with perl}
 cd scripting/perl
@@ -292,15 +293,16 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,logrotate.d,security} \
 if [ "%{_lib}" != "lib" ] ; then
 	install -d $RPM_BUILD_ROOT%{_libdir}
 	mv $RPM_BUILD_ROOT%{_ulibdir}/*.so* $RPM_BUILD_ROOT%{_libdir}
-	mv $RPM_BUILD_ROOT%{_ulibdir}/*.a $RPM_BUILD_ROOT%{_libdir}
+	#mv $RPM_BUILD_ROOT%{_ulibdir}/*.a $RPM_BUILD_ROOT%{_libdir}
 fi
 
 %if %{with php}
 install -d $RPM_BUILD_ROOT%{_php_configdir}/conf.d
 %{__make} -C scripting/php install \
-	PHPDIR="$RPM_BUILD_ROOT%{_php_extensiondir}"
-cat <<'EOF' > $RPM_BUILD_ROOT%{_php_configdir}/conf.d/cups.ini
-; Enable cups extension module
+	PHPDIR="%{__php_extensiondir}"
+install -d $RPM_BUILD_ROOT%{_php_configdir}/conf.d
+cat > $RPM_BUILD_ROOT%{_php_configdir}/conf.d/phpcups.ini << EOF
+; Enable phpcups extension module
 extension=phpcups.so
 EOF
 %endif
@@ -325,6 +327,7 @@ cp doc/images/*	$RPM_BUILD_ROOT%{_ulibdir}/%{name}/cgi-bin/images
 
 touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
 touch $RPM_BUILD_ROOT/etc/security/blacklist.cups
+touch $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/{classes,printers}.conf
 
 # windows drivers can be put there.
 install -d $RPM_BUILD_ROOT%{_datadir}/cups/drivers
@@ -334,7 +337,7 @@ chmod u+w $RPM_BUILD_ROOT%{perl_vendorarch}/auto/CUPS/CUPS.so
 
 # check-files cleanup
 rm -rf $RPM_BUILD_ROOT%{_mandir}/{,es/,fr/}cat?
-rm -f $RPM_BUILD_ROOT/etc/rc.d/rc?.d/???cups
+rm -rf $RPM_BUILD_ROOT/etc/{init.d,rc?.d}/*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -370,6 +373,7 @@ fi
 %doc *.txt
 %attr(640,root,root) %config %verify(not md5 mtime size) /etc/pam.d/*
 %attr(754,root,root) /etc/rc.d/init.d/cups
+/etc/dbus-1/system.d/cups.conf
 %dir %{_sysconfdir}/%{name}
 %attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/classes.conf
 %attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/cupsd.conf
@@ -377,14 +381,15 @@ fi
 %attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/*.convs
 %attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/*.types
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/security/blacklist.cups
-%dir %{_sysconfdir}/%{name}/certs
+#%dir %{_sysconfdir}/%{name}/certs
 %dir %{_sysconfdir}/%{name}/interfaces
 %dir %{_sysconfdir}/%{name}/ppd
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
 %attr(4755,lp,root) %{_bindir}/lppasswd
 %attr(755,root,root) %{_bindir}/cupstestppd
-%attr(755,root,root) %{_bindir}/disable
-%attr(755,root,root) %{_bindir}/enable
+%attr(755,root,root) %{_bindir}/cupstestdsc
+#%attr(755,root,root) %{_bindir}/cupsdisable
+#%attr(755,root,root) %{_bindir}/cupsenable
 %dir %{_ulibdir}/cups
 %dir %{_ulibdir}/cups/*
 %attr(755,root,root) %{_ulibdir}/cups/*/*
@@ -393,42 +398,38 @@ fi
 %exclude %{_ulibdir}/cups/backend/parallel
 %attr(755,root,root) %{_sbindir}/cupsd
 %{_datadir}/cups
-%{_mandir}/man1/backend.1*
+%{_mandir}/man7/backend.7*
 %{_mandir}/man1/cupstestppd.1*
-%{_mandir}/man1/filter.1*
+%{_mandir}/man1/cupstestdsc.1*
+%{_mandir}/man7/filter.7*
 %{_mandir}/man1/lppasswd.1*
 %{_mandir}/man[58]/*
-%lang(fr) %{_mandir}/fr/man1/backend.1*
-%lang(fr) %{_mandir}/fr/man1/cupstestppd.1*
-%lang(fr) %{_mandir}/fr/man1/filter.1*
-%lang(fr) %{_mandir}/fr/man1/lppasswd.1*
-%lang(fr) %{_mandir}/fr/man[58]/*
-%lang(es) %{_mandir}/es/man1/backend.1*
-%lang(es) %{_mandir}/es/man1/cupstestppd.1*
-%lang(es) %{_mandir}/es/man1/filter.1*
-%lang(es) %{_mandir}/es/man1/lppasswd.1*
-%lang(es) %{_mandir}/es/man[58]/*
-# not glibc dir
-%dir %{_datadir}/locale/C
-%{_datadir}/locale/C/cups_C
-%lang(be) %{_datadir}/locale/be/cups_be
-%lang(cs) %{_datadir}/locale/cs/cups_cs
-%lang(de) %{_datadir}/locale/de/cups_de
-%{_datadir}/locale/en/cups_en
-%lang(en_US) %{_datadir}/locale/en_US/cups_en_US
-%lang(es) %{_datadir}/locale/es/cups_es
-%lang(fr) %{_datadir}/locale/fr/cups_fr
-%lang(he) %{_datadir}/locale/he/cups_he
-%lang(it) %{_datadir}/locale/it/cups_it
-# not glibc dir
-%dir %lang(ru) %{_datadir}/locale/ru_RU
-%lang(ru) %{_datadir}/locale/ru_RU/cups_ru_RU
-%lang(sv) %{_datadir}/locale/sv/cups_sv
-%lang(uk) %{_datadir}/locale/uk/cups_uk
-# not glibc dir
-%dir %lang(uk) %{_datadir}/locale/uk_UA
-%lang(uk) %{_datadir}/locale/uk_UA/cups_uk_UA
-%lang(zh_CN) %{_datadir}/locale/zh_CN/cups_zh_CN
+#%lang(fr) %{_mandir}/fr/man1/backend.1*
+#%lang(fr) %{_mandir}/fr/man1/cupstestppd.1*
+#%lang(fr) %{_mandir}/fr/man1/filter.1*
+#%lang(fr) %{_mandir}/fr/man1/lppasswd.1*
+#%lang(fr) %{_mandir}/fr/man[58]/*
+#%lang(es) %{_mandir}/es/man1/backend.1*
+#%lang(es) %{_mandir}/es/man1/cupstestppd.1*
+#%lang(es) %{_mandir}/es/man1/filter.1*
+#%lang(es) %{_mandir}/es/man1/lppasswd.1*
+#%lang(es) %{_mandir}/es/man[58]/*
+#%{_datadir}/locale/C/cups_C
+#%lang(be) %{_datadir}/locale/be/cups_be
+#%lang(cs) %{_datadir}/locale/cs/cups_cs
+#%lang(de) %{_datadir}/locale/de/cups_de
+#%{_datadir}/locale/en/cups_en
+#%lang(en_US) %{_datadir}/locale/en_US/cups_en_US
+%lang(es) %{_datadir}/locale/es/cups_es.po
+%lang(ja) %{_datadir}/locale/ja/cups_ja.po
+#%lang(fr) %{_datadir}/locale/fr/cups_fr
+#%lang(he) %{_datadir}/locale/he/cups_he
+#%lang(it) %{_datadir}/locale/it/cups_it
+#%lang(ru) %{_datadir}/locale/ru_RU/cups_ru_RU
+%lang(sv) %{_datadir}/locale/sv/cups_sv.po
+#%lang(uk) %{_datadir}/locale/uk/cups_uk
+#%lang(uk) %{_datadir}/locale/uk_UA/cups_uk_UA
+#%lang(zh_CN) %{_datadir}/locale/zh_CN/cups_zh_CN
 /var/spool/cups
 %attr(750,root,logs) %dir /var/log/archiv/cups
 %attr(750,root,logs) %dir /var/log/cups
@@ -442,7 +443,7 @@ fi
 
 %files clients
 %defattr(644,root,root,755)
-%attr(644,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/client.conf
+#%attr(644,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/client.conf
 %attr(755,root,root) %{_bindir}/cancel
 %attr(755,root,root) %{_bindir}/lp
 %attr(755,root,root) %{_bindir}/lpoptions
@@ -464,19 +465,19 @@ fi
 %{_mandir}/man1/lpr.1*
 %{_mandir}/man1/lprm.1*
 %{_mandir}/man1/lpstat.1*
-%lang(fr) %{_mandir}/fr/man1/cancel.1*
-%lang(fr) %{_mandir}/fr/man1/lp.1*
-%lang(fr) %{_mandir}/fr/man1/lpoptions.1*
-%lang(fr) %{_mandir}/fr/man1/lpq.1*
-%lang(fr) %{_mandir}/fr/man1/lpr.1*
-%lang(fr) %{_mandir}/fr/man1/lprm.1*
-%lang(fr) %{_mandir}/fr/man1/lpstat.1*
-%lang(es) %{_mandir}/es/man1/lp.1*
-%lang(es) %{_mandir}/es/man1/lpoptions.1*
-%lang(es) %{_mandir}/es/man1/lpq.1*
-%lang(es) %{_mandir}/es/man1/lpr.1*
-%lang(es) %{_mandir}/es/man1/lprm.1*
-%lang(es) %{_mandir}/es/man1/lpstat.1*
+#%lang(fr) %{_mandir}/fr/man1/cancel.1*
+#%lang(fr) %{_mandir}/fr/man1/lp.1*
+#%lang(fr) %{_mandir}/fr/man1/lpoptions.1*
+#%lang(fr) %{_mandir}/fr/man1/lpq.1*
+#%lang(fr) %{_mandir}/fr/man1/lpr.1*
+#%lang(fr) %{_mandir}/fr/man1/lprm.1*
+#%lang(fr) %{_mandir}/fr/man1/lpstat.1*
+#%lang(es) %{_mandir}/es/man1/lp.1*
+#%lang(es) %{_mandir}/es/man1/lpoptions.1*
+#%lang(es) %{_mandir}/es/man1/lpq.1*
+#%lang(es) %{_mandir}/es/man1/lpr.1*
+#%lang(es) %{_mandir}/es/man1/lprm.1*
+#%lang(es) %{_mandir}/es/man1/lpstat.1*
 
 %files image-lib
 %defattr(644,root,root,755)
@@ -489,12 +490,12 @@ fi
 %{_libdir}/lib*.so
 %{_mandir}/man1/cups-config*
 %{_mandir}/man3/*
-%lang(fr) %{_mandir}/fr/man1/cups-config*
-%lang(es) %{_mandir}/es/man1/cups-config*
+#%lang(fr) %{_mandir}/fr/man1/cups-config*
+#%lang(es) %{_mandir}/es/man1/cups-config*
 
-%files static
-%defattr(644,root,root,755)
-%{_libdir}/*.a
+#%files static
+#%defattr(644,root,root,755)
+#%{_libdir}/*.a
 
 %if %{with perl}
 %files -n perl-cups
@@ -509,8 +510,8 @@ fi
 %if %{with php}
 %files -n php-cups
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not md5 mtime size) %{_php_configdir}/conf.d/cups.ini
-%attr(755,root,root) %{_php_extensiondir}/*.so
+%attr(755,root,root) %(_php_extensiondir)/*
+%config(noreplace) %verify(not md5 mtime size) %{_php_configdir}/conf.d/phpcups.ini
 %endif
 
 %files backend-usb
