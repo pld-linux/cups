@@ -13,7 +13,7 @@ Summary(pl):	Popularny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.2.0
-Release:	0.7
+Release:	0.8
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
@@ -25,11 +25,11 @@ Source3:	%{name}.logrotate
 Patch0:		%{name}-config.patch
 Patch1:		%{name}-lp-lpr.patch
 Patch2:		%{name}-options.patch
-Patch4:		%{name}-man_pages_linking.patch
-Patch5:		%{name}-nolibs.patch
-Patch6:		%{name}-nostrip.patch
-Patch7:		%{name}-rpath.patch
-Patch12:	%{name}-anonymous_jobs.patch
+Patch3:		%{name}-man_pages_linking.patch
+Patch4:		%{name}-nolibs.patch
+Patch5:		%{name}-nostrip.patch
+Patch6:		%{name}-rpath.patch
+Patch7:		%{name}-anonymous_jobs.patch
 URL:		http://www.cups.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -234,14 +234,14 @@ pod³±czonych do portów równoleg³ych.
 
 %prep
 %setup -q
-#patch0 -p1 todo
+%patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch4 -p1
-#patch5 -p1 to check
+%patch3 -p1
+#patch4 -p1 to check
+%patch5 -p1
 %patch6 -p1
-%patch7 -p1
-#patch12 -p1 to check
+#patch7 -p1 to check
 
 %build
 %{__aclocal}
