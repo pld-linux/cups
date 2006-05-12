@@ -26,10 +26,9 @@ Patch0:		%{name}-config.patch
 Patch1:		%{name}-lp-lpr.patch
 Patch2:		%{name}-options.patch
 Patch3:		%{name}-man_pages_linking.patch
-Patch4:		%{name}-nolibs.patch
-Patch5:		%{name}-nostrip.patch
-Patch6:		%{name}-rpath.patch
-Patch7:		%{name}-anonymous_jobs.patch
+Patch4:		%{name}-nostrip.patch
+Patch5:		%{name}-rpath.patch
+Patch6:		%{name}-anonymous_jobs.patch
 URL:		http://www.cups.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -239,10 +238,9 @@ pod³±czonych do portów równoleg³ych.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-#patch4 -p1 to check
+%patch4 -p1
 %patch5 -p1
-%patch6 -p1
-#patch7 -p1 to check
+#patch6 -p1 to check
 
 %build
 %{__aclocal}
