@@ -34,7 +34,8 @@ URL:		http://www.cups.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	dbus-devel
-BuildRequires:	gnutls-devel
+BuildRequires:	openldap-devel
+BuildRequires:	openssl-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
@@ -248,6 +249,10 @@ pod³±czonych do portów równoleg³ych.
 %{__autoconf}
 %configure \
 	--libdir=%{_ulibdir} \
+	--enable-ssl \
+	--enable-openssl \
+	--disable-gnutls \
+	--disable-cdsassl \
 	--enable-dbus \
 	%{?debug:--enable-debug} \
 	--with-docdir=%{_ulibdir}/%{name}/cgi-bin
