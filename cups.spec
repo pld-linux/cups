@@ -25,14 +25,10 @@ Source3:	%{name}.logrotate
 Patch0:		%{name}-config.patch
 Patch1:		%{name}-lp-lpr.patch
 Patch2:		%{name}-options.patch
-Patch3:		%{name}-ENCRYPTIONtxt.patch
 Patch4:		%{name}-man_pages_linking.patch
 Patch5:		%{name}-nolibs.patch
 Patch6:		%{name}-nostrip.patch
 Patch7:		%{name}-rpath.patch
-Patch8:		%{name}-gcc34.patch
-Patch10:	%{name}-gcc4.patch
-Patch11:	%{name}-CAN-2005-2097.patch
 Patch12:	%{name}-anonymous_jobs.patch
 URL:		http://www.cups.org/
 BuildRequires:	autoconf
@@ -241,14 +237,10 @@ pod³±czonych do portów równoleg³ych.
 #patch0 -p1 todo
 %patch1 -p1
 %patch2 -p1
-#patch3 -p1 obsoleted
 %patch4 -p1
 #patch5 -p1 to check
 %patch6 -p1
 %patch7 -p1
-#patch8 -p1 to check
-#patch10 -p1 to check
-#patch11 -p1 obsoleted
 #patch12 -p1 to check
 
 %build
