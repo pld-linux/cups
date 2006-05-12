@@ -249,6 +249,8 @@ pod³±czonych do portów równoleg³ych.
 %{__autoconf}
 %configure \
 	--libdir=%{_ulibdir} \
+	--enable-shared \
+	--enable-static \
 	--enable-ssl \
 	--enable-openssl \
 	--disable-gnutls \
@@ -320,7 +322,7 @@ cp doc/images/*	$RPM_BUILD_ROOT%{_ulibdir}/%{name}/cgi-bin/images
 
 touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
 touch $RPM_BUILD_ROOT/etc/security/blacklist.cups
-touch $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/{classes,printers}.conf
+touch $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/{classes,printers,client}.conf
 
 # windows drivers can be put there.
 install -d $RPM_BUILD_ROOT%{_datadir}/cups/drivers
@@ -458,7 +460,7 @@ fi
 
 %files clients
 %defattr(644,root,root,755)
-#%attr(644,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/client.conf
+%attr(644,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/client.conf
 %attr(755,root,root) %{_bindir}/cancel
 %attr(755,root,root) %{_bindir}/lp
 %attr(755,root,root) %{_bindir}/lpoptions
@@ -508,9 +510,9 @@ fi
 #%lang(fr) %{_mandir}/fr/man1/cups-config*
 #%lang(es) %{_mandir}/es/man1/cups-config*
 
-#%files static
-#%defattr(644,root,root,755)
-#%{_libdir}/*.a
+%files static
+%defattr(644,root,root,755)
+%{_libdir}/*.a
 
 %if %{with perl}
 %files -n perl-cups
