@@ -31,7 +31,6 @@ Patch5:		%{name}-nolibs.patch
 Patch6:		%{name}-nostrip.patch
 Patch7:		%{name}-rpath.patch
 Patch8:		%{name}-gcc34.patch
-Patch9:		%{name}-tmpdir.patch
 Patch10:	%{name}-gcc4.patch
 Patch11:	%{name}-CAN-2005-2097.patch
 Patch12:	%{name}-anonymous_jobs.patch
@@ -248,8 +247,6 @@ pod³±czonych do portów równoleg³ych.
 %patch6 -p1
 %patch7 -p1
 #patch8 -p1 to check
-# wtf?
-#%patch9 -p1
 #patch10 -p1 to check
 #patch11 -p1 obsoleted
 #patch12 -p1 to check
