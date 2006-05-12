@@ -292,7 +292,7 @@ fi
 
 %if %{with php}
 %{__make} -C scripting/php install \
-	PHPDIR="%{__php_extensiondir}"
+	PHPDIR=$RPM_BUILD_ROOT%{_php_extensiondir}
 install -d $RPM_BUILD_ROOT%{_php_configdir}/conf.d
 cat > $RPM_BUILD_ROOT%{_php_configdir}/conf.d/phpcups.ini << EOF
 ; Enable phpcups extension module
