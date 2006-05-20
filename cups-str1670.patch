@@ -1,0 +1,12 @@
+--- cups-1.2.x/scheduler/dirsvc.c.str1670	2006-05-18 13:48:42.000000000 +0100
++++ cups-1.2.x/scheduler/dirsvc.c	2006-05-18 13:49:45.000000000 +0100
+@@ -2596,7 +2596,8 @@
+       cupsdLogMessage(CUPSD_LOG_DEBUG2,
+                       "cupsdSendBrowseList: (%d bytes) %s", bytes, packet);
+ 
+-      if (sendto(BrowseSocket, packet, bytes, 0,
++      if (BrowseSocket != -1 &&
++	  sendto(BrowseSocket, packet, bytes, 0,
+ 		 (struct sockaddr *)&(b->to),
+ 		 sizeof(struct sockaddr_in)) <= 0)
+       {
