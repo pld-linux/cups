@@ -14,7 +14,7 @@ Summary(pl):	Popularny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.2.0
-Release:	0.91
+Release:	0.92
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
@@ -107,7 +107,7 @@ Bibliotecas CUPS requeridas pelos clientes CUPS.
 Summary:	Common Unix Printing System Clients
 Summary(pl):	Aplikacje klienckie dla CUPS
 Group:		Applications/Printing
-Provides:	%{name}-clients = %{epoch}:%{version}-%{release}
+Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Conflicts:	LPRng
 
 %description clients
