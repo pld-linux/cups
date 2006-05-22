@@ -10,7 +10,7 @@
 %include	/usr/lib/rpm/macros.perl
 %define		pdir CUPS
 Summary:	Common Unix Printing System
-Summary(pl):	Popularny system druku dla Uniksa
+Summary(pl):	Ogólny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.2.0
@@ -79,7 +79,12 @@ support real-world printing under UNIX.
 %description -l pl
 CUPS dostarcza standardowy poziom drukowania dla systemów uniksowych.
 CUPS u¿ywa protoko³u IPP - Internet Printint Protocol jako podstawy do
-zarz±dzania zadaniami i kolejkami druku.
+zarz±dzania zadaniami i kolejkami druku. W ograniczonym zakresie
+obs³ugiwane s± tak¿e protoko³y LPD (Line Printer Daemon), SMB (Server
+Message Block) i AppSocket (znany tak¿e jako JetDirect). CUPS
+udostêpnia przegl±danie drukarek sieciowych i opcje drukowania oparte
+na PPD (PostScript Printer Description) do obs³ugi rzeczywistych
+drukarek.
 
 %description -l pt_BR
 O sistema Unix de impressão (CUPS) fornece uma camada de impressão
@@ -135,7 +140,7 @@ Bibliotecas CUPS requeridas pelos clientes CUPS.
 
 %package devel
 Summary:	Common Unix Printing System development files
-Summary(pl):	Popularny System Druku dla Uniksa, pliki nag³ówkowe
+Summary(pl):	Ogólny system druku dla Uniksa - pliki nag³ówkowe
 Summary(pt_BR):	Sistema Unix de Impressão - ambiente de desenvolvimento
 Group:		Development/Libraries
 Requires:	%{name}-image-lib = %{epoch}:%{version}-%{release}
@@ -146,7 +151,7 @@ Obsoletes:	libcups1-devel
 Common Unix Printing System development files.
 
 %description devel -l pl
-Popularny System Druku dla Uniksa, pliki nag³ówkowe.
+Ogólny system druku dla Uniksa - pliki nag³ówkowe.
 
 %description devel -l pt_BR
 Este pacote é um adicional que contem um ambiente de desenvolvimento
@@ -155,7 +160,7 @@ CUPS.
 
 %package static
 Summary:	Common Unix Printing System static libraries
-Summary(pl):	Popularny System Druku dla Uniksa, biblioteki statyczne
+Summary(pl):	Ogólny system druku dla Uniksa - biblioteki statyczne
 Summary(pt_BR):	Common Unix Printing System - bibliotecas estáticas
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
@@ -164,7 +169,7 @@ Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 Common Unix Printing System static libraries.
 
 %description static -l pl
-Popularny System Druku dla Uniksa, biblioteki statyczne.
+Ogólny system druku dla Uniksa - biblioteki statyczne.
 
 %description static -l pt_BR
 Bibliotecas estáticas para desenvolvimento de programas que usam as
@@ -180,7 +185,7 @@ Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 Perl module for Common Unix Printing System.
 
 %description -n perl-cups -l pl
-Modu³ Perla do Popularnego Systemu Druku dla Uniksa.
+Modu³ Perla do ogólnego systemu druku dla Uniksa.
 
 %package -n php-cups
 Summary:	PHP module for CUPS
@@ -193,7 +198,7 @@ Requires:	php-common >= 4:5.0.0
 PHP module for Common Unix Printing System.
 
 %description -n php-cups -l pl
-Modu³ PHP do Popularnego Systemu Druku dla Uniksa.
+Modu³ PHP do ogólnego systemu druku dla Uniksa.
 
 %package backend-usb
 Summary:	USB backend for CUPS
