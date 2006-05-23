@@ -13,13 +13,13 @@ Summary:	Common Unix Printing System
 Summary(pl):	Ogólny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.2.0
-Release:	0.92
+Version:	1.2.1
+Release:	0.1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
 Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	a168b0b1c8bb946060e659e1df2927c5
+# Source0-md5:	f804995e3f469bdefedc033510f6e6a5
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -28,9 +28,6 @@ Patch1:		%{name}-lp-lpr.patch
 Patch2:		%{name}-options.patch
 Patch3:		%{name}-man_pages_linking.patch
 Patch4:		%{name}-nostrip.patch
-Patch5:		%{name}-rpath.patch
-Patch6:		%{name}-str1670.patch
-Patch7:		%{name}-str1705.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
@@ -247,9 +244,6 @@ pod³±czonych do portów równoleg³ych.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
 
 %build
 %{__aclocal} -I config-scripts
@@ -437,6 +431,7 @@ fi
 %{_mandir}/man[58]/*
 %lang(es) %{_datadir}/locale/es/cups_es.po
 %lang(ja) %{_datadir}/locale/ja/cups_ja.po
+%lang(pl) %{_datadir}/locale/pl/cups_pl.po
 %lang(sv) %{_datadir}/locale/sv/cups_sv.po
 
 %dir %attr(775,root,lp) /var/cache/cups
