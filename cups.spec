@@ -14,7 +14,7 @@ Summary(pl):	Ogólny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.2.1
-Release:	1
+Release:	2
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
@@ -290,7 +290,7 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,logrotate.d,security} \
 if [ "%{_lib}" != "lib" ] ; then
 	install -d $RPM_BUILD_ROOT%{_libdir}
 	mv $RPM_BUILD_ROOT%{_ulibdir}/*.so* $RPM_BUILD_ROOT%{_libdir}
-	#mv $RPM_BUILD_ROOT%{_ulibdir}/*.a $RPM_BUILD_ROOT%{_libdir}
+	mv $RPM_BUILD_ROOT%{_ulibdir}/*.a $RPM_BUILD_ROOT%{_libdir}
 fi
 
 %if %{with php}
