@@ -14,7 +14,7 @@ Summary(pl):	Ogólny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.2.1
-Release:	2
+Release:	3
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
@@ -28,6 +28,7 @@ Patch1:		%{name}-lp-lpr.patch
 Patch2:		%{name}-options.patch
 Patch3:		%{name}-man_pages_linking.patch
 Patch4:		%{name}-nostrip.patch
+Patch5:		%{name}-jobs-header_tmpl_pl.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
@@ -244,6 +245,7 @@ pod³±czonych do portów równoleg³ych.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 %build
 %{__aclocal} -I config-scripts
@@ -325,6 +327,7 @@ install -d $RPM_BUILD_ROOT%{_datadir}/cups/drivers
 
 touch $RPM_BUILD_ROOT/var/cache/cups/help.index
 touch $RPM_BUILD_ROOT/var/cache/cups/{job,remote}.cache
+touch $RPM_BUILD_ROOT/var/cache/cups/ppds.dat
 install -d $RPM_BUILD_ROOT/etc/cups/ssl
 
 # post-strip can't work on readonly files
@@ -439,8 +442,9 @@ fi
 %dir %attr(511,lp,sys) /var/run/cups/certs
 %dir %attr(710,root,lp) /var/spool/cups
 %dir %attr(1770,root,lp) /var/spool/cups/tmp
-%attr(640,root,lp) %ghost /var/cache/cups/help.index
+%attr(600,lp,lp) %ghost /var/cache/cups/help.index
 %attr(640,root,lp) %ghost /var/cache/cups/job.cache
+%attr(600,lp,lp) %ghost /var/cache/cups/ppds.dat
 %attr(640,root,lp) %ghost /var/cache/cups/remote.cache
 %attr(750,root,logs) %dir /var/log/archiv/cups
 %attr(750,root,logs) %dir /var/log/cups
