@@ -4,8 +4,10 @@
 # - remove obsolete /etc/cups/certs (trigger?)
 #
 # Conditional build:
-%bcond_without	php	# don't build PHP extension
-%bcond_without	perl	# don't build Perl extension
+%bcond_with	gnutls		# use GNU TLS for SSL/TLS support (instead of OpenSSL)
+%bcond_without	php		# don't build PHP extension
+%bcond_without	perl		# don't build Perl extension
+%bcond_without	static_libs	# don't build static library
 #
 %include	/usr/lib/rpm/macros.perl
 %define		pdir CUPS
@@ -34,13 +36,14 @@ BuildRequires:	acl-devel
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	dbus-devel
+%{?with_gnutls:BuildRequires:	gnutls-devel}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	openldap-devel
 BuildRequires:	openslp-devel
-BuildRequires:	openssl-devel
+%{!?with_gnutls:BuildRequires:	openssl-devel}
 BuildRequires:	pam-devel
 %{?with_php:BuildRequires:	php-devel >= 4:5.0.0}
 BuildRequires:	pkgconfig
@@ -253,14 +256,16 @@ pod³±czonych do portów równoleg³ych.
 %configure \
 	--libdir=%{_ulibdir} \
 	--enable-shared \
-	--enable-static \
+	%{?with_static_libs:--enable-static} \
 	--enable-ssl \
-	--enable-openssl \
-	--disable-gnutls \
+	--%{?with_gnutls:dis}%{!?with_gnutls:en}able-openssl \
+	--%{!?with_gnutls:dis}%{?with_gnutls:en}able-gnutls \
 	--disable-cdsassl \
 	--enable-dbus \
 	%{?debug:--enable-debug} \
-	--with-docdir=%{_ulibdir}/%{name}/cgi-bin
+	--with-docdir=%{_ulibdir}/%{name}/cgi-bin \
+	%{?with_php:--with-php}
+
 %{__make}
 
 %{__perl} -pi -e 's#-I\.\.\/\.\.#-I../.. -I../../cups#g' scripting/php/Makefile
@@ -508,9 +513,11 @@ fi
 #%lang(fr) %{_mandir}/fr/man1/cups-config*
 #%lang(es) %{_mandir}/es/man1/cups-config*
 
+%if %{with static_libs}
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/*.a
+%endif
 
 %if %{with perl}
 %files -n perl-cups
