@@ -30,7 +30,7 @@ Patch1:		%{name}-lp-lpr.patch
 Patch2:		%{name}-options.patch
 Patch3:		%{name}-man_pages_linking.patch
 Patch4:		%{name}-nostrip.patch
-Patch5:		%{name}-jobs-header_tmpl_pl.patch
+Patch5:		%{name}-templates_pl.patch
 Patch6:		%{name}-str1723.patch
 Patch7:		%{name}-str1740.patch
 URL:		http://www.cups.org/
