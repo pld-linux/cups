@@ -16,7 +16,7 @@ Summary(pl):	Ogólny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.2.1
-Release:	4
+Release:	5
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
@@ -384,7 +384,6 @@ fi
 %attr(640,root,root) %config %verify(not md5 mtime size) /etc/pam.d/*
 %attr(754,root,root) /etc/rc.d/init.d/cups
 /etc/dbus-1/system.d/cups.conf
-%dir %attr(755,root,lp) %{_sysconfdir}/%{name}
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/classes.conf
 %attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/cupsd.conf
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/printers.conf
@@ -465,6 +464,7 @@ fi
 
 %files lib
 %defattr(644,root,root,755)
+%dir %attr(755,root,lp) %{_sysconfdir}/%{name}
 %attr(755,root,root) %{_libdir}/libcups.so.*
 
 %files clients
