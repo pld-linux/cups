@@ -34,6 +34,7 @@ Patch5:		%{name}-templates_pl.patch
 Patch6:		%{name}-str1723.patch
 Patch7:		%{name}-str1740.patch
 Patch8:		%{name}-str1736.patch
+Patch9:		%{name}-str1776.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
@@ -255,6 +256,7 @@ pod³±czonych do portów równoleg³ych.
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
+%patch9 -p1
 
 %build
 %{__aclocal} -I config-scripts
