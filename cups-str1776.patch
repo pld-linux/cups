@@ -1,0 +1,11 @@
+--- cups-1.2.1/scheduler/printers.c.orig	2006-05-16 21:47:26.000000000 +0200
++++ cups-1.2.1/scheduler/printers.c	2006-06-18 10:22:03.525788250 +0200
+@@ -665,7 +665,7 @@
+ 	   dp = (cupsd_printer_t *)cupsArrayNext(Printers))
+ 	if (dp != p && (dp->type & CUPS_PRINTER_DEFAULT))
+ 	{
+-	  DefaultPrinter = p;
++	  DefaultPrinter = dp;
+ 	  break;
+ 	}
+     }
