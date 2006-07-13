@@ -16,7 +16,7 @@ Summary(pl):	Ogólny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.2.1
-Release:	6
+Release:	7
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
@@ -31,10 +31,7 @@ Patch2:		%{name}-options.patch
 Patch3:		%{name}-man_pages_linking.patch
 Patch4:		%{name}-nostrip.patch
 Patch5:		%{name}-templates_pl.patch
-Patch6:		%{name}-str1723.patch
-Patch7:		%{name}-str1740.patch
-Patch8:		%{name}-str1736.patch
-Patch9:		%{name}-str1776.patch
+Patch6:		%{name}-svn5706.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
@@ -254,9 +251,6 @@ pod³±czonych do portów równoleg³ych.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%patch7 -p1
-%patch8 -p1
-%patch9 -p1
 
 %build
 %{__aclocal} -I config-scripts
