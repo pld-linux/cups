@@ -15,13 +15,13 @@ Summary:	Common Unix Printing System
 Summary(pl):	Ogólny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.2.1
-Release:	7
+Version:	1.2.2
+Release:	1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
 Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	f804995e3f469bdefedc033510f6e6a5
+# Source0-md5:	091de9109c9252cb37427859e90190ad
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -31,7 +31,7 @@ Patch2:		%{name}-options.patch
 Patch3:		%{name}-man_pages_linking.patch
 Patch4:		%{name}-nostrip.patch
 Patch5:		%{name}-templates_pl.patch
-Patch6:		%{name}-svn5706.patch
+Patch6:		%{name}-str1737.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
@@ -404,6 +404,7 @@ fi
 %{_ulibdir}/cups/cgi-bin/*.html
 %{_ulibdir}/cups/cgi-bin/*.ico
 %{_ulibdir}/cups/cgi-bin/*.txt
+%lang(de) %{_ulibdir}/cups/cgi-bin/de
 %lang(es) %{_ulibdir}/cups/cgi-bin/es
 %lang(ja) %{_ulibdir}/cups/cgi-bin/ja
 %lang(pl) %{_ulibdir}/cups/cgi-bin/pl
@@ -428,6 +429,7 @@ fi
 %{_datadir}/cups/model
 %dir %{_datadir}/cups/templates
 %{_datadir}/cups/templates/*.tmpl
+%lang(de) %{_datadir}/cups/templates/de
 %lang(es) %{_datadir}/cups/templates/es
 %lang(ja) %{_datadir}/cups/templates/ja
 %lang(pl) %{_datadir}/cups/templates/pl
