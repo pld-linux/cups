@@ -147,6 +147,8 @@ Summary(pt_BR):	Sistema Unix de Impressão - ambiente de desenvolvimento
 Group:		Development/Libraries
 Requires:	%{name}-image-lib = %{epoch}:%{version}-%{release}
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
+%{?with_gnutls:Requires:	gnutls-devel}
+%{!?with_gnutls:Requires:	openssl-devel}
 Obsoletes:	libcups1-devel
 
 %description devel
