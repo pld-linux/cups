@@ -446,6 +446,7 @@ fi
 %{_mandir}/man7/filter.7*
 %{_mandir}/man1/lppasswd.1*
 %{_mandir}/man[58]/*
+%lang(de) %{_datadir}/locale/de/cups_de.po
 %lang(es) %{_datadir}/locale/es/cups_es.po
 %lang(ja) %{_datadir}/locale/ja/cups_ja.po
 %lang(pl) %{_datadir}/locale/pl/cups_pl.po
