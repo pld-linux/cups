@@ -16,7 +16,7 @@ Summary(pl):	Ogólny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.2.2
-Release:	1
+Release:	2
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
@@ -342,6 +342,10 @@ install -d $RPM_BUILD_ROOT/etc/cups/ssl
 # post-strip can't work on readonly files
 chmod u+w $RPM_BUILD_ROOT%{perl_vendorarch}/auto/CUPS/CUPS.so
 
+# links to enable/disable (compatibility!)
+ln -s accept $RPM_BUILD_ROOT/usr/sbin/enable
+ln -s accept $RPM_BUILD_ROOT/usr/sbin/disable
+
 # check-files cleanup
 rm -rf $RPM_BUILD_ROOT%{_mandir}/{,es/,fr/}cat?
 rm -rf $RPM_BUILD_ROOT/etc/{init.d,rc?.d}/*
@@ -479,6 +483,10 @@ fi
 %attr(755,root,root) %{_bindir}/lpstat
 %attr(755,root,root) %{_sbindir}/accept
 %attr(755,root,root) %{_sbindir}/cupsaddsmb
+%attr(755,root,root) %{_sbindir}/cupsenable
+%attr(755,root,root) %{_sbindir}/cupsdisable
+%attr(755,root,root) %{_sbindir}/disable
+%attr(755,root,root) %{_sbindir}/enable
 %attr(755,root,root) %{_sbindir}/lpadmin
 %attr(755,root,root) %{_sbindir}/lpc
 %attr(755,root,root) %{_sbindir}/lpinfo
