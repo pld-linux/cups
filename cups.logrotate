@@ -5,6 +5,6 @@
 	compress
 	create 660 root logs
 	postrotate
-		/etc/rc.d/init.d/cups restart > /dev/null
+		/sbin/service cups restart > /dev/null
 	endscript
 }
