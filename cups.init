@@ -1,6 +1,5 @@
 #!/bin/sh
 #
-#
 # cups		Common UNIX Printing System (CUPS)
 #
 # chkconfig:	2345 90 10
@@ -28,10 +27,7 @@ else
 	exit 0
 fi
 
-RETVAL=0
-# See how we were called.
-case "$1" in
-  start)
+start() {
 	# Check if the service is already running?
 	if [ ! -f /var/lock/subsys/cups ]; then
 		msg_starting CUPS
@@ -41,8 +37,9 @@ case "$1" in
 	else
 		msg_already_running CUPS
 	fi
-	;;
-  stop)
+}
+
+stop() {
 	# Stop daemons.
 	if [ -f /var/lock/subsys/cups ]; then
 		msg_stopping CUPS
@@ -51,11 +48,20 @@ case "$1" in
 	else
 		msg_not_running CUPS
 	fi
+}
+
+RETVAL=0
+# See how we were called.
+case "$1" in
+  start)
+  	start
+	;;
+  stop)
+  	stop
 	;;
   restart)
-	$0 stop
-	$0 start
-	exit $?
+	stop
+	start
 	;;
   reload|force-reload)
 	if [ -f /var/lock/subsys/cups ]; then
