@@ -15,13 +15,13 @@ Summary:	Common Unix Printing System
 Summary(pl):	Ogólny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.2.4
-Release:	2
+Version:	1.2.5
+Release:	1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
 Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	528650aba3b56541f75370ef09541850
+# Source0-md5:	3e5d2c127890fd3ed97e2249c278b6e8
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -410,6 +410,7 @@ fi
 %{_ulibdir}/cups/cgi-bin/*.txt
 %lang(de) %{_ulibdir}/cups/cgi-bin/de
 %lang(es) %{_ulibdir}/cups/cgi-bin/es
+%lang(et) %{_ulibdir}/cups/cgi-bin/et
 %lang(ja) %{_ulibdir}/cups/cgi-bin/ja
 %lang(pl) %{_ulibdir}/cups/cgi-bin/pl
 %lang(sv) %{_ulibdir}/cups/cgi-bin/sv
@@ -435,6 +436,7 @@ fi
 %{_datadir}/cups/templates/*.tmpl
 %lang(de) %{_datadir}/cups/templates/de
 %lang(es) %{_datadir}/cups/templates/es
+%lang(et) %{_datadir}/cups/templates/et
 %lang(ja) %{_datadir}/cups/templates/ja
 %lang(pl) %{_datadir}/cups/templates/pl
 %lang(sv) %{_datadir}/cups/templates/sv
@@ -446,6 +448,7 @@ fi
 %{_mandir}/man[58]/*
 %lang(de) %{_datadir}/locale/de/cups_de.po
 %lang(es) %{_datadir}/locale/es/cups_es.po
+%lang(et) %{_datadir}/locale/et/cups_et.po
 %lang(ja) %{_datadir}/locale/ja/cups_ja.po
 %lang(pl) %{_datadir}/locale/pl/cups_pl.po
 %lang(sv) %{_datadir}/locale/sv/cups_sv.po
