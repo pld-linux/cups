@@ -16,7 +16,7 @@ Summary(pl):	Ogólny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.2.6
-Release:	1
+Release:	2
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
@@ -330,21 +330,21 @@ touch $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/{classes,printers,client}.conf
 # windows drivers can be put there.
 install -d $RPM_BUILD_ROOT%{_datadir}/cups/drivers
 
+# dirs for gimp-print-cups-4.2.7-1
+install -d $RPM_BUILD_ROOT%{_datadir}/cups/model/{C,da,en_GB,fr,nb,pl,sv}
+
 touch $RPM_BUILD_ROOT/var/cache/cups/help.index
 touch $RPM_BUILD_ROOT/var/cache/cups/{job,remote}.cache
 touch $RPM_BUILD_ROOT/var/cache/cups/ppds.dat
-install -d $RPM_BUILD_ROOT/etc/cups/ssl
-
-# post-strip can't work on readonly files
-chmod u+w $RPM_BUILD_ROOT%{perl_vendorarch}/auto/CUPS/CUPS.so
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/cups/ssl
 
 # links to enable/disable (compatibility!)
-ln -s accept $RPM_BUILD_ROOT/usr/sbin/enable
-ln -s accept $RPM_BUILD_ROOT/usr/sbin/disable
+ln -s accept $RPM_BUILD_ROOT%{_sbindir}/enable
+ln -s accept $RPM_BUILD_ROOT%{_sbindir}/disable
 
 # check-files cleanup
 rm -rf $RPM_BUILD_ROOT%{_mandir}/{,es/,fr/}cat?
-rm -rf $RPM_BUILD_ROOT/etc/{init.d,rc?.d}/*
+rm -rf $RPM_BUILD_ROOT/''etc/{init.d,rc?.d}/*
 rm -rf $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/cupsd.conf.default
 
 %clean
@@ -429,7 +429,17 @@ fi
 %{_datadir}/cups/data
 %{_datadir}/cups/drivers
 %{_datadir}/cups/fonts
-%{_datadir}/cups/model
+%dir %{_datadir}/cups/model
+%{_datadir}/cups/model/*.ppd.gz
+# dirs for gimp-print-cups-4.2.7-1
+%dir %{_datadir}/cups/model/C
+%lang(da) %dir %{_datadir}/cups/model/da
+%lang(en_GB) %dir %{_datadir}/cups/model/en_GB
+%lang(fr) %dir %{_datadir}/cups/model/fr
+%lang(nb) %dir %{_datadir}/cups/model/nb
+%lang(pl) %dir %{_datadir}/cups/model/pl
+%lang(sv) %dir %{_datadir}/cups/model/sv
+
 %dir %{_datadir}/cups/templates
 %{_datadir}/cups/templates/*.tmpl
 %lang(de) %{_datadir}/cups/templates/de
