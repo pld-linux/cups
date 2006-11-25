@@ -148,6 +148,7 @@ Requires:	%{name}-image-lib = %{epoch}:%{version}-%{release}
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 %{?with_gnutls:Requires:	gnutls-devel}
 %{!?with_gnutls:Requires:	openssl-devel}
+Requires:	zlib-devel
 Obsoletes:	libcups1-devel
 
 %description devel
