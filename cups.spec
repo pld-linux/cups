@@ -16,7 +16,7 @@ Summary(pl):	Ogólny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.2.7
-Release:	1
+Release:	2
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
@@ -196,6 +196,8 @@ Summary:	PHP module for CUPS
 Summary(pl):	Modu³ PHP CUPS
 Group:		Development/Languages/PHP
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
+%{?requires_php_extension}
+Requires:	%{_sysconfdir}/conf.d
 Requires:	php-common >= 4:5.0.0
 
 %description -n php-cups
