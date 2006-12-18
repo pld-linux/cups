@@ -16,7 +16,7 @@ Summary(pl):	Ogólny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.2.7
-Release:	3
+Release:	4
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
@@ -30,7 +30,9 @@ Patch1:		%{name}-lp-lpr.patch
 Patch2:		%{name}-options.patch
 Patch3:		%{name}-man_pages_linking.patch
 Patch4:		%{name}-nostrip.patch
-Patch5:		%{name}-templates_pl.patch
+Patch5:		%{name}-templates.patch
+Patch6:		%{name}-certs_FHS.patch
+Patch7:		%{name}-str2111.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
@@ -254,6 +256,8 @@ pod³±czonych do portów równoleg³ych.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
+%patch7 -p1
 
 %build
 %{__aclocal} -I config-scripts
@@ -292,6 +296,7 @@ cd ../..
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,logrotate.d,security} \
+	$RPM_BUILD_ROOT/var/run/cups \
 	$RPM_BUILD_ROOT/var/log/{,archiv/}cups
 
 %{__make} install \
@@ -470,8 +475,9 @@ fi
 %lang(sv) %{_datadir}/locale/sv/cups_sv.po
 
 %dir %attr(775,root,lp) /var/cache/cups
+%dir %attr(755,root,lp) /var/lib/cups
+%dir %attr(511,lp,sys) /var/lib/cups/certs
 %dir %attr(755,root,lp) /var/run/cups
-%dir %attr(511,lp,sys) /var/run/cups/certs
 %dir %attr(710,root,lp) /var/spool/cups
 %dir %attr(1770,root,lp) /var/spool/cups/tmp
 %attr(600,lp,lp) %ghost /var/cache/cups/help.index
