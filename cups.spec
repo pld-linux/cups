@@ -50,7 +50,7 @@ BuildRequires:	pam-devel
 %{?with_php:BuildRequires:	php-devel >= 4:5.0.0}
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-perlprov
-BuildRequires:	rpmbuild(macros) >= 1.268
+BuildRequires:	rpmbuild(macros) >= 1.344
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Requires:	pam >= 0.77.3
@@ -61,11 +61,6 @@ Conflicts:	ghostscript < 7.05.4
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_ulibdir	%{_prefix}/lib
-
-%if %{with php}
-%define		_php_configdir /etc/php
-%define		_php_extensiondir %(php-config --extension-dir)
-%endif
 
 %description
 CUPS provides a portable printing layer for UNIX-based operating
@@ -312,9 +307,9 @@ fi
 
 %if %{with php}
 %{__make} -C scripting/php install \
-	PHPDIR=$RPM_BUILD_ROOT%{_php_extensiondir}
-install -d $RPM_BUILD_ROOT%{_php_configdir}/conf.d
-cat > $RPM_BUILD_ROOT%{_php_configdir}/conf.d/phpcups.ini << EOF
+	PHPDIR=$RPM_BUILD_ROOT%{php_extensiondir}
+install -d $RPM_BUILD_ROOT%{php_sysconfdir}/conf.d
+cat > $RPM_BUILD_ROOT%{php_sysconfdir}/conf.d/phpcups.ini << EOF
 ; Enable phpcups extension module
 extension=phpcups.so
 EOF
@@ -571,8 +566,8 @@ fi
 %files -n php-cups
 %defattr(644,root,root,755)
 %doc scripting/php/README
-%attr(755,root,root) %{_php_extensiondir}/*
-%config(noreplace) %verify(not md5 mtime size) %{_php_configdir}/conf.d/phpcups.ini
+%attr(755,root,root) %{php_extensiondir}/*
+%config(noreplace) %verify(not md5 mtime size) %{php_sysconfdir}/conf.d/phpcups.ini
 %endif
 
 %files backend-usb
