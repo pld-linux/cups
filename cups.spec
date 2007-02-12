@@ -12,8 +12,8 @@
 %include	/usr/lib/rpm/macros.perl
 %define		pdir CUPS
 Summary:	Common Unix Printing System
-Summary(pl):	OgÛlny system druku dla Uniksa
-Summary(pt_BR):	Sistema Unix de Impress„o
+Summary(pl.UTF-8):   Og√≥lny system druku dla Uniksa
+Summary(pt_BR.UTF-8):   Sistema Unix de Impress√£o
 Name:		cups
 Version:	1.2.7
 Release:	4
@@ -74,24 +74,24 @@ with reduced functionality. CUPS adds network printer browsing and
 PostScript Printer Description ("PPD") based printing options to
 support real-world printing under UNIX.
 
-%description -l pl
-CUPS dostarcza standardowy poziom drukowania dla systemÛw uniksowych.
-CUPS uøywa protoko≥u IPP - Internet Printint Protocol jako podstawy do
-zarz±dzania zadaniami i kolejkami druku. W ograniczonym zakresie
-obs≥ugiwane s± takøe protoko≥y LPD (Line Printer Daemon), SMB (Server
-Message Block) i AppSocket (znany takøe jako JetDirect). CUPS
-udostÍpnia przegl±danie drukarek sieciowych i opcje drukowania oparte
-na PPD (PostScript Printer Description) do obs≥ugi rzeczywistych
+%description -l pl.UTF-8
+CUPS dostarcza standardowy poziom drukowania dla system√≥w uniksowych.
+CUPS u≈ºywa protoko≈Çu IPP - Internet Printint Protocol jako podstawy do
+zarzƒÖdzania zadaniami i kolejkami druku. W ograniczonym zakresie
+obs≈Çugiwane sƒÖ tak≈ºe protoko≈Çy LPD (Line Printer Daemon), SMB (Server
+Message Block) i AppSocket (znany tak≈ºe jako JetDirect). CUPS
+udostƒôpnia przeglƒÖdanie drukarek sieciowych i opcje drukowania oparte
+na PPD (PostScript Printer Description) do obs≈Çugi rzeczywistych
 drukarek.
 
-%description -l pt_BR
-O sistema Unix de impress„o (CUPS) fornece uma camada de impress„o
-port·vel para os sistemas operacionais baseados no UNIXÆ.
+%description -l pt_BR.UTF-8
+O sistema Unix de impress√£o (CUPS) fornece uma camada de impress√£o
+port√°vel para os sistemas operacionais baseados no UNIX¬Æ.
 
 %package lib
 Summary:	Common Unix Printing System Libraries
-Summary(pl):	Biblioteki dla CUPS
-Summary(pt_BR):	Sistema Unix de Impress„o - bibliotecas para uso em clientes cups
+Summary(pl.UTF-8):   Biblioteki dla CUPS
+Summary(pt_BR.UTF-8):   Sistema Unix de Impress√£o - bibliotecas para uso em clientes cups
 Group:		Libraries
 Provides:	%{name}-libs = %{epoch}:%{version}-%{release}
 Obsoletes:	cups-libs
@@ -100,15 +100,15 @@ Obsoletes:	libcups1
 %description lib
 Common Unix Printing System Libraries.
 
-%description lib -l pl
+%description lib -l pl.UTF-8
 Biblioteki dla CUPS.
 
-%description lib -l pt_BR
+%description lib -l pt_BR.UTF-8
 Bibliotecas CUPS requeridas pelos clientes CUPS.
 
 %package clients
 Summary:	Common Unix Printing System Clients
-Summary(pl):	Aplikacje klienckie dla CUPS
+Summary(pl.UTF-8):   Aplikacje klienckie dla CUPS
 Group:		Applications/Printing
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Conflicts:	LPRng
@@ -116,13 +116,13 @@ Conflicts:	LPRng
 %description clients
 Common Unix Printing System Clients.
 
-%description clients -l pl
+%description clients -l pl.UTF-8
 Aplikacje klienckie dla CUPS.
 
 %package image-lib
 Summary:	Common Unix Printing System Libraries - images manipulation
-Summary(pl):	Biblioteki dla CUPS - obs≥uga formatÛw graficznych
-Summary(pt_BR):	Sistema Unix de Impress„o - bibliotecas para uso em clientes cups
+Summary(pl.UTF-8):   Biblioteki dla CUPS - obs≈Çuga format√≥w graficznych
+Summary(pt_BR.UTF-8):   Sistema Unix de Impress√£o - bibliotecas para uso em clientes cups
 Group:		Libraries
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 Obsoletes:	libcups1
@@ -130,16 +130,16 @@ Obsoletes:	libcups1
 %description image-lib
 Common Unix Printing System Libraries - images manupalation.
 
-%description image-lib -l pl
-Biblioteki dla CUPS - obs≥uga formatÛw graficznych.
+%description image-lib -l pl.UTF-8
+Biblioteki dla CUPS - obs≈Çuga format√≥w graficznych.
 
-%description image-lib -l pt_BR
+%description image-lib -l pt_BR.UTF-8
 Bibliotecas CUPS requeridas pelos clientes CUPS.
 
 %package devel
 Summary:	Common Unix Printing System development files
-Summary(pl):	OgÛlny system druku dla Uniksa - pliki nag≥Ûwkowe
-Summary(pt_BR):	Sistema Unix de Impress„o - ambiente de desenvolvimento
+Summary(pl.UTF-8):   Og√≥lny system druku dla Uniksa - pliki nag≈Ç√≥wkowe
+Summary(pt_BR.UTF-8):   Sistema Unix de Impress√£o - ambiente de desenvolvimento
 Group:		Development/Libraries
 Requires:	%{name}-image-lib = %{epoch}:%{version}-%{release}
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
@@ -151,46 +151,46 @@ Obsoletes:	libcups1-devel
 %description devel
 Common Unix Printing System development files.
 
-%description devel -l pl
-OgÛlny system druku dla Uniksa - pliki nag≥Ûwkowe.
+%description devel -l pl.UTF-8
+Og√≥lny system druku dla Uniksa - pliki nag≈Ç√≥wkowe.
 
-%description devel -l pt_BR
-Este pacote È um adicional que contem um ambiente de desenvolvimento
-para a criaÁ„o de suporte a novas impressoras e novos serviÁos ao
+%description devel -l pt_BR.UTF-8
+Este pacote √© um adicional que contem um ambiente de desenvolvimento
+para a cria√ß√£o de suporte a novas impressoras e novos servi√ßos ao
 CUPS.
 
 %package static
 Summary:	Common Unix Printing System static libraries
-Summary(pl):	OgÛlny system druku dla Uniksa - biblioteki statyczne
-Summary(pt_BR):	Common Unix Printing System - bibliotecas est·ticas
+Summary(pl.UTF-8):   Og√≥lny system druku dla Uniksa - biblioteki statyczne
+Summary(pt_BR.UTF-8):   Common Unix Printing System - bibliotecas est√°ticas
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 
 %description static
 Common Unix Printing System static libraries.
 
-%description static -l pl
-OgÛlny system druku dla Uniksa - biblioteki statyczne.
+%description static -l pl.UTF-8
+Og√≥lny system druku dla Uniksa - biblioteki statyczne.
 
-%description static -l pt_BR
-Bibliotecas est·ticas para desenvolvimento de programas que usam as
+%description static -l pt_BR.UTF-8
+Bibliotecas est√°ticas para desenvolvimento de programas que usam as
 bibliotecas do CUPS.
 
 %package -n perl-cups
 Summary:	Perl module for CUPS
-Summary(pl):	Modu≥ Perla CUPS
+Summary(pl.UTF-8):   Modu≈Ç Perla CUPS
 Group:		Development/Languages/Perl
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 
 %description -n perl-cups
 Perl module for Common Unix Printing System.
 
-%description -n perl-cups -l pl
-Modu≥ Perla do ogÛlnego systemu druku dla Uniksa.
+%description -n perl-cups -l pl.UTF-8
+Modu≈Ç Perla do og√≥lnego systemu druku dla Uniksa.
 
 %package -n php-cups
 Summary:	PHP module for CUPS
-Summary(pl):	Modu≥ PHP CUPS
+Summary(pl.UTF-8):   Modu≈Ç PHP CUPS
 Group:		Development/Languages/PHP
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 %{?requires_php_extension}
@@ -200,24 +200,24 @@ Requires:	php-common >= 4:5.0.0
 %description -n php-cups
 PHP module for Common Unix Printing System.
 
-%description -n php-cups -l pl
-Modu≥ PHP do ogÛlnego systemu druku dla Uniksa.
+%description -n php-cups -l pl.UTF-8
+Modu≈Ç PHP do og√≥lnego systemu druku dla Uniksa.
 
 %package backend-usb
 Summary:	USB backend for CUPS
-Summary(pl):	Backend USB dla CUPS-a
+Summary(pl.UTF-8):   Backend USB dla CUPS-a
 Group:		Applications/Printing
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description backend-usb
 This package allow CUPS printing on USB printers.
 
-%description backend-usb -l pl
-Ten pakiet umoøliwia drukowanie z poziomu CUPS-a na drukarkach USB.
+%description backend-usb -l pl.UTF-8
+Ten pakiet umo≈ºliwia drukowanie z poziomu CUPS-a na drukarkach USB.
 
 %package backend-serial
 Summary:	Serial port backend for CUPS
-Summary(pl):	Backend obs≥uguj±cy porty szeregowe dla CUPS-a
+Summary(pl.UTF-8):   Backend obs≈ÇugujƒÖcy porty szeregowe dla CUPS-a
 Group:		Applications/Printing
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
@@ -225,13 +225,13 @@ Requires:	%{name} = %{epoch}:%{version}-%{release}
 This package allow CUPS printing on printers connected by serial
 ports.
 
-%description backend-serial -l pl
-Ten pakiet umoøliwia drukowanie z poziomu CUPS-a na drukarkach
-pod≥±czonych do portÛw szeregowych.
+%description backend-serial -l pl.UTF-8
+Ten pakiet umo≈ºliwia drukowanie z poziomu CUPS-a na drukarkach
+pod≈ÇƒÖczonych do port√≥w szeregowych.
 
 %package backend-parallel
 Summary:	Parallel port backend for CUPS
-Summary(pl):	Backend obs≥uguj±cy porty rÛwnoleg≥e dla CUPS-a
+Summary(pl.UTF-8):   Backend obs≈ÇugujƒÖcy porty r√≥wnoleg≈Çe dla CUPS-a
 Group:		Applications/Printing
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
@@ -239,9 +239,9 @@ Requires:	%{name} = %{epoch}:%{version}-%{release}
 This package allow CUPS printing on printers connected by parallel
 ports.
 
-%description backend-parallel -l pl
-Ten pakiet umoøliwia drukowanie z poziomu CUPS-a na drukarkach
-pod≥±czonych do portÛw rÛwnoleg≥ych.
+%description backend-parallel -l pl.UTF-8
+Ten pakiet umo≈ºliwia drukowanie z poziomu CUPS-a na drukarkach
+pod≈ÇƒÖczonych do port√≥w r√≥wnoleg≈Çych.
 
 %prep
 %setup -q
