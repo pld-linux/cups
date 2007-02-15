@@ -15,13 +15,13 @@ Summary:	Common Unix Printing System
 Summary(pl):	Ogólny system druku dla Uniksa
 Summary(pt_BR):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.2.7
-Release:	4
+Version:	1.2.8
+Release:	1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
 Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	bf44783d9b46130bee9f2995e6055470
+# Source0-md5:	d2cc0604113d5300b7b3e823b660d04a
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -32,7 +32,6 @@ Patch3:		%{name}-man_pages_linking.patch
 Patch4:		%{name}-nostrip.patch
 Patch5:		%{name}-templates.patch
 Patch6:		%{name}-certs_FHS.patch
-Patch7:		%{name}-str2111.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
@@ -50,7 +49,7 @@ BuildRequires:	pam-devel
 %{?with_php:BuildRequires:	php-devel >= 4:5.0.0}
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-perlprov
-BuildRequires:	rpmbuild(macros) >= 1.268
+BuildRequires:	rpmbuild(macros) >= 1.344
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Requires:	pam >= 0.77.3
@@ -61,11 +60,6 @@ Conflicts:	ghostscript < 7.05.4
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_ulibdir	%{_prefix}/lib
-
-%if %{with php}
-%define		_php_configdir /etc/php
-%define		_php_extensiondir %(php-config --extension-dir)
-%endif
 
 %description
 CUPS provides a portable printing layer for UNIX-based operating
@@ -257,7 +251,6 @@ pod³±czonych do portów równoleg³ych.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%patch7 -p1
 
 %build
 %{__aclocal} -I config-scripts
@@ -312,9 +305,9 @@ fi
 
 %if %{with php}
 %{__make} -C scripting/php install \
-	PHPDIR=$RPM_BUILD_ROOT%{_php_extensiondir}
-install -d $RPM_BUILD_ROOT%{_php_configdir}/conf.d
-cat > $RPM_BUILD_ROOT%{_php_configdir}/conf.d/phpcups.ini << EOF
+	PHPDIR=$RPM_BUILD_ROOT%{php_extensiondir}
+install -d $RPM_BUILD_ROOT%{php_sysconfdir}/conf.d
+cat > $RPM_BUILD_ROOT%{php_sysconfdir}/conf.d/phpcups.ini << EOF
 ; Enable phpcups extension module
 extension=phpcups.so
 EOF
@@ -376,13 +369,11 @@ fi
 %postun	image-lib -p /sbin/ldconfig
 
 %post -n php-cups
-[ ! -f /etc/apache/conf.d/??_mod_php.conf ] || %service -q apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php.conf ] || %service -q httpd restart
+%php_webserver_restart
 
 %postun -n php-cups
 if [ "$1" = 0 ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php.conf ] || %service -q apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php.conf ] || %service -q httpd restart
+	%php_webserver_restart
 fi
 
 %files
@@ -419,6 +410,7 @@ fi
 %lang(de) %{_ulibdir}/cups/cgi-bin/de
 %lang(es) %{_ulibdir}/cups/cgi-bin/es
 %lang(et) %{_ulibdir}/cups/cgi-bin/et
+%lang(fr) %{_ulibdir}/cups/cgi-bin/fr
 %lang(it) %{_ulibdir}/cups/cgi-bin/it
 %lang(ja) %{_ulibdir}/cups/cgi-bin/ja
 %lang(pl) %{_ulibdir}/cups/cgi-bin/pl
@@ -456,6 +448,7 @@ fi
 %lang(de) %{_datadir}/cups/templates/de
 %lang(es) %{_datadir}/cups/templates/es
 %lang(et) %{_datadir}/cups/templates/et
+%lang(fr) %{_datadir}/cups/templates/fr
 %lang(it) %{_datadir}/cups/templates/it
 %lang(ja) %{_datadir}/cups/templates/ja
 %lang(pl) %{_datadir}/cups/templates/pl
@@ -469,6 +462,7 @@ fi
 %lang(de) %{_datadir}/locale/de/cups_de.po
 %lang(es) %{_datadir}/locale/es/cups_es.po
 %lang(et) %{_datadir}/locale/et/cups_et.po
+%lang(fr) %{_datadir}/locale/fr/cups_fr.po
 %lang(it) %{_datadir}/locale/it/cups_it.po
 %lang(ja) %{_datadir}/locale/ja/cups_ja.po
 %lang(pl) %{_datadir}/locale/pl/cups_pl.po
@@ -571,8 +565,8 @@ fi
 %files -n php-cups
 %defattr(644,root,root,755)
 %doc scripting/php/README
-%attr(755,root,root) %{_php_extensiondir}/*
-%config(noreplace) %verify(not md5 mtime size) %{_php_configdir}/conf.d/phpcups.ini
+%attr(755,root,root) %{php_extensiondir}/*
+%config(noreplace) %verify(not md5 mtime size) %{php_sysconfdir}/conf.d/phpcups.ini
 %endif
 
 %files backend-usb
