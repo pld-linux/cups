@@ -20,7 +20,7 @@ Release:	1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
-Source0:	ftp://ftp3.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
+Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
 # Source0-md5:	d2cc0604113d5300b7b3e823b660d04a
 Source1:	%{name}.init
 Source2:	%{name}.pamd
