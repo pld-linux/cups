@@ -15,13 +15,13 @@ Summary:	Common Unix Printing System
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.2.7
-Release:	4
+Version:	1.2.8
+Release:	1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
-Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	bf44783d9b46130bee9f2995e6055470
+Source0:	ftp://ftp3.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
+# Source0-md5:	d2cc0604113d5300b7b3e823b660d04a
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -32,7 +32,6 @@ Patch3:		%{name}-man_pages_linking.patch
 Patch4:		%{name}-nostrip.patch
 Patch5:		%{name}-templates.patch
 Patch6:		%{name}-certs_FHS.patch
-Patch7:		%{name}-str2111.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
@@ -252,7 +251,6 @@ podłączonych do portów równoległych.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%patch7 -p1
 
 %build
 %{__aclocal} -I config-scripts
@@ -412,6 +410,7 @@ fi
 %lang(de) %{_ulibdir}/cups/cgi-bin/de
 %lang(es) %{_ulibdir}/cups/cgi-bin/es
 %lang(et) %{_ulibdir}/cups/cgi-bin/et
+%lang(fr) %{_ulibdir}/cups/cgi-bin/fr
 %lang(it) %{_ulibdir}/cups/cgi-bin/it
 %lang(ja) %{_ulibdir}/cups/cgi-bin/ja
 %lang(pl) %{_ulibdir}/cups/cgi-bin/pl
@@ -449,6 +448,7 @@ fi
 %lang(de) %{_datadir}/cups/templates/de
 %lang(es) %{_datadir}/cups/templates/es
 %lang(et) %{_datadir}/cups/templates/et
+%lang(fr) %{_datadir}/cups/templates/fr
 %lang(it) %{_datadir}/cups/templates/it
 %lang(ja) %{_datadir}/cups/templates/ja
 %lang(pl) %{_datadir}/cups/templates/pl
@@ -462,6 +462,7 @@ fi
 %lang(de) %{_datadir}/locale/de/cups_de.po
 %lang(es) %{_datadir}/locale/es/cups_es.po
 %lang(et) %{_datadir}/locale/et/cups_et.po
+%lang(fr) %{_datadir}/locale/fr/cups_fr.po
 %lang(it) %{_datadir}/locale/it/cups_it.po
 %lang(ja) %{_datadir}/locale/ja/cups_ja.po
 %lang(pl) %{_datadir}/locale/pl/cups_pl.po
