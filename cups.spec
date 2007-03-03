@@ -603,8 +603,3 @@ fi
 %files backend-parallel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_ulibdir}/cups/backend/parallel
-
-%files X
-%defattr(644,root,root,755)
-%{_desktopdir}/%{name}.desktop
-%{_iconsdir}/hicolor/*/apps/%{name}.png
