@@ -14,16 +14,18 @@
 #
 %include	/usr/lib/rpm/macros.perl
 %define		pdir CUPS
+%define		_svn	r6309
+%define		_rel	0.1
 Summary:	Common Unix Printing System
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.3
-Release:	0.1
+Release:	0.%{svn}.%{_rel}
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
-Source0:	http://dl.sourceforge.net/sourceforge/cups/%{name}-%{version}svn-r6309-source.tar.bz2
+Source0:	http://dl.sourceforge.net/cups/%{name}-%{version}svn-%{_svn}-source.tar.bz2
 # Source0-md5:	c819a5eca9f2434c5f51fd01df00c38d
 Source1:	%{name}.init
 Source2:	%{name}.pamd
@@ -41,8 +43,8 @@ URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	glibc-headers
 BuildRequires:	dbus-devel
+BuildRequires:	glibc-headers
 %{?with_gnutls:BuildRequires:	gnutls-devel}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
@@ -248,20 +250,8 @@ ports.
 Ten pakiet umożliwia drukowanie z poziomu CUPS-a na drukarkach
 podłączonych do portów równoległych.
 
-%package X
-Summary:	for WM
-Summary(pl.UTF-8):	for menu in WM
-Group:          Applications
-Requires:       %{name} = %{epoch}:%{version}-%{release}
-
-%description X
--
-
-%description X -l pl.UTF-8
--
-
 %prep
-%setup -q -n %{name}-%{version}svn-r6309
+%setup -q -n %{name}-%{version}svn-%{_svn}
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -617,4 +607,4 @@ fi
 %files X
 %defattr(644,root,root,755)
 %{_desktopdir}/%{name}.desktop
-%{_datadir}/icons/hicolor/*/apps/%{name}.png
+%{_iconsdir}/hicolor/*/apps/%{name}.png
