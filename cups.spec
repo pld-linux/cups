@@ -5,8 +5,11 @@
 #
 # Conditional build:
 %bcond_with	gnutls		# use GNU TLS for SSL/TLS support (instead of OpenSSL)
+%bcond_with	dnssd
 %bcond_without	php		# don't build PHP extension
 %bcond_without	perl		# don't build Perl extension
+%bcond_without	java
+%bcond_without	python
 %bcond_without	static_libs	# don't build static library
 #
 %include	/usr/lib/rpm/macros.perl
@@ -15,13 +18,13 @@ Summary:	Common Unix Printing System
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.2.8
-Release:	2
+Version:	1.3
+Release:	0.1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
-Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	d2cc0604113d5300b7b3e823b660d04a
+Source0:	http://dl.sourceforge.net/sourceforge/cups/%{name}-%{version}svn-r6309-source.tar.bz2
+# Source0-md5:	c819a5eca9f2434c5f51fd01df00c38d
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -38,6 +41,7 @@ URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
 BuildRequires:	automake
+BuildRequires:	glibc-headers
 BuildRequires:	dbus-devel
 %{?with_gnutls:BuildRequires:	gnutls-devel}
 BuildRequires:	libjpeg-devel
@@ -244,8 +248,20 @@ ports.
 Ten pakiet umożliwia drukowanie z poziomu CUPS-a na drukarkach
 podłączonych do portów równoległych.
 
+%package X
+Summary:	for WM
+Summary(pl.UTF-8):	for menu in WM
+Group:          Applications
+Requires:       %{name} = %{epoch}:%{version}-%{release}
+
+%description X
+-
+
+%description X -l pl.UTF-8
+-
+
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}svn-r6309
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -261,15 +277,27 @@ podłączonych do portów równoległych.
 %configure \
 	--libdir=%{_ulibdir} \
 	--enable-shared \
+	--with-cups-user=lp \
+	--with-cups-group=sys \
+	--with-system-groups=sys \
+	--with-printcap=/etc/printcap \
 	%{?with_static_libs:--enable-static} \
 	--enable-ssl \
 	--%{?with_gnutls:dis}%{!?with_gnutls:en}able-openssl \
 	--%{!?with_gnutls:dis}%{?with_gnutls:en}able-gnutls \
+	--%{!?with_dnssd:dis}%{?with_dnssd:en}able-dnssd \
 	--disable-cdsassl \
 	--enable-dbus \
 	%{?debug:--enable-debug} \
 	--with-docdir=%{_ulibdir}/%{name}/cgi-bin \
-	%{?with_php:--with-php}
+	--with-config-file-perm=0640 \
+	--with-log-file-perm=0640 \
+	%{?with_dnssd:--with-dnssd-libs=x} \
+	%{?with_dnssd:--with-dnssd-includes=x} \
+	%{?with_php:--with-php} \
+	%{?with_perl:--with-perl} \
+	%{?with_java:--with-java} \
+	%{?with_php:--with-python}
 
 %{__make}
 
@@ -585,3 +613,8 @@ fi
 %files backend-parallel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_ulibdir}/cups/backend/parallel
+
+%files X
+%defattr(644,root,root,755)
+%{_desktopdir}/%{name}.desktop
+%{_datadir}/icons/hicolor/*/apps/%{name}.png
