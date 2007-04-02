@@ -483,7 +483,7 @@ fi
 %attr(640,root,lp) %ghost /var/cache/cups/job.cache
 %attr(600,lp,lp) %ghost /var/cache/cups/ppds.dat
 %attr(640,root,lp) %ghost /var/cache/cups/remote.cache
-%attr(750,root,logs) %dir /var/log/archiv/cups
+%attr(750,root,logs) %dir /var/log/archive/cups
 %attr(750,root,logs) %dir /var/log/cups
 %attr(640,root,logs) %ghost /var/log/cups/access_log
 %attr(640,root,logs) %ghost /var/log/cups/error_log
