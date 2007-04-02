@@ -16,7 +16,7 @@ Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.2.10
-Release:	1
+Release:	2
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
@@ -293,7 +293,7 @@ cd ../..
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,logrotate.d,security} \
 	$RPM_BUILD_ROOT/var/run/cups \
-	$RPM_BUILD_ROOT/var/log/{,archiv/}cups
+	$RPM_BUILD_ROOT/var/log/{,archive/}cups
 
 %{__make} install \
 	BUILDROOT=$RPM_BUILD_ROOT \
