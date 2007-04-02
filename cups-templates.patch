@@ -48,14 +48,3 @@ diff -u -r cups-1.2.1.orig/templates/pl/printer-stop.tmpl cups-1.2.1/templates/p
 -HREF="/{is_class?klasy:drukarki}/{printer_name}">{printer_name}</A>
 +HREF="/{is_class?classes:printers}/{printer_name}">{printer_name}</A>
  została zatrzymana.</P>
---- cups-1.2.8/templates/pl/printers.tmpl.orig	2006-05-15 22:06:46.000000000 +0200
-+++ cups-1.2.8/templates/pl/printers.tmpl	2007-02-18 10:12:35.967716799 +0100
-@@ -6,7 +6,7 @@
- <TABLE WIDTH="100%" CLASS="button" CELLSPACING="0" CELLPADDING="0" SUMMARY="{printer_name}">
- <TR>
- <TD VALIGN="TOP"><A HREF="{printer_uri_supported}">
--<IMG SRC="/images/printer-{printer_state=3?bezczynna:{printer_state=4?przetwarzanie:zatrzymana}}.gif" CLASS="button" ALT=""></A>
-+<IMG SRC="/images/printer-{printer_state=3?idle:{printer_state=4?processing:stopped}}.gif" CLASS="button" ALT=""></A>
- </TD>
- <TD VALIGN="TOP"><B>Opis:</B> {printer_info}<BR>
- <B>Położenie:</B> {printer_location}<BR>
