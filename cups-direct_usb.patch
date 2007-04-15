@@ -6,9 +6,9 @@
               strcasecmp(hostname, "Minolta");
 +    if (use_bc && !strncmp(uri, "usb:/dev/", 9))
 +      use_bc = 0;
- 
+ #endif /* __NetBSD__ */
+  
      if ((device_fd = open_device(uri, &use_bc)) == -1)
-     {
 @@ -304,12 +306,7 @@
    if (!strncmp(uri, "usb:/dev/", 9))
  #ifdef __linux
