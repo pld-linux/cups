@@ -14,7 +14,7 @@
 #
 %include	/usr/lib/rpm/macros.perl
 %define		pdir CUPS
-%define		_svn	r6397
+%define		_svn	r6446
 %define		_rel	0.1
 Summary:	Common Unix Printing System
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
@@ -27,7 +27,7 @@ License:	GPL/LGPL
 Group:		Applications/Printing
 #Source0:	http://dl.sourceforge.net/cups/%{name}-%{version}svn-%{_svn}-source.tar.bz2
 Source0:	ftp://ftp3.easysw.com/pub/cups/snapshots/%{name}-%{version}svn-%{_svn}-source.tar.bz2
-# Source0-md5:	57c3cd16ea6058580245548d9e4802b2
+# Source0-md5:	d7f9de293fd41a58afb5b680fc6ba458
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
