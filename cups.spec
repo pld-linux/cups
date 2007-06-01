@@ -250,8 +250,7 @@ podłączonych do portów równoległych.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-# WHY THIS IS NEEDED?
-#%patch5 -p1
+%patch5 -p1
 %patch6 -p1
 
 %build
@@ -316,10 +315,8 @@ EOF
 %endif
 
 %if %{with perl}
-cd scripting/perl
-%{__make} install \
+%{__make} -C scripting/perl install \
 	DESTDIR=$RPM_BUILD_ROOT
-cd ../..
 %endif
 
 install %{SOURCE1}	$RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
