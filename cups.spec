@@ -15,13 +15,13 @@ Summary:	Common Unix Printing System
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.2.10
-Release:	2
+Version:	1.2.11
+Release:	0.1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
 Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	aad696a480b618e61bc7dab11623d3ac
+# Source0-md5:	2742f1eec38abb04472b86627da8e493
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -33,7 +33,6 @@ Patch3:		%{name}-man_pages_linking.patch
 Patch4:		%{name}-nostrip.patch
 Patch5:		%{name}-templates.patch
 Patch6:		%{name}-certs_FHS.patch
-Patch7:		%{name}-direct_usb.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
@@ -251,9 +250,9 @@ podłączonych do portów równoległych.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
+# WHY THIS IS NEEDED?
+#%patch5 -p1
 %patch6 -p1
-%patch7 -p1
 
 %build
 %{__aclocal} -I config-scripts
@@ -420,6 +419,7 @@ fi
 %lang(ja) %{_ulibdir}/cups/cgi-bin/ja
 %lang(pl) %{_ulibdir}/cups/cgi-bin/pl
 %lang(sv) %{_ulibdir}/cups/cgi-bin/sv
+%lang(zh_TW) %{_ulibdir}/cups/cgi-bin/zh_TW
 
 %exclude %{_ulibdir}/cups/backend/usb
 %exclude %{_ulibdir}/cups/backend/serial
@@ -458,6 +458,7 @@ fi
 %lang(ja) %{_datadir}/cups/templates/ja
 %lang(pl) %{_datadir}/cups/templates/pl
 %lang(sv) %{_datadir}/cups/templates/sv
+%lang(zh_TW) %{_datadir}/cups/templates/zh_TW
 %{_mandir}/man7/backend.7*
 %{_mandir}/man1/cupstestppd.1*
 %{_mandir}/man1/cupstestdsc.1*
@@ -472,6 +473,7 @@ fi
 %lang(ja) %{_datadir}/locale/ja/cups_ja.po
 %lang(pl) %{_datadir}/locale/pl/cups_pl.po
 %lang(sv) %{_datadir}/locale/sv/cups_sv.po
+%lang(zh_TW) %{_datadir}/locale/zh_TW/cups_zh_TW.po
 
 %dir %attr(775,root,lp) /var/cache/cups
 %dir %attr(755,root,lp) /var/lib/cups
