@@ -5,8 +5,11 @@
 #
 # Conditional build:
 %bcond_with	gnutls		# use GNU TLS for SSL/TLS support (instead of OpenSSL)
+%bcond_without	dnssd
 %bcond_without	php		# don't build PHP extension
 %bcond_without	perl		# don't build Perl extension
+%bcond_without	java
+%bcond_without	python
 %bcond_without	static_libs	# don't build static library
 #
 %include	/usr/lib/rpm/macros.perl
@@ -15,13 +18,13 @@ Summary:	Common Unix Printing System
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.2.12
-Release:	2
+Version:	1.3.0
+Release:	1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
-Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	d410658468384b5ba5d04a808f6157fe
+Source0:	http://dl.sourceforge.net/cups/%{name}-%{version}-source.tar.bz2
+# Source0-md5:	ae2855d5d1ab5b5fcbb8a2613cefec14
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -33,12 +36,16 @@ Patch3:		%{name}-man_pages_linking.patch
 Patch4:		%{name}-nostrip.patch
 Patch5:		%{name}-templates.patch
 Patch6:		%{name}-certs_FHS.patch
+Patch7:		%{name}-direct_usb.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
 BuildRequires:	automake
+%{?with_dnssd:BuildRequires:	avahi-compat-libdns_sd-devel}
 BuildRequires:	dbus-devel
+BuildRequires:	glibc-headers
 %{?with_gnutls:BuildRequires:	gnutls-devel}
+BuildRequires:	krb5-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
@@ -253,6 +260,7 @@ podłączonych do portów równoległych.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 
 %build
 %{__aclocal} -I config-scripts
@@ -260,15 +268,27 @@ podłączonych do portów równoległych.
 %configure \
 	--libdir=%{_ulibdir} \
 	--enable-shared \
+	--with-cups-user=lp \
+	--with-cups-group=sys \
+	--with-system-groups=sys \
+	--with-printcap=/etc/printcap \
 	%{?with_static_libs:--enable-static} \
 	--enable-ssl \
 	--%{?with_gnutls:dis}%{!?with_gnutls:en}able-openssl \
 	--%{!?with_gnutls:dis}%{?with_gnutls:en}able-gnutls \
+	--%{!?with_dnssd:dis}%{?with_dnssd:en}able-dnssd \
 	--disable-cdsassl \
 	--enable-dbus \
 	%{?debug:--enable-debug} \
 	--with-docdir=%{_ulibdir}/%{name}/cgi-bin \
-	%{?with_php:--with-php}
+	--with-config-file-perm=0640 \
+	--with-log-file-perm=0640 \
+	%{?with_dnssd:--with-dnssd-libs=x} \
+	%{?with_dnssd:--with-dnssd-includes=x} \
+	%{?with_php:--with-php} \
+	%{?with_perl:--with-perl} \
+	%{?with_java:--with-java} \
+	%{?with_php:--with-python}
 
 %{__make}
 
@@ -398,7 +418,9 @@ fi
 %attr(4755,lp,root) %{_bindir}/lppasswd
 %attr(755,root,root) %{_bindir}/cupstestppd
 %attr(755,root,root) %{_bindir}/cupstestdsc
+%attr(755,root,root) %{_sbindir}/cupsctl
 %attr(755,root,root) %{_sbindir}/cupsd
+%attr(755,root,root) %{_sbindir}/cupsfilter
 
 %dir %{_ulibdir}/cups
 %dir %{_ulibdir}/cups/*
@@ -413,6 +435,7 @@ fi
 %lang(es) %{_ulibdir}/cups/cgi-bin/es
 %lang(et) %{_ulibdir}/cups/cgi-bin/et
 %lang(fr) %{_ulibdir}/cups/cgi-bin/fr
+%lang(he) %{_ulibdir}/cups/cgi-bin/he
 %lang(it) %{_ulibdir}/cups/cgi-bin/it
 %lang(ja) %{_ulibdir}/cups/cgi-bin/ja
 %lang(pl) %{_ulibdir}/cups/cgi-bin/pl
@@ -452,6 +475,7 @@ fi
 %lang(es) %{_datadir}/cups/templates/es
 %lang(et) %{_datadir}/cups/templates/et
 %lang(fr) %{_datadir}/cups/templates/fr
+%lang(he) %{_datadir}/cups/templates/he
 %lang(it) %{_datadir}/cups/templates/it
 %lang(ja) %{_datadir}/cups/templates/ja
 %lang(pl) %{_datadir}/cups/templates/pl
@@ -463,14 +487,25 @@ fi
 %{_mandir}/man7/filter.7*
 %{_mandir}/man1/lppasswd.1*
 %{_mandir}/man[58]/*
+%lang(da) %{_datadir}/locale/da/cups_da.po
 %lang(de) %{_datadir}/locale/de/cups_de.po
 %lang(es) %{_datadir}/locale/es/cups_es.po
 %lang(et) %{_datadir}/locale/et/cups_et.po
+%lang(fi) %{_datadir}/locale/fi/cups_fi.po
 %lang(fr) %{_datadir}/locale/fr/cups_fr.po
+%lang(he) %{_datadir}/locale/he/cups_he.po
 %lang(it) %{_datadir}/locale/it/cups_it.po
+%lang(ko) %{_datadir}/locale/ko/cups_ko.po
 %lang(ja) %{_datadir}/locale/ja/cups_ja.po
+%lang(nl) %{_datadir}/locale/nl/cups_nl.po
+%lang(no) %{_datadir}/locale/no/cups_no.po
 %lang(pl) %{_datadir}/locale/pl/cups_pl.po
+%lang(pt) %{_datadir}/locale/pt/cups_pt.po
+%lang(pt_BR) %{_datadir}/locale/pt_BR/cups_pt_BR.po
+%lang(pt_PT) %{_datadir}/locale/pt_PT/cups_pt_PT.po
+%lang(ru) %{_datadir}/locale/ru/cups_ru.po
 %lang(sv) %{_datadir}/locale/sv/cups_sv.po
+%lang(zh) %{_datadir}/locale/zh/cups_zh.po
 %lang(zh_TW) %{_datadir}/locale/zh_TW/cups_zh_TW.po
 
 %dir %attr(775,root,lp) /var/cache/cups
