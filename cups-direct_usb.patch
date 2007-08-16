@@ -1,0 +1,25 @@
+--- cups-1.2.8/backend/usb-unix.c.direct-usb	2007-02-05 20:25:50.000000000 +0000
++++ cups-1.2.8/backend/usb-unix.c	2007-02-14 17:44:40.000000000 +0000
+@@ -87,6 +87,8 @@
+     use_bc = strcasecmp(hostname, "Canon") &&
+              strcasecmp(hostname, "Konica Minolta") &&
+              strcasecmp(hostname, "Minolta");
++    if (use_bc && !strncmp(uri, "usb:/dev/", 9))
++      use_bc = 0;
+ #endif /* __FreeBSD__ || __NetBSD__ || __OpenBSD__ || __DragonFly__ */
+  
+     if ((device_fd = open_device(uri, &use_bc)) == -1)
+@@ -304,12 +306,7 @@
+   if (!strncmp(uri, "usb:/dev/", 9))
+ #ifdef __linux
+   {
+-   /*
+-    * Do not allow direct devices anymore...
+-    */
+-
+-    errno = ENODEV;
+-    return (-1);
++    return (open(uri + 4, O_RDWR | O_EXCL));
+   }
+   else if (!strncmp(uri, "usb://", 6))
+   {
