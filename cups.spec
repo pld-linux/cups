@@ -136,7 +136,7 @@ Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 Obsoletes:	libcups1
 
 %description image-lib
-Common Unix Printing System Libraries - images manupalation.
+Common Unix Printing System Libraries - images manipalation.
 
 %description image-lib -l pl.UTF-8
 Biblioteki dla CUPS - obsługa formatów graficznych.
