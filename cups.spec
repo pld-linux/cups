@@ -65,6 +65,7 @@ Requires:	rc-scripts
 Obsoletes:	printingdaemon
 Provides:	printingdaemon
 Conflicts:	ghostscript < 7.05.4
+Conflicts:	logrotate < 3.7.4
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_ulibdir	%{_prefix}/lib
