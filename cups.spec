@@ -18,13 +18,13 @@ Summary:	Common Unix Printing System
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.3.0
+Version:	1.3.2
 Release:	1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
-Source0:	http://dl.sourceforge.net/cups/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	ae2855d5d1ab5b5fcbb8a2613cefec14
+Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
+# Source0-md5:	0f5f95847d7ca209da25936e47699bfe
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -409,6 +409,7 @@ fi
 %attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/cupsd.conf
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/printers.conf
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/mailto.conf
+%attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/snmp.conf
 %attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/*.convs
 %attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/*.types
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/security/blacklist.cups
