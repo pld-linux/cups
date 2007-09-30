@@ -3,6 +3,15 @@
 # - perl BRs
 # - remove obsolete /etc/cups/certs (trigger?)
 #
+# warning: Installed (but unpackaged) file(s) found:
+#   /usr/share/applications/cups.desktop
+#   /usr/share/icons/hicolor/128x128/apps/cups.png
+#   /usr/share/icons/hicolor/16x16/apps/cups.png
+#   /usr/share/icons/hicolor/32x32/apps/cups.png
+#   /usr/share/icons/hicolor/64x64/apps/cups.png
+#   /usr/share/locale/no/cups_no.po
+#   /usr/share/locale/zh/cups_zh.po
+#
 # Conditional build:
 %bcond_with	gnutls		# use GNU TLS for SSL/TLS support (instead of OpenSSL)
 %bcond_without	dnssd
@@ -18,13 +27,13 @@ Summary:	Common Unix Printing System
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.3.2
-Release:	1
+Version:	1.3.3
+Release:	0.1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
 Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	0f5f95847d7ca209da25936e47699bfe
+# Source0-md5:	d4911e68b6979d16bc7a55f68d16cc53
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
