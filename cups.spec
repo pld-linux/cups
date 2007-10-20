@@ -1,4 +1,5 @@
 # TODO:
+# - kill CFLAGS from `cups-config --libs`
 # - build/install java ext ?
 # - perl BRs
 # - remove obsolete /etc/cups/certs (trigger?)
@@ -161,9 +162,15 @@ Summary(pt_BR.UTF-8):	Sistema Unix de Impressão - ambiente de desenvolvimento
 Group:		Development/Libraries
 Requires:	%{name}-image-lib = %{epoch}:%{version}-%{release}
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
+# for libcups
 %{?with_gnutls:Requires:	gnutls-devel}
+Requires:	krb5-devel
 %{!?with_gnutls:Requires:	openssl-devel}
 Requires:	zlib-devel
+# for libcupsimage
+Requires:	libjpeg-devel
+Requires:	libpng-devel
+Requires:	libtiff-devel
 Obsoletes:	libcups1-devel
 
 %description devel
