@@ -469,9 +469,7 @@ fi
 %attr(755,root,root) %{_ulibdir}/cups/monitor/*
 %attr(755,root,root) %{_ulibdir}/cups/notifier/*
 
-%dir %{_datadir}/cups
 %{_datadir}/cups/banners
-%{_datadir}/cups/charmaps
 %{_datadir}/cups/charsets
 %{_datadir}/cups/data
 %{_datadir}/cups/drivers
@@ -505,26 +503,6 @@ fi
 %{_mandir}/man7/filter.7*
 %{_mandir}/man1/lppasswd.1*
 %{_mandir}/man[58]/*
-%lang(da) %{_datadir}/locale/da/cups_da.po
-%lang(de) %{_datadir}/locale/de/cups_de.po
-%lang(es) %{_datadir}/locale/es/cups_es.po
-%lang(et) %{_datadir}/locale/et/cups_et.po
-%lang(fi) %{_datadir}/locale/fi/cups_fi.po
-%lang(fr) %{_datadir}/locale/fr/cups_fr.po
-%lang(he) %{_datadir}/locale/he/cups_he.po
-%lang(it) %{_datadir}/locale/it/cups_it.po
-%lang(ko) %{_datadir}/locale/ko/cups_ko.po
-%lang(ja) %{_datadir}/locale/ja/cups_ja.po
-%lang(nl) %{_datadir}/locale/nl/cups_nl.po
-#%lang(no) %{_datadir}/locale/no/cups_no.po
-%lang(pl) %{_datadir}/locale/pl/cups_pl.po
-%lang(pt) %{_datadir}/locale/pt/cups_pt.po
-%lang(pt_BR) %{_datadir}/locale/pt_BR/cups_pt_BR.po
-#%lang(pt_PT) %{_datadir}/locale/pt_PT/cups_pt_PT.po
-%lang(ru) %{_datadir}/locale/ru/cups_ru.po
-%lang(sv) %{_datadir}/locale/sv/cups_sv.po
-#%lang(zh) %{_datadir}/locale/zh/cups_zh.po
-%lang(zh_TW) %{_datadir}/locale/zh_TW/cups_zh_TW.po
 
 %dir %attr(775,root,lp) /var/cache/cups
 %dir %attr(755,root,lp) /var/lib/cups
@@ -546,6 +524,28 @@ fi
 %defattr(644,root,root,755)
 %dir %attr(755,root,lp) %{_sysconfdir}/%{name}
 %attr(755,root,root) %{_libdir}/libcups.so.*
+%dir %{_datadir}/cups
+%{_datadir}/cups/charmaps
+%lang(da) %{_datadir}/locale/da/cups_da.po
+%lang(de) %{_datadir}/locale/de/cups_de.po
+%lang(es) %{_datadir}/locale/es/cups_es.po
+%lang(et) %{_datadir}/locale/et/cups_et.po
+%lang(fi) %{_datadir}/locale/fi/cups_fi.po
+%lang(fr) %{_datadir}/locale/fr/cups_fr.po
+%lang(he) %{_datadir}/locale/he/cups_he.po
+%lang(it) %{_datadir}/locale/it/cups_it.po
+%lang(ko) %{_datadir}/locale/ko/cups_ko.po
+%lang(ja) %{_datadir}/locale/ja/cups_ja.po
+%lang(nl) %{_datadir}/locale/nl/cups_nl.po
+#%lang(no) %{_datadir}/locale/no/cups_no.po
+%lang(pl) %{_datadir}/locale/pl/cups_pl.po
+%lang(pt) %{_datadir}/locale/pt/cups_pt.po
+%lang(pt_BR) %{_datadir}/locale/pt_BR/cups_pt_BR.po
+#%lang(pt_PT) %{_datadir}/locale/pt_PT/cups_pt_PT.po
+%lang(ru) %{_datadir}/locale/ru/cups_ru.po
+%lang(sv) %{_datadir}/locale/sv/cups_sv.po
+#%lang(zh) %{_datadir}/locale/zh/cups_zh.po
+%lang(zh_TW) %{_datadir}/locale/zh_TW/cups_zh_TW.po
 
 %files clients
 %defattr(644,root,root,755)
@@ -599,7 +599,6 @@ fi
 %{_includedir}/cups
 %{_libdir}/lib*.so
 %{_mandir}/man1/cups-config*
-%{_mandir}/man3/*
 #%lang(fr) %{_mandir}/fr/man1/cups-config*
 #%lang(es) %{_mandir}/es/man1/cups-config*
 
@@ -617,6 +616,7 @@ fi
 %{perl_vendorarch}/auto/CUPS/*.bs
 %{perl_vendorarch}/auto/CUPS/autosplit.ix
 %attr(755,root,root) %{perl_vendorarch}/auto/CUPS/*.so
+%{_mandir}/man3/CUPS.3pm.gz
 %endif
 
 %if %{with php}
