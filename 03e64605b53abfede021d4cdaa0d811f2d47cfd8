@@ -1,0 +1,3 @@
+- updated to 1.2.7 [fixes CVE-2007-0720]
+- added it translation
+- -templates_pl.patch is back
