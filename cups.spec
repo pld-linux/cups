@@ -10,8 +10,6 @@
 #   /usr/share/icons/hicolor/16x16/apps/cups.png
 #   /usr/share/icons/hicolor/32x32/apps/cups.png
 #   /usr/share/icons/hicolor/64x64/apps/cups.png
-#   /usr/share/locale/no/cups_no.po
-#   /usr/share/locale/zh/cups_zh.po
 #
 # Conditional build:
 %bcond_with	gnutls		# use GNU TLS for SSL/TLS support (instead of OpenSSL)
@@ -383,6 +381,11 @@ install -d $RPM_BUILD_ROOT%{_sysconfdir}/cups/ssl
 ln -s accept $RPM_BUILD_ROOT%{_sbindir}/enable
 ln -s accept $RPM_BUILD_ROOT%{_sbindir}/disable
 
+# fix/update locale names
+install -d $RPM_BUILD_ROOT%{_datadir}/locale/{nb,zh_CN}
+mv -f $RPM_BUILD_ROOT%{_datadir}/locale/{no/cups_no.po,nb/cups_nb.po}
+mv -f $RPM_BUILD_ROOT%{_datadir}/locale/{zh/cups_zh.po,zh_CN/cups_zh_CN.po}
+
 # check-files cleanup
 rm -rf $RPM_BUILD_ROOT%{_mandir}/{,es/,fr/}cat?
 rm -rf $RPM_BUILD_ROOT/''etc/{init.d,rc?.d}/*
@@ -497,11 +500,11 @@ fi
 %lang(pl) %{_datadir}/cups/templates/pl
 %lang(sv) %{_datadir}/cups/templates/sv
 %lang(zh_TW) %{_datadir}/cups/templates/zh_TW
-%{_mandir}/man7/backend.7*
 %{_mandir}/man1/cupstestppd.1*
 %{_mandir}/man1/cupstestdsc.1*
-%{_mandir}/man7/filter.7*
 %{_mandir}/man1/lppasswd.1*
+%{_mandir}/man7/backend.7*
+%{_mandir}/man7/filter.7*
 %{_mandir}/man[58]/*
 
 %dir %attr(775,root,lp) /var/cache/cups
@@ -537,14 +540,13 @@ fi
 %lang(ko) %{_datadir}/locale/ko/cups_ko.po
 %lang(ja) %{_datadir}/locale/ja/cups_ja.po
 %lang(nl) %{_datadir}/locale/nl/cups_nl.po
-#%lang(no) %{_datadir}/locale/no/cups_no.po
+%lang(nb) %{_datadir}/locale/nb/cups_nb.po
 %lang(pl) %{_datadir}/locale/pl/cups_pl.po
 %lang(pt) %{_datadir}/locale/pt/cups_pt.po
 %lang(pt_BR) %{_datadir}/locale/pt_BR/cups_pt_BR.po
-#%lang(pt_PT) %{_datadir}/locale/pt_PT/cups_pt_PT.po
 %lang(ru) %{_datadir}/locale/ru/cups_ru.po
 %lang(sv) %{_datadir}/locale/sv/cups_sv.po
-#%lang(zh) %{_datadir}/locale/zh/cups_zh.po
+%lang(zh_CN) %{_datadir}/locale/zh_CN/cups_zh_CN.po
 %lang(zh_TW) %{_datadir}/locale/zh_TW/cups_zh_TW.po
 
 %files clients
@@ -596,34 +598,36 @@ fi
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/cups-config
+%attr(755,root,root) %{_libdir}/libcups.so
+%attr(755,root,root) %{_libdir}/libcupsimage.so
 %{_includedir}/cups
-%{_libdir}/lib*.so
-%{_mandir}/man1/cups-config*
-#%lang(fr) %{_mandir}/fr/man1/cups-config*
-#%lang(es) %{_mandir}/es/man1/cups-config*
+%{_mandir}/man1/cups-config.1*
+#%lang(fr) %{_mandir}/fr/man1/cups-config.1*
+#%lang(es) %{_mandir}/es/man1/cups-config.1*
 
 %if %{with static_libs}
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/*.a
+%{_libdir}/libcups.a
+%{_libdir}/libcupsimage.a
 %endif
 
 %if %{with perl}
 %files -n perl-cups
 %defattr(644,root,root,755)
-%{perl_vendorarch}/*.pm
+%{perl_vendorarch}/CUPS.pm
 %dir %{perl_vendorarch}/auto/CUPS
-%{perl_vendorarch}/auto/CUPS/*.bs
+%{perl_vendorarch}/auto/CUPS/CUPS.bs
 %{perl_vendorarch}/auto/CUPS/autosplit.ix
-%attr(755,root,root) %{perl_vendorarch}/auto/CUPS/*.so
-%{_mandir}/man3/CUPS.3pm.gz
+%attr(755,root,root) %{perl_vendorarch}/auto/CUPS/CUPS.so
+%{_mandir}/man3/CUPS.3pm*
 %endif
 
 %if %{with php}
 %files -n php-cups
 %defattr(644,root,root,755)
 %doc scripting/php/README
-%attr(755,root,root) %{php_extensiondir}/*
+%attr(755,root,root) %{php_extensiondir}/phpcups.so
 %config(noreplace) %verify(not md5 mtime size) %{php_sysconfdir}/conf.d/phpcups.ini
 %endif
 
