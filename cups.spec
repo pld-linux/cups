@@ -58,7 +58,7 @@ BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
-BuildRequires:	openldap-devel
+BuildRequires:	openldap-devel >= 2.4.6
 BuildRequires:	openslp-devel
 %{!?with_gnutls:BuildRequires:	openssl-devel}
 BuildRequires:	pam-devel
