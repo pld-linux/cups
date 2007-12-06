@@ -1,23 +1,11 @@
-# TODO:
-# - kill CFLAGS from `cups-config --libs`
-# - build/install java ext ?
-# - perl BRs
-# - remove obsolete /etc/cups/certs (trigger?)
-#
-# warning: Installed (but unpackaged) file(s) found:
-#   /usr/share/applications/cups.desktop
-#   /usr/share/icons/hicolor/128x128/apps/cups.png
-#   /usr/share/icons/hicolor/16x16/apps/cups.png
-#   /usr/share/icons/hicolor/32x32/apps/cups.png
-#   /usr/share/icons/hicolor/64x64/apps/cups.png
 #
 # Conditional build:
 %bcond_with	gnutls		# use GNU TLS for SSL/TLS support (instead of OpenSSL)
 %bcond_without	dnssd
-%bcond_without	php		# don't build PHP extension
-%bcond_without	perl		# don't build Perl extension
-%bcond_without	java
-%bcond_without	python
+%bcond_without	php		# don't build PHP extension/support in web interface
+%bcond_without	perl		# don't build Perl extension/support in web interface
+%bcond_without	java		# don't build Java extension/support in web interface
+%bcond_without	python		# don't build Python support in web interface
 %bcond_without	static_libs	# don't build static library
 #
 %include	/usr/lib/rpm/macros.perl
@@ -27,7 +15,7 @@ Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.3.4
-Release:	3
+Release:	3.1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
@@ -37,6 +25,7 @@ Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
 Source4:	%{name}.mailto.conf
+Source5:	%{name}-lpd.inetd
 Patch0:		%{name}-config.patch
 Patch1:		%{name}-lp-lpr.patch
 Patch2:		%{name}-options.patch
@@ -46,6 +35,7 @@ Patch5:		%{name}-templates.patch
 Patch6:		%{name}-certs_FHS.patch
 Patch7:		%{name}-direct_usb.patch
 Patch8:		%{name}-satisfy-any.patch
+Patch9:		%{name}-no-polluted-krb5config.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
@@ -54,6 +44,8 @@ BuildRequires:	automake
 BuildRequires:	dbus-devel
 BuildRequires:	glibc-headers
 %{?with_gnutls:BuildRequires:	gnutls-devel}
+%{?with_java:BuildRequires:	jar}
+%{?with_java:BuildRequires:	jdk}
 BuildRequires:	krb5-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
@@ -227,6 +219,18 @@ PHP module for Common Unix Printing System.
 %description -n php-cups -l pl.UTF-8
 Moduł PHP do ogólnego systemu druku dla Uniksa.
 
+%package -n java-cups
+Summary:	CUPS java classes
+Summary(pl.UTF-8):	Klasy javy CUPS
+Group:		Development/Languages/Java
+Requires:	jre
+
+%description -n java-cups
+Common Unix Printing System Java classes.
+
+%description -n java-cups -l pl.UTF-8
+Klasy javy do ogólnego systemu druku dla Uniksa.
+
 %package backend-usb
 Summary:	USB backend for CUPS
 Summary(pl.UTF-8):	Backend USB dla CUPS-a
@@ -267,6 +271,19 @@ ports.
 Ten pakiet umożliwia drukowanie z poziomu CUPS-a na drukarkach
 podłączonych do portów równoległych.
 
+%package lpd
+Summary:	LPD compatibility support for CUPS print server
+Summary(pl.UTF-8):	Wsparcie dla LPD w serwerze wydruków CUPS
+Group:		Applications/Printing
+Requires:	rc-inetd
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+
+%description lpd
+LPD compatibility support for CUPS print server.
+
+%description lpd -l pl.UTF-8
+Wsparcie dla LPD w serwerze wydruków CUPS.
+
 %prep
 %setup -q
 %patch0 -p1
@@ -278,6 +295,7 @@ podłączonych do portów równoległych.
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
+%patch9 -p1
 
 %build
 %{__aclocal} -I config-scripts
@@ -305,7 +323,7 @@ podłączonych do portów równoległych.
 	%{?with_php:--with-php} \
 	%{?with_perl:--with-perl} \
 	%{?with_java:--with-java} \
-	%{?with_php:--with-python}
+	%{?with_python:--with-python}
 
 %{__make}
 
@@ -325,9 +343,18 @@ cd scripting/perl
 cd ../..
 %endif
 
+%if %{with java}
+cd scripting/java
+rm -rf classes/* cups.jar
+javac -d classes src/com/easysw/cups/*.java
+cd classes
+jar cvf ../cups.jar com/easysw/cups
+cd ../../..
+%endif
+
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,logrotate.d,security} \
+install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,logrotate.d,security,sysconfig/rc-inetd} \
 	$RPM_BUILD_ROOT/var/run/cups \
 	$RPM_BUILD_ROOT/var/log/{,archive/}cups
 
@@ -357,10 +384,17 @@ EOF
 	DESTDIR=$RPM_BUILD_ROOT
 %endif
 
+%if %{with java}
+install -d $RPM_BUILD_ROOT{%{_datadir}/java,%{_examplesdir}/java-cups-%{version}}
+install scripting/java/cups.jar $RPM_BUILD_ROOT%{_datadir}/java
+cp -a scripting/java/{CUPSPrinter.java,example} $RPM_BUILD_ROOT%{_examplesdir}/java-cups-%{version}
+%endif
+
 install %{SOURCE1}	$RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install %{SOURCE2}	$RPM_BUILD_ROOT/etc/pam.d/%{name}
 install %{SOURCE3}	$RPM_BUILD_ROOT/etc/logrotate.d/%{name}
 install %{SOURCE4}      $RPM_BUILD_ROOT/etc/cups/mailto.conf
+sed -e 's|__ULIBDIR__|%{_ulibdir}|g' %{SOURCE5} > $RPM_BUILD_ROOT/etc/sysconfig/rc-inetd/cups-lpd
 
 gzip -9nf $RPM_BUILD_ROOT%{_datadir}/%{name}/model/*.ppd
 
@@ -419,6 +453,14 @@ if [ "$1" = 0 ]; then
 	%php_webserver_restart
 fi
 
+%post lpd
+%service -q rc-inetd reload
+
+%postun lpd
+if [ "$1" = 0 ]; then
+	%service -q rc-inetd reload
+fi
+
 %files
 %defattr(644,root,root,755)
 #%doc *.gz doc/*.html doc/*.css doc/images
@@ -469,7 +511,9 @@ fi
 %exclude %{_ulibdir}/cups/backend/serial
 %exclude %{_ulibdir}/cups/backend/parallel
 %attr(755,root,root) %{_ulibdir}/cups/backend/*
-%attr(755,root,root) %{_ulibdir}/cups/daemon/*
+%attr(755,root,root) %{_ulibdir}/cups/daemon/cups-deviced
+%attr(755,root,root) %{_ulibdir}/cups/daemon/cups-driverd
+%attr(755,root,root) %{_ulibdir}/cups/daemon/cups-polld
 %attr(755,root,root) %{_ulibdir}/cups/filter/*
 %attr(755,root,root) %{_ulibdir}/cups/monitor/*
 %attr(755,root,root) %{_ulibdir}/cups/notifier/*
@@ -507,7 +551,17 @@ fi
 %{_mandir}/man1/lppasswd.1*
 %{_mandir}/man7/backend.7*
 %{_mandir}/man7/filter.7*
-%{_mandir}/man[58]/*
+%{_mandir}/man5/*
+%{_mandir}/man8/accept.8*
+%{_mandir}/man8/cups-deviced.8*
+%{_mandir}/man8/cups-driverd.8*
+%{_mandir}/man8/cups-polld.8*
+%{_mandir}/man8/cupsaddsmb.8*
+%{_mandir}/man8/cupsctl.8*
+%{_mandir}/man8/cupsd.8*
+%{_mandir}/man8/cupsenable.8*
+%{_mandir}/man8/cupsfilter.8*
+%{_mandir}/man8/lp*
 
 %dir %attr(775,root,lp) /var/cache/cups
 %dir %attr(755,root,lp) /var/lib/cups
@@ -572,6 +626,8 @@ fi
 %attr(755,root,root) %{_sbindir}/lpinfo
 %attr(755,root,root) %{_sbindir}/lpmove
 %attr(755,root,root) %{_sbindir}/reject
+%{_datadir}/applications/cups.desktop
+%{_datadir}/icons/hicolor/*/apps/cups.png
 %{_mandir}/man1/cancel.1*
 %{_mandir}/man1/lp.1*
 %{_mandir}/man1/lpoptions.1*
@@ -633,6 +689,14 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{php_sysconfdir}/conf.d/phpcups.ini
 %endif
 
+%if %{with java}
+%files -n java-cups
+%defattr(644,root,root,755)
+%doc scripting/java/docs/*
+%{_datadir}/java/cups.jar
+%{_examplesdir}/java-cups-%{version}
+%endif
+
 %files backend-usb
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_ulibdir}/cups/backend/usb
@@ -644,3 +708,9 @@ fi
 %files backend-parallel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_ulibdir}/cups/backend/parallel
+
+%files lpd
+%defattr(644,root,root,755)
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/rc-inetd/*
+%attr(755,root,root) %{_ulibdir}/cups/daemon/cups-lpd
+%{_mandir}/man8/cups-lpd.8*
