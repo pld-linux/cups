@@ -10,6 +10,11 @@
 #
 %include	/usr/lib/rpm/macros.perl
 %define		pdir CUPS
+
+%ifarch i386 i486 ppc
+%undefine	with_java
+%endif
+
 Summary:	Common Unix Printing System
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
