@@ -1,0 +1,21 @@
+
+Removed code prevented "Satisfy Any" directive to work, cupsdCheckPolicy checks
+for auth info AND allow/deny access lists and does its job properly so checking
+again just for auth info is The Wrong Thing as there may be an access list
+allowing unauthorized clients based on their IP.
+
+--- cups-1.3.4/scheduler/ipp.c~	2007-10-22 22:27:22.000000000 +0200
++++ cups-1.3.4/scheduler/ipp.c	2007-12-06 18:25:11.000000000 +0100
+@@ -1294,12 +1294,6 @@
+     send_http_error(con, status, printer);
+     return (NULL);
+   }
+-  else if ((printer->type & CUPS_PRINTER_AUTHENTICATED) &&
+-           !con->username[0] && !auth_info)
+-  {
+-    send_http_error(con, HTTP_UNAUTHORIZED, printer);
+-    return (NULL);
+-  }
+ #ifdef HAVE_SSL
+   else if (auth_info && !con->http.tls &&
+            !httpAddrLocalhost(con->http.hostaddr))
