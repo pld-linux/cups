@@ -1,8 +1,8 @@
 
-Removed code prevented "Satisfy Any" directive to work, cupsdCheckPolicy checks
-for auth info AND allow/deny access lists and does its job properly so checking
-again just for auth info is The Wrong Thing as there may be an access list
-allowing unauthorized clients based on their IP.
+Removed code prevented "Satisfy Any" directive from working, cupsdCheckPolicy
+checks for auth info AND allow/deny access lists and does its job properly
+so checking again just for auth info is The Wrong Thing as there may be
+an access list allowing unauthorized clients based on their IP.
 
 --- cups-1.3.4/scheduler/ipp.c~	2007-10-22 22:27:22.000000000 +0200
 +++ cups-1.3.4/scheduler/ipp.c	2007-12-06 18:25:11.000000000 +0100
