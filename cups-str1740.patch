@@ -1,0 +1,48 @@
+--- cups-1.2.1/filter/pstops.c.orig	2006-05-22 19:31:23.000000000 +0100
++++ cups-1.2.1/filter/pstops.c	2006-06-02 15:08:26.000000000 +0100
+@@ -1305,6 +1305,9 @@
+ 
+   if (first_page)
+   {
++    char	*page_setup;		/* PageSetup commands to send */
++
++
+     doc_puts(doc, "%%BeginPageSetup\n");
+ 
+     if (pageinfo->num_options > 0)
+@@ -1344,20 +1347,28 @@
+       */
+ 
+       if (doc_setup)
++      {
+ 	doc_puts(doc, doc_setup);
++	free(doc_setup);
++      }
+ 
+       if (any_setup)
++      {
+ 	doc_puts(doc, any_setup);
++	free(any_setup);
++      }
++    }
+ 
+-     /*
+-      * Free the command strings...
+-      */
++   /*
++    * Output commands for the current page...
++    */
+ 
+-      if (doc_setup)
+-	free(doc_setup);
++    page_setup = ppdEmitString(ppd, PPD_ORDER_PAGE, 0);
+ 
+-      if (any_setup)
+-	free(any_setup);
++    if (page_setup)
++    {
++      doc_puts(doc, page_setup);
++      free(page_setup);
+     }
+   }
+ 

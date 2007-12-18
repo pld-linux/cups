@@ -1,0 +1,63 @@
+--- cups-1.1.10/ENCRYPTION.txt.orig	Thu Jan  4 07:42:35 2001
++++ cups-1.1.10/ENCRYPTION.txt	Thu Jan  4 09:23:15 2001
+@@ -94,6 +94,8 @@
+ properly signed it will generate all kinds of warnings in
+ Netscape and MSIE:
+ 
++    mkdir /etc/cups/ssl
++
+     openssl req -new -x509 -keyout /etc/cups/ssl/server.key \
+         -out /etc/cups/ssl/server.crt -days 365 -nodes
+ 
+@@ -103,6 +105,51 @@
+ encrypted.  The cupsd process runs in the background, detached
+ from any input source; if you encrypt these files then cupsd
+ will not be able to load them!
++
++If the above "openssl" command issues messages as
++
++    Using configuration from /usr/lib/ssl/openssl.cnf
++    Unable to load config info
++
++and later on
++
++    unable to find 'distinguished_name'
++    problems making Certificate Request
++
++create a file /usr/lib/ssl/openssl.cnf (or how it was called in the
++error message) containing
++
++-----------------openssl.cnf-------------------------------------------
++
++[ req ]
++distinguished_name     = req_distinguished_name
++[ req_distinguished_name ]
++countryName                    = Country Name (2 letter code)
++countryName_default            = US
++countryName_min                = 2
++countryName_max                = 2
++localityName                   = Locality Name (eg, city)
++organizationalUnitName         = Organizational Unit Name (eg, section)
++commonName                     = Common Name (eg, YOUR name)
++commonName_max                 = 64
++emailAddress                   = Email Address
++emailAddress_max               = 40
++
++-----------------------------------------------------------------------
++
++and repeat the two commands. Now you will be asked some questions and
++the certificate will be generated.
++
++Give the commands
++
++   man req
++
++and
++
++   man openssl
++
++if you have further questions. See especially the "DIAGNOSTICS" and
++"EXAMPLES" sections of the "req" man page.
+ 
+ Send all rants about non-encrypted certificate and key files to
+ /dev/null.  It makes sense to encrypt user files, but not for

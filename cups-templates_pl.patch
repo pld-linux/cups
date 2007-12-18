@@ -1,0 +1,50 @@
+diff -u -r cups-1.2.1.orig/templates/pl/printer-accept.tmpl cups-1.2.1/templates/pl/printer-accept.tmpl
+--- cups-1.2.1.orig/templates/pl/printer-accept.tmpl	2006-05-15 22:06:46.000000000 +0200
++++ cups-1.2.1/templates/pl/printer-accept.tmpl	2006-06-02 20:07:26.000000000 +0200
+@@ -1,3 +1,3 @@
+ <P>{is_class?Klasa:Drukarka} <A
+-HREF="/{is_class?klasy:drukarki}/{printer_name}">{printer_name}</A>
++HREF="/{is_class?classes:printers}/{printer_name}">{printer_name}</A>
+ teraz akceptuje zadania.</P>
+diff -u -r cups-1.2.1.orig/templates/pl/printer-default.tmpl cups-1.2.1/templates/pl/printer-default.tmpl
+--- cups-1.2.1.orig/templates/pl/printer-default.tmpl	2006-05-15 22:06:46.000000000 +0200
++++ cups-1.2.1/templates/pl/printer-default.tmpl	2006-06-02 20:08:36.000000000 +0200
+@@ -1,5 +1,5 @@
+ <P>{is_class?Klasa:Drukarka} <A
+-HREF="/{is_class?klasy:drukarki}/{printer_name}">{printer_name}</A>
++HREF="/{is_class?classes:printers}/{printer_name}">{printer_name}</A>
+ została utworzona domyślną drukarką na serwerze.</P>
+ 
+ <BLOCKQUOTE><B>Uwaga:</B> każdy domyślny użytkownik, który został ustawiony przez
+diff -u -r cups-1.2.1.orig/templates/pl/printer-purge.tmpl cups-1.2.1/templates/pl/printer-purge.tmpl
+--- cups-1.2.1.orig/templates/pl/printer-purge.tmpl	2006-05-15 22:06:46.000000000 +0200
++++ cups-1.2.1/templates/pl/printer-purge.tmpl	2006-06-02 20:09:23.000000000 +0200
+@@ -1,3 +1,3 @@
+ <P>{is_class?Klasa:Drukarka} <A
+-HREF="/{is_class?klasy:drukarki/{printer_name}">{printer_name}</A>
++HREF="/{is_class?classes:printers/{printer_name}">{printer_name}</A>
+ została wyczyszczone ze wszystkich zadań.</P>
+diff -u -r cups-1.2.1.orig/templates/pl/printer-reject.tmpl cups-1.2.1/templates/pl/printer-reject.tmpl
+--- cups-1.2.1.orig/templates/pl/printer-reject.tmpl	2006-05-15 22:06:46.000000000 +0200
++++ cups-1.2.1/templates/pl/printer-reject.tmpl	2006-06-02 20:10:41.000000000 +0200
+@@ -1,3 +1,3 @@
+ <P>{is_class?Klasa:Drukarka} <A
+-HREF="/{is_class?klasy:drukarki}/{printer_name}">{printer_name}</A>
++HREF="/{is_class?classes:printers}/{printer_name}">{printer_name}</A>
+ już nie akceptuje zadań.</P>
+diff -u -r cups-1.2.1.orig/templates/pl/printer-start.tmpl cups-1.2.1/templates/pl/printer-start.tmpl
+--- cups-1.2.1.orig/templates/pl/printer-start.tmpl	2006-05-15 22:06:46.000000000 +0200
++++ cups-1.2.1/templates/pl/printer-start.tmpl	2006-06-02 20:11:12.000000000 +0200
+@@ -1,3 +1,3 @@
+ <P>{is_class?Klasa:Drukarka} <A
+-HREF="/{is_class?klasy:drukarki}/{printer_name}">{printer_name}</A>
++HREF="/{is_class?classes:printers}/{printer_name}">{printer_name}</A>
+ została uruchomiona.</P>
+diff -u -r cups-1.2.1.orig/templates/pl/printer-stop.tmpl cups-1.2.1/templates/pl/printer-stop.tmpl
+--- cups-1.2.1.orig/templates/pl/printer-stop.tmpl	2006-05-15 22:06:46.000000000 +0200
++++ cups-1.2.1/templates/pl/printer-stop.tmpl	2006-06-02 20:20:12.000000000 +0200
+@@ -1,3 +1,3 @@
+ <P>{is_class?Klasa:Drukarka} <A
+-HREF="/{is_class?klasy:drukarki}/{printer_name}">{printer_name}</A>
++HREF="/{is_class?classes:printers}/{printer_name}">{printer_name}</A>
+ została zatrzymana.</P>
