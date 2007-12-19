@@ -9,6 +9,7 @@
 %bcond_without	static_libs	# don't build static library
 #
 %include	/usr/lib/rpm/macros.perl
+%include	/usr/lib/rpm/macros.java
 %define		pdir CUPS
 
 %ifarch i386 i486 ppc
@@ -51,6 +52,7 @@ BuildRequires:	glibc-headers
 %{?with_gnutls:BuildRequires:	gnutls-devel}
 %{?with_java:BuildRequires:	jar}
 %{?with_java:BuildRequires:	jdk}
+%{?with_java:BuildRequires:	jpackage-utils}
 BuildRequires:	krb5-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
@@ -62,14 +64,15 @@ BuildRequires:	openslp-devel
 BuildRequires:	pam-devel
 %{?with_php:BuildRequires:	php-devel >= 4:5.0.0}
 BuildRequires:	pkgconfig
+%{?with_java:BuildRequires:	rpm-javaprov}
 BuildRequires:	rpm-perlprov
 BuildRequires:	rpmbuild(macros) >= 1.344
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Requires:	pam >= 0.77.3
 Requires:	rc-scripts
-Obsoletes:	printingdaemon
 Provides:	printingdaemon
+Obsoletes:	printingdaemon
 Conflicts:	ghostscript < 7.05.4
 Conflicts:	logrotate < 3.7-4
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -125,8 +128,8 @@ Summary:	Common Unix Printing System Clients
 Summary(pl.UTF-8):	Aplikacje klienckie dla CUPS
 Group:		Applications/Printing
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
-Obsoletes:	printingclient
 Provides:	printingclient
+Obsoletes:	printingclient
 
 %description clients
 Common Unix Printing System Clients.
@@ -228,13 +231,28 @@ Moduł PHP do ogólnego systemu druku dla Uniksa.
 Summary:	CUPS java classes
 Summary(pl.UTF-8):	Klasy javy CUPS
 Group:		Development/Languages/Java
-Requires:	jre
+Requires:	jpackage-utils
 
 %description -n java-cups
 Common Unix Printing System Java classes.
 
 %description -n java-cups -l pl.UTF-8
 Klasy javy do ogólnego systemu druku dla Uniksa.
+
+%package -n java-cups-javadoc
+Summary:	Online manual for %{name}
+Summary(pl.UTF-8):	Dokumentacja online do %{name}
+Group:		Documentation
+Requires:	jpackage-utils
+
+%description -n java-cups-javadoc
+Documentation for %{name}.
+
+%description -n java-cups-javadoc -l pl.UTF-8
+Dokumentacja do %{name}.
+
+%description -n java-cups-javadoc -l fr.UTF-8
+Javadoc pour %{name}.
 
 %package backend-usb
 Summary:	USB backend for CUPS
@@ -280,8 +298,8 @@ podłączonych do portów równoległych.
 Summary:	LPD compatibility support for CUPS print server
 Summary(pl.UTF-8):	Wsparcie dla LPD w serwerze wydruków CUPS
 Group:		Applications/Printing
-Requires:	rc-inetd
 Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	rc-inetd
 
 %description lpd
 LPD compatibility support for CUPS print server.
@@ -351,9 +369,9 @@ cd ../..
 %if %{with java}
 cd scripting/java
 rm -rf classes/* cups.jar
-javac -d classes src/com/easysw/cups/*.java
+%javac -d classes src/com/easysw/cups/*.java
 cd classes
-jar cvf ../cups.jar com/easysw/cups
+%jar cvf ../cups.jar com/easysw/cups
 cd ../../..
 %endif
 
@@ -378,7 +396,7 @@ fi
 %{__make} -C scripting/php install \
 	PHPDIR=$RPM_BUILD_ROOT%{php_extensiondir}
 install -d $RPM_BUILD_ROOT%{php_sysconfdir}/conf.d
-cat > $RPM_BUILD_ROOT%{php_sysconfdir}/conf.d/phpcups.ini << EOF
+cat > $RPM_BUILD_ROOT%{php_sysconfdir}/conf.d/phpcups.ini << 'EOF'
 ; Enable phpcups extension module
 extension=phpcups.so
 EOF
@@ -391,14 +409,21 @@ EOF
 
 %if %{with java}
 install -d $RPM_BUILD_ROOT{%{_datadir}/java,%{_examplesdir}/java-cups-%{version}}
-install scripting/java/cups.jar $RPM_BUILD_ROOT%{_datadir}/java
+# jars
+cp -a scripting/java/cups.jar $RPM_BUILD_ROOT%{_javadir}/%{name}-%{version}.jar
+ln -s %{name}-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/%{name}.jar
+# examples
 cp -a scripting/java/{CUPSPrinter.java,example} $RPM_BUILD_ROOT%{_examplesdir}/java-cups-%{version}
+# javadoc
+install -d $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
+cp -a scripting/java/docs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
+ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{name} # ghost symlink
 %endif
 
 install %{SOURCE1}	$RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install %{SOURCE2}	$RPM_BUILD_ROOT/etc/pam.d/%{name}
 install %{SOURCE3}	$RPM_BUILD_ROOT/etc/logrotate.d/%{name}
-install %{SOURCE4}      $RPM_BUILD_ROOT/etc/cups/mailto.conf
+install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/cups/mailto.conf
 sed -e 's|__ULIBDIR__|%{_ulibdir}|g' %{SOURCE5} > $RPM_BUILD_ROOT/etc/sysconfig/rc-inetd/cups-lpd
 
 gzip -9nf $RPM_BUILD_ROOT%{_datadir}/%{name}/model/*.ppd
@@ -457,6 +482,9 @@ fi
 if [ "$1" = 0 ]; then
 	%php_webserver_restart
 fi
+
+%post -n java-cups-javadoc
+ln -nfs %{name}-%{version} %{_javadocdir}/%{name}
 
 %post lpd
 %service -q rc-inetd reload
@@ -631,8 +659,8 @@ fi
 %attr(755,root,root) %{_sbindir}/lpinfo
 %attr(755,root,root) %{_sbindir}/lpmove
 %attr(755,root,root) %{_sbindir}/reject
-%{_datadir}/applications/cups.desktop
-%{_datadir}/icons/hicolor/*/apps/cups.png
+%{_desktopdir}/cups.desktop
+%{_iconsdir}/hicolor/*/apps/cups.png
 %{_mandir}/man1/cancel.1*
 %{_mandir}/man1/lp.1*
 %{_mandir}/man1/lpoptions.1*
@@ -697,9 +725,13 @@ fi
 %if %{with java}
 %files -n java-cups
 %defattr(644,root,root,755)
-%doc scripting/java/docs/*
-%{_datadir}/java/cups.jar
+%{_javadir}/*.jar
 %{_examplesdir}/java-cups-%{version}
+
+%files -n java-cups-javadoc
+%defattr(644,root,root,755)
+%{_javadocdir}/%{name}-%{version}
+%ghost %{_javadocdir}/%{name}
 %endif
 
 %files backend-usb
