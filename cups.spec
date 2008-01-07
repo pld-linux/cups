@@ -327,7 +327,7 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 	--libdir=%{_ulibdir} \
 	--enable-shared \
 	--with-cups-user=lp \
-	--with-cups-group=sys \
+	--with-cups-group=lp \
 	--with-system-groups=sys \
 	--with-printcap=/etc/printcap \
 	%{?with_static_libs:--enable-static} \
