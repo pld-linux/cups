@@ -1,0 +1,29 @@
+--- cups-1.3.6/scripting/java/src/com/easysw/cups/IPPAttribute.java.orig	2008-01-07 20:15:28.000000000 +0100
++++ cups-1.3.6/scripting/java/src/com/easysw/cups/IPPAttribute.java	2008-03-01 15:54:29.368987179 +0100
+@@ -25,6 +25,8 @@
+  * @since	JDK1.3
+  */
+ import java.util.*;
++import java.nio.charset.Charset;
++import java.nio.ByteBuffer;
+ 
+ public class IPPAttribute
+ {
+@@ -263,7 +265,7 @@
+   {
+     IPPValue val;
+     int      bytes = 0;          // Start with one for the group tag.
+-    Charset  utf8 = Charset::forName("UTF-8");
++    Charset  utf8 = Charset.forName("UTF-8");
+     ByteBuffer temp;
+ 
+     //
+@@ -369,7 +371,7 @@
+     int    i,j, n;
+     int    bi    = 0;          // Start with one for the group tag.
+     byte[] bytes = new byte[sz];
+-    Charset  utf8 = Charset::forName("UTF-8");
++    Charset  utf8 = Charset.forName("UTF-8");
+     ByteBuffer temp;
+ 
+     if (group_tag != last_group)
