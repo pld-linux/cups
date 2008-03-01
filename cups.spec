@@ -23,7 +23,7 @@ Name:		cups
 Version:	1.3.6
 Release:	1
 Epoch:		1
-License:	GPL/LGPL
+License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
 Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
 # Source0-md5:	642f9f6d879999bff1b51aeee57a3ce1
@@ -42,6 +42,7 @@ Patch6:		%{name}-certs_FHS.patch
 Patch7:		%{name}-direct_usb.patch
 Patch8:		%{name}-satisfy-any.patch
 Patch9:		%{name}-no-polluted-krb5config.patch
+Patch10:	%{name}-java-fix.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
@@ -109,6 +110,7 @@ portável para os sistemas operacionais baseados no UNIX®.
 Summary:	Common Unix Printing System Libraries
 Summary(pl.UTF-8):	Biblioteki dla CUPS
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão - bibliotecas para uso em clientes cups
+License:	LGPL v2 + openssl exception
 Group:		Libraries
 Provides:	%{name}-libs = %{epoch}:%{version}-%{release}
 Obsoletes:	cups-libs
@@ -126,6 +128,7 @@ Bibliotecas CUPS requeridas pelos clientes CUPS.
 %package clients
 Summary:	Common Unix Printing System Clients
 Summary(pl.UTF-8):	Aplikacje klienckie dla CUPS
+License:	GPL v2 + openssl exception
 Group:		Applications/Printing
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Provides:	printingclient
@@ -141,6 +144,7 @@ Aplikacje klienckie dla CUPS.
 Summary:	Common Unix Printing System Libraries - images manipulation
 Summary(pl.UTF-8):	Biblioteki dla CUPS - obsługa formatów graficznych
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão - bibliotecas para uso em clientes cups
+License:	LGPL v2 + openssl exception
 Group:		Libraries
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 Obsoletes:	libcups1
@@ -158,6 +162,7 @@ Bibliotecas CUPS requeridas pelos clientes CUPS.
 Summary:	Common Unix Printing System development files
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa - pliki nagłówkowe
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão - ambiente de desenvolvimento
+License:	LGPL v2 + openssl exception
 Group:		Development/Libraries
 Requires:	%{name}-image-lib = %{epoch}:%{version}-%{release}
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
@@ -187,6 +192,7 @@ CUPS.
 Summary:	Common Unix Printing System static libraries
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa - biblioteki statyczne
 Summary(pt_BR.UTF-8):	Common Unix Printing System - bibliotecas estáticas
+License:	LGPL v2 + openssl exception
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 
@@ -203,6 +209,7 @@ bibliotecas do CUPS.
 %package -n perl-cups
 Summary:	Perl module for CUPS
 Summary(pl.UTF-8):	Moduł Perla CUPS
+License:	GPL v2 + openssl exception
 Group:		Development/Languages/Perl
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 
@@ -215,6 +222,7 @@ Moduł Perla do ogólnego systemu druku dla Uniksa.
 %package -n php-cups
 Summary:	PHP module for CUPS
 Summary(pl.UTF-8):	Moduł PHP CUPS
+License:	GPL v2 + openssl exception
 Group:		Development/Languages/PHP
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 %{?requires_php_extension}
@@ -230,6 +238,7 @@ Moduł PHP do ogólnego systemu druku dla Uniksa.
 %package -n java-cups
 Summary:	CUPS java classes
 Summary(pl.UTF-8):	Klasy javy CUPS
+License:	GPL v2 + openssl exception
 Group:		Development/Languages/Java
 Requires:	jpackage-utils
 
@@ -242,6 +251,7 @@ Klasy javy do ogólnego systemu druku dla Uniksa.
 %package -n java-cups-javadoc
 Summary:	Online manual for %{name}
 Summary(pl.UTF-8):	Dokumentacja online do %{name}
+License:	GPL v2 + openssl exception
 Group:		Documentation
 Requires:	jpackage-utils
 
@@ -257,6 +267,7 @@ Javadoc pour %{name}.
 %package backend-usb
 Summary:	USB backend for CUPS
 Summary(pl.UTF-8):	Backend USB dla CUPS-a
+License:	GPL v2 + openssl exception
 Group:		Applications/Printing
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
@@ -269,6 +280,7 @@ Ten pakiet umożliwia drukowanie z poziomu CUPS-a na drukarkach USB.
 %package backend-serial
 Summary:	Serial port backend for CUPS
 Summary(pl.UTF-8):	Backend obsługujący porty szeregowe dla CUPS-a
+License:	GPL v2 + openssl exception
 Group:		Applications/Printing
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
@@ -283,6 +295,7 @@ podłączonych do portów szeregowych.
 %package backend-parallel
 Summary:	Parallel port backend for CUPS
 Summary(pl.UTF-8):	Backend obsługujący porty równoległe dla CUPS-a
+License:	GPL v2 + openssl exception
 Group:		Applications/Printing
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
@@ -297,6 +310,7 @@ podłączonych do portów równoległych.
 %package lpd
 Summary:	LPD compatibility support for CUPS print server
 Summary(pl.UTF-8):	Wsparcie dla LPD w serwerze wydruków CUPS
+License:	GPL v2 + openssl exception
 Group:		Applications/Printing
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	rc-inetd
@@ -319,6 +333,7 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
+%patch10 -p1
 
 %build
 %{__aclocal} -I config-scripts
