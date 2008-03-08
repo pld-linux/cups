@@ -21,7 +21,7 @@ Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.3.6
-Release:	2
+Release:	3
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
@@ -76,6 +76,14 @@ Provides:	printingdaemon
 Obsoletes:	printingdaemon
 Conflicts:	ghostscript < 7.05.4
 Conflicts:	logrotate < 3.7-4
+# pstoraster:
+Suggests:	cups-filter-pstoraster
+# Contains imagetops...:
+Suggests:	kdelibs
+# pdftops:
+Suggests:	poppler-progs
+# pstops:
+Suggests:	psutils
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_ulibdir	%{_prefix}/lib
