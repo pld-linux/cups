@@ -20,13 +20,13 @@ Summary:	Common Unix Printing System
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.3.6
-Release:	3
+Version:	1.3.7
+Release:	1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
 Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	642f9f6d879999bff1b51aeee57a3ce1
+# Source0-md5:	db4a45a17104f10f3ee599d88267c9e5
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -43,6 +43,7 @@ Patch7:		%{name}-direct_usb.patch
 Patch8:		%{name}-satisfy-any.patch
 Patch9:		%{name}-no-polluted-krb5config.patch
 Patch10:	%{name}-java-fix.patch
+Patch11:	%{name}-verbose-compilation.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
@@ -54,12 +55,11 @@ BuildRequires:	glibc-headers
 %{?with_java:BuildRequires:	jar}
 %{?with_java:BuildRequires:	jdk}
 %{?with_java:BuildRequires:	jpackage-utils}
-BuildRequires:	krb5-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
-BuildRequires:	openldap-devel >= 2.4.6
+BuildRequires:	openldap-devel
 BuildRequires:	openslp-devel
 %{!?with_gnutls:BuildRequires:	openssl-devel}
 BuildRequires:	pam-devel
@@ -342,6 +342,7 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
+%patch11 -p1
 
 %build
 %{__aclocal} -I config-scripts
