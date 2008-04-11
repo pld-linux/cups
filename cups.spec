@@ -20,13 +20,13 @@ Summary:	Common Unix Printing System
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.3.5
+Version:	1.3.7
 Release:	1
 Epoch:		1
-License:	GPL/LGPL
+License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
 Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	355705c528e9a8d0d439da15454d79a6
+# Source0-md5:	db4a45a17104f10f3ee599d88267c9e5
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -41,6 +41,9 @@ Patch5:		%{name}-templates.patch
 Patch6:		%{name}-certs_FHS.patch
 Patch7:		%{name}-direct_usb.patch
 Patch8:		%{name}-satisfy-any.patch
+Patch9:		%{name}-no-polluted-krb5config.patch
+Patch10:	%{name}-java-fix.patch
+Patch11:	%{name}-verbose-compilation.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
@@ -73,6 +76,14 @@ Provides:	printingdaemon
 Obsoletes:	printingdaemon
 Conflicts:	ghostscript < 7.05.4
 Conflicts:	logrotate < 3.7-4
+# pstoraster:
+Suggests:	cups-filter-pstoraster
+# Contains imagetops...:
+Suggests:	kdelibs
+# pdftops:
+Suggests:	poppler-progs
+# pstops:
+Suggests:	psutils
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_ulibdir	%{_prefix}/lib
@@ -107,6 +118,7 @@ portável para os sistemas operacionais baseados no UNIX®.
 Summary:	Common Unix Printing System Libraries
 Summary(pl.UTF-8):	Biblioteki dla CUPS
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão - bibliotecas para uso em clientes cups
+License:	LGPL v2 + openssl exception
 Group:		Libraries
 Provides:	%{name}-libs = %{epoch}:%{version}-%{release}
 Obsoletes:	cups-libs
@@ -124,6 +136,7 @@ Bibliotecas CUPS requeridas pelos clientes CUPS.
 %package clients
 Summary:	Common Unix Printing System Clients
 Summary(pl.UTF-8):	Aplikacje klienckie dla CUPS
+License:	GPL v2 + openssl exception
 Group:		Applications/Printing
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Provides:	printingclient
@@ -139,6 +152,7 @@ Aplikacje klienckie dla CUPS.
 Summary:	Common Unix Printing System Libraries - images manipulation
 Summary(pl.UTF-8):	Biblioteki dla CUPS - obsługa formatów graficznych
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão - bibliotecas para uso em clientes cups
+License:	LGPL v2 + openssl exception
 Group:		Libraries
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 Obsoletes:	libcups1
@@ -156,11 +170,13 @@ Bibliotecas CUPS requeridas pelos clientes CUPS.
 Summary:	Common Unix Printing System development files
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa - pliki nagłówkowe
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão - ambiente de desenvolvimento
+License:	LGPL v2 + openssl exception
 Group:		Development/Libraries
 Requires:	%{name}-image-lib = %{epoch}:%{version}-%{release}
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 # for libcups
 %{?with_gnutls:Requires:	gnutls-devel}
+Requires:	krb5-devel
 %{!?with_gnutls:Requires:	openssl-devel}
 Requires:	zlib-devel
 # for libcupsimage
@@ -184,6 +200,7 @@ CUPS.
 Summary:	Common Unix Printing System static libraries
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa - biblioteki statyczne
 Summary(pt_BR.UTF-8):	Common Unix Printing System - bibliotecas estáticas
+License:	LGPL v2 + openssl exception
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 
@@ -200,6 +217,7 @@ bibliotecas do CUPS.
 %package -n perl-cups
 Summary:	Perl module for CUPS
 Summary(pl.UTF-8):	Moduł Perla CUPS
+License:	GPL v2 + openssl exception
 Group:		Development/Languages/Perl
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 
@@ -212,6 +230,7 @@ Moduł Perla do ogólnego systemu druku dla Uniksa.
 %package -n php-cups
 Summary:	PHP module for CUPS
 Summary(pl.UTF-8):	Moduł PHP CUPS
+License:	GPL v2 + openssl exception
 Group:		Development/Languages/PHP
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 %{?requires_php_extension}
@@ -227,6 +246,7 @@ Moduł PHP do ogólnego systemu druku dla Uniksa.
 %package -n java-cups
 Summary:	CUPS java classes
 Summary(pl.UTF-8):	Klasy javy CUPS
+License:	GPL v2 + openssl exception
 Group:		Development/Languages/Java
 Requires:	jpackage-utils
 
@@ -239,6 +259,7 @@ Klasy javy do ogólnego systemu druku dla Uniksa.
 %package -n java-cups-javadoc
 Summary:	Online manual for %{name}
 Summary(pl.UTF-8):	Dokumentacja online do %{name}
+License:	GPL v2 + openssl exception
 Group:		Documentation
 Requires:	jpackage-utils
 
@@ -254,6 +275,7 @@ Javadoc pour %{name}.
 %package backend-usb
 Summary:	USB backend for CUPS
 Summary(pl.UTF-8):	Backend USB dla CUPS-a
+License:	GPL v2 + openssl exception
 Group:		Applications/Printing
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
@@ -266,6 +288,7 @@ Ten pakiet umożliwia drukowanie z poziomu CUPS-a na drukarkach USB.
 %package backend-serial
 Summary:	Serial port backend for CUPS
 Summary(pl.UTF-8):	Backend obsługujący porty szeregowe dla CUPS-a
+License:	GPL v2 + openssl exception
 Group:		Applications/Printing
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
@@ -280,6 +303,7 @@ podłączonych do portów szeregowych.
 %package backend-parallel
 Summary:	Parallel port backend for CUPS
 Summary(pl.UTF-8):	Backend obsługujący porty równoległe dla CUPS-a
+License:	GPL v2 + openssl exception
 Group:		Applications/Printing
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
@@ -294,6 +318,7 @@ podłączonych do portów równoległych.
 %package lpd
 Summary:	LPD compatibility support for CUPS print server
 Summary(pl.UTF-8):	Wsparcie dla LPD w serwerze wydruków CUPS
+License:	GPL v2 + openssl exception
 Group:		Applications/Printing
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	rc-inetd
@@ -315,6 +340,9 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1
 
 %build
 %{__aclocal} -I config-scripts
@@ -323,7 +351,7 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 	--libdir=%{_ulibdir} \
 	--enable-shared \
 	--with-cups-user=lp \
-	--with-cups-group=sys \
+	--with-cups-group=lp \
 	--with-system-groups=sys \
 	--with-printcap=/etc/printcap \
 	%{?with_static_libs:--enable-static} \
