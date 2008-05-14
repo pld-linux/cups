@@ -44,6 +44,7 @@ Patch8:		%{name}-satisfy-any.patch
 Patch9:		%{name}-no-polluted-krb5config.patch
 Patch10:	%{name}-java-fix.patch
 Patch11:	%{name}-verbose-compilation.patch
+Patch12:	%{name}-CVE-2008-1722.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
@@ -344,6 +345,7 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
+%patch12 -p1
 
 %build
 %{__aclocal} -I config-scripts
