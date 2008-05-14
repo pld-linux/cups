@@ -21,7 +21,7 @@ Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.3.7
-Release:	2
+Release:	3
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
@@ -44,6 +44,7 @@ Patch8:		%{name}-satisfy-any.patch
 Patch9:		%{name}-no-polluted-krb5config.patch
 Patch10:	%{name}-java-fix.patch
 Patch11:	%{name}-verbose-compilation.patch
+Patch12:	%{name}-CVE-2008-1722.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
@@ -52,10 +53,10 @@ BuildRequires:	automake
 BuildRequires:	dbus-devel
 BuildRequires:	glibc-headers
 %{?with_gnutls:BuildRequires:	gnutls-devel}
+BuildRequires:	heimdal-devel
 %{?with_java:BuildRequires:	jar}
 %{?with_java:BuildRequires:	jdk}
 %{?with_java:BuildRequires:	jpackage-utils}
-BuildRequires:	krb5-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
@@ -177,7 +178,7 @@ Requires:	%{name}-image-lib = %{epoch}:%{version}-%{release}
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 # for libcups
 %{?with_gnutls:Requires:	gnutls-devel}
-Requires:	krb5-devel
+Requires:	heimdal-devel
 %{!?with_gnutls:Requires:	openssl-devel}
 Requires:	zlib-devel
 # for libcupsimage
@@ -344,6 +345,7 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
+%patch12 -p1
 
 %build
 %{__aclocal} -I config-scripts
