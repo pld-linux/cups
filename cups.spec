@@ -45,6 +45,7 @@ Patch9:		%{name}-no-polluted-krb5config.patch
 Patch10:	%{name}-java-fix.patch
 Patch11:	%{name}-verbose-compilation.patch
 Patch12:	%{name}-CVE-2008-1722.patch
+Patch13:	%{name}-peercred.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
@@ -346,33 +347,36 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
+%patch13 -p1
 
 %build
 %{__aclocal} -I config-scripts
 %{__autoconf}
 %configure \
 	--libdir=%{_ulibdir} \
+	--disable-cdsassl \
+	--enable-dbus \
 	--enable-shared \
+	--enable-ssl \
+	%{?debug:--enable-debug} \
+	--%{!?with_dnssd:dis}%{?with_dnssd:en}able-dnssd \
+	--%{!?with_gnutls:dis}%{?with_gnutls:en}able-gnutls \
+	--%{?with_gnutls:dis}%{!?with_gnutls:en}able-openssl \
+	%{?with_static_libs:--enable-static} \
 	--with-cups-user=lp \
 	--with-cups-group=lp \
 	--with-system-groups=sys \
 	--with-printcap=/etc/printcap \
-	%{?with_static_libs:--enable-static} \
-	--enable-ssl \
-	--%{?with_gnutls:dis}%{!?with_gnutls:en}able-openssl \
-	--%{!?with_gnutls:dis}%{?with_gnutls:en}able-gnutls \
-	--%{!?with_dnssd:dis}%{?with_dnssd:en}able-dnssd \
-	--disable-cdsassl \
-	--enable-dbus \
-	%{?debug:--enable-debug} \
+	--with-dbusdir=/etc/dbus-1 \
 	--with-docdir=%{_ulibdir}/%{name}/cgi-bin \
 	--with-config-file-perm=0640 \
 	--with-log-file-perm=0640 \
+	--with-optim=-Wno-format-y2k \
 	%{?with_dnssd:--with-dnssd-libs=x} \
 	%{?with_dnssd:--with-dnssd-includes=x} \
-	%{?with_php:--with-php} \
-	%{?with_perl:--with-perl} \
 	%{?with_java:--with-java} \
+	%{?with_perl:--with-perl} \
+	%{?with_php:--with-php} \
 	%{?with_python:--with-python}
 
 %{__make}
