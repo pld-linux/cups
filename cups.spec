@@ -46,6 +46,7 @@ Patch10:	%{name}-java-fix.patch
 Patch11:	%{name}-verbose-compilation.patch
 Patch12:	%{name}-CVE-2008-1722.patch
 Patch13:	%{name}-peercred.patch
+Patch14:	%{name}-translate.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
@@ -348,6 +349,7 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
+%patch14 -p1
 
 %build
 %{__aclocal} -I config-scripts
