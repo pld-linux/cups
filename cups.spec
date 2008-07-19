@@ -45,6 +45,7 @@ Patch9:		%{name}-no-polluted-krb5config.patch
 Patch10:	%{name}-java-fix.patch
 Patch11:	%{name}-verbose-compilation.patch
 Patch12:	%{name}-CVE-2008-1722.patch
+Patch13:	%{name}-translate.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
@@ -346,6 +347,7 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
+%patch13 -p1
 
 %build
 %{__aclocal} -I config-scripts
@@ -435,7 +437,7 @@ EOF
 %endif
 
 %if %{with java}
-install -d $RPM_BUILD_ROOT{%{_datadir}/java,%{_examplesdir}/java-cups-%{version}}
+install -d $RPM_BUILD_ROOT{%{_javadir},%{_examplesdir}/java-cups-%{version}}
 # jars
 cp -a scripting/java/cups.jar $RPM_BUILD_ROOT%{_javadir}/%{name}-%{version}.jar
 ln -s %{name}-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/%{name}.jar
