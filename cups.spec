@@ -20,13 +20,13 @@ Summary:	Common Unix Printing System
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.3.7
-Release:	2
+Version:	1.3.8
+Release:	0.1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
 Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	db4a45a17104f10f3ee599d88267c9e5
+# Source0-md5:	84e09577d673b212f605dd09caee456c
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -37,16 +37,15 @@ Patch1:		%{name}-lp-lpr.patch
 Patch2:		%{name}-options.patch
 Patch3:		%{name}-man_pages_linking.patch
 Patch4:		%{name}-nostrip.patch
-Patch5:		%{name}-templates.patch
-Patch6:		%{name}-certs_FHS.patch
-Patch7:		%{name}-direct_usb.patch
-Patch8:		%{name}-satisfy-any.patch
-Patch9:		%{name}-no-polluted-krb5config.patch
-Patch10:	%{name}-java-fix.patch
-Patch11:	%{name}-verbose-compilation.patch
-Patch12:	%{name}-CVE-2008-1722.patch
-Patch13:	%{name}-peercred.patch
-Patch14:	%{name}-translate.patch
+Patch5:		%{name}-certs_FHS.patch
+Patch6:		%{name}-direct_usb.patch
+# -satisfy-any.patch should be reviewed
+Patch7:		%{name}-satisfy-any.patch
+Patch8:		%{name}-no-polluted-krb5config.patch
+Patch9:		%{name}-java-fix.patch
+Patch10:	%{name}-verbose-compilation.patch
+Patch11:	%{name}-peercred.patch
+Patch12:	%{name}-translate.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
@@ -342,14 +341,12 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%patch7 -p1
+#patch7 -p1
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
-%patch13 -p1
-%patch14 -p1
 
 %build
 %{__aclocal} -I config-scripts
@@ -567,6 +564,7 @@ fi
 %lang(et) %{_ulibdir}/cups/cgi-bin/et
 %lang(fr) %{_ulibdir}/cups/cgi-bin/fr
 %lang(he) %{_ulibdir}/cups/cgi-bin/he
+%lang(id) %{_ulibdir}/cups/cgi-bin/id
 %lang(it) %{_ulibdir}/cups/cgi-bin/it
 %lang(ja) %{_ulibdir}/cups/cgi-bin/ja
 %lang(pl) %{_ulibdir}/cups/cgi-bin/pl
@@ -607,6 +605,7 @@ fi
 %lang(et) %{_datadir}/cups/templates/et
 %lang(fr) %{_datadir}/cups/templates/fr
 %lang(he) %{_datadir}/cups/templates/he
+%lang(id) %{_datadir}/cups/templates/id
 %lang(it) %{_datadir}/cups/templates/it
 %lang(ja) %{_datadir}/cups/templates/ja
 %lang(pl) %{_datadir}/cups/templates/pl
@@ -658,6 +657,7 @@ fi
 %lang(fi) %{_datadir}/locale/fi/cups_fi.po
 %lang(fr) %{_datadir}/locale/fr/cups_fr.po
 %lang(he) %{_datadir}/locale/he/cups_he.po
+%lang(id) %{_datadir}/locale/id/cups_id.po
 %lang(it) %{_datadir}/locale/it/cups_it.po
 %lang(ko) %{_datadir}/locale/ko/cups_ko.po
 %lang(ja) %{_datadir}/locale/ja/cups_ja.po
