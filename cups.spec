@@ -39,13 +39,11 @@ Patch3:		%{name}-man_pages_linking.patch
 Patch4:		%{name}-nostrip.patch
 Patch5:		%{name}-certs_FHS.patch
 Patch6:		%{name}-direct_usb.patch
-# -satisfy-any.patch should be reviewed
-Patch7:		%{name}-satisfy-any.patch
-Patch8:		%{name}-no-polluted-krb5config.patch
-Patch9:		%{name}-java-fix.patch
-Patch10:	%{name}-verbose-compilation.patch
-Patch11:	%{name}-peercred.patch
-Patch12:	%{name}-translate.patch
+Patch7:		%{name}-no-polluted-krb5config.patch
+Patch8:		%{name}-java-fix.patch
+Patch9:		%{name}-verbose-compilation.patch
+Patch10:	%{name}-peercred.patch
+Patch11:	%{name}-translate.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
@@ -341,12 +339,11 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-#patch7 -p1
+%patch7 -p1
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
-%patch12 -p1
 
 %build
 %{__aclocal} -I config-scripts
