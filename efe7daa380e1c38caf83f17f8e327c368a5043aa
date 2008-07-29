@@ -1,0 +1,7 @@
+- up to 1.3.8
+- -templates.patch removed (applied upstream)
+- -CVE-2008-1722 removed (according to CHANGES.txt crashes related
+  to processing images has been fixed)
+- updated -satisfy-any.patch, but NOT applied in a spec - please review
+  in relation to CHANGES.txt ["Satisfy any" did not work in IPP policies (STR #2782)]
+- rel. 0.1
