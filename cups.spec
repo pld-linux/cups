@@ -71,6 +71,7 @@ BuildRequires:	rpm-perlprov
 BuildRequires:	rpmbuild(macros) >= 1.344
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
+Requires:	openssl-tools
 Requires:	pam >= 0.77.3
 Requires:	rc-scripts
 Provides:	printingdaemon
