@@ -1,4 +1,0 @@
-#%PAM-1.0
-auth		required	pam_listfile.so item=user sense=deny file=/etc/security/blacklist.cups onerr=succeed
-auth		include		system-auth
-account		include		system-auth
