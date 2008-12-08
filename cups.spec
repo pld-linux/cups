@@ -45,6 +45,9 @@ Patch9:		%{name}-verbose-compilation.patch
 Patch10:	%{name}-peercred.patch
 Patch11:	%{name}-translate.patch
 URL:		http://www.cups.org/
+# http://www.cups.org/str.php?L2974
+# Upgrade to 1.3.10 or patch: http://www.cups.org/strfiles/2974/str2974.patch
+BuildRequires:	security(CVE-2008-5286)
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
 BuildRequires:	automake
