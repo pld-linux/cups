@@ -1,6 +1,5 @@
-diff -urN cups-1.2.0.org/conf/cupsd.conf.in cups-1.2.0/conf/cupsd.conf.in
---- cups-1.2.0.org/conf/cupsd.conf.in	2006-04-23 23:46:38.000000000 +0200
-+++ cups-1.2.0/conf/cupsd.conf.in	2006-05-12 08:17:48.946318536 +0200
+--- cups-1.4b2/conf/cupsd.conf.in~	2008-12-11 19:24:57.000000000 +0100
++++ cups-1.4b2/conf/cupsd.conf.in	2008-12-16 11:33:01.000000000 +0100
 @@ -6,6 +6,9 @@
  #   file.
  #
@@ -8,6 +7,6 @@ diff -urN cups-1.2.0.org/conf/cupsd.conf.in cups-1.2.0/conf/cupsd.conf.in
 +MaxLogSize 0
 +Printcap /etc/printcap
 +
- # Log general information in error_log - change "info" to "debug" for
- # troubleshooting...
- LogLevel info
+ # Log general information in error_log - change "@CUPS_LOG_LEVEL@" to "debug"
+ # for troubleshooting...
+ LogLevel @CUPS_LOG_LEVEL@
