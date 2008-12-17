@@ -1,4 +1,9 @@
 #
+# TODO: - update cups-man_pages_linking.patch
+#	- make it build with dnssd
+#	- fix install section
+#	- fix problem with java files
+#
 # Conditional build:
 %bcond_with	gnutls		# use GNU TLS for SSL/TLS support (instead of OpenSSL)
 %bcond_without	dnssd
@@ -16,17 +21,19 @@
 %undefine	with_java
 %endif
 
+%define	_beta	b2
+
 Summary:	Common Unix Printing System
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.3.9
-Release:	1
+Version:	1.4
+Release:	0.%{_beta}.1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
-Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	cf63f451c356e6cabb08972d4d11c365
+Source0:	http://ftp.easysw.com/pub/cups/%{version}%{_beta}/%{name}-%{version}%{_beta}-source.tar.bz2
+# Source0-md5:	23f540e6145e4ab3298700d9f496bcd1
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -36,14 +43,12 @@ Patch0:		%{name}-config.patch
 Patch1:		%{name}-lp-lpr.patch
 Patch2:		%{name}-options.patch
 Patch3:		%{name}-man_pages_linking.patch
-Patch4:		%{name}-nostrip.patch
-Patch5:		%{name}-certs_FHS.patch
-Patch6:		%{name}-direct_usb.patch
-Patch7:		%{name}-no-polluted-krb5config.patch
-Patch8:		%{name}-java-fix.patch
-Patch9:		%{name}-verbose-compilation.patch
-Patch10:	%{name}-peercred.patch
-Patch11:	%{name}-translate.patch
+Patch4:		%{name}-certs_FHS.patch
+Patch5:		%{name}-direct_usb.patch
+Patch6:		%{name}-no-polluted-krb5config.patch
+Patch7:		%{name}-verbose-compilation.patch
+Patch8:		%{name}-peercred.patch
+Patch9:		%{name}-dnssd.patch
 URL:		http://www.cups.org/
 # http://www.cups.org/str.php?L2974
 # Upgrade to 1.3.10 or patch: http://www.cups.org/strfiles/2974/str2974.patch
@@ -335,19 +340,19 @@ LPD compatibility support for CUPS print server.
 Wsparcie dla LPD w serwerze wydruków CUPS.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}%{_beta}
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
+#%%patch3 -p1
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
+%if %{with dnssd}
 %patch9 -p1
-%patch10 -p1
-%patch11 -p1
+%endif
 
 %build
 %{__aclocal} -I config-scripts
