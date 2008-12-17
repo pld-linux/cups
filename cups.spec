@@ -108,13 +108,13 @@ support real-world printing under UNIX.
 
 %description -l pl.UTF-8
 CUPS dostarcza standardowy poziom drukowania dla systemów uniksowych.
-CUPS używa protokołu IPP - Internet Printint Protocol jako podstawy do
-zarządzania zadaniami i kolejkami druku. W ograniczonym zakresie
-obsługiwane są także protokoły LPD (Line Printer Daemon), SMB (Server
-Message Block) i AppSocket (znany także jako JetDirect). CUPS
-udostępnia przeglądanie drukarek sieciowych i opcje drukowania oparte
-na PPD (PostScript Printer Description) do obsługi rzeczywistych
-drukarek.
+CUPS używa protokołu IPP - Internet Printint Protocol jako podstawy
+do zarządzania zadaniami i kolejkami druku. W ograniczonym zakresie
+obsługiwane są także protokoły LPD (Line Printer Daemon), SMB
+(Server Message Block) i AppSocket (znany także jako JetDirect). CUPS
+udostępnia przeglądanie drukarek sieciowych i opcje drukowania
+oparte na PPD (PostScript Printer Description) do obsługi
+rzeczywistych drukarek.
 
 %description -l pt_BR.UTF-8
 O sistema Unix de impressão (CUPS) fornece uma camada de impressão
@@ -367,7 +367,7 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 	--with-cups-user=lp \
 	--with-cups-group=lp \
 	--with-system-groups=sys \
-	--with-printcap=/etc/printcap \
+	--with-printcap=%{_sysconfdir}/printcap \
 	--with-dbusdir=/etc/dbus-1 \
 	--with-docdir=%{_ulibdir}/%{name}/cgi-bin \
 	--with-config-file-perm=0640 \
@@ -440,7 +440,7 @@ EOF
 %endif
 
 #%%if %{with java}
-#install -d $RPM_BUILD_ROOT{%{_datadir}/java,%{_examplesdir}/java-cups-%{version}}
+#install -d $RPM_BUILD_ROOT{%{_javadir},%{_examplesdir}/java-cups-%{version}}
 # jars
 #cp -a scripting/java/cups.jar $RPM_BUILD_ROOT%{_javadir}/%{name}-%{version}.jar
 #ln -s %{name}-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/%{name}.jar
