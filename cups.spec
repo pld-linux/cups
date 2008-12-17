@@ -50,9 +50,6 @@ Patch7:		%{name}-verbose-compilation.patch
 Patch8:		%{name}-peercred.patch
 Patch9:		%{name}-dnssd.patch
 URL:		http://www.cups.org/
-# http://www.cups.org/str.php?L2974
-# Upgrade to 1.3.10 or patch: http://www.cups.org/strfiles/2974/str2974.patch
-BuildRequires:	security(CVE-2008-5286)
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
 BuildRequires:	automake
