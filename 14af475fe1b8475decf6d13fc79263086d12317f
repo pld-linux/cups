@@ -1,0 +1,4 @@
+- up to 1.4b2 version (CVE-2008-5286)
+- removed patches: nostrip.patch, java-fix.patch, translate.patch
+- new patch: dnssd.patch (fix some linking problem when build with dnssd)
+- TODO list
