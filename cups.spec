@@ -1,6 +1,5 @@
 #
-# TODO:	- make it build with dnssd
-#	- check files section
+# TODO:	- check files section
 #	- fix problem with java files (IMO no longer supported)
 #
 # Conditional build:
