@@ -1,23 +1,16 @@
 #
 # TODO:	- check files section
-#	- fix problem with java files (IMO no longer supported)
 #
 # Conditional build:
 %bcond_with	gnutls		# use GNU TLS for SSL/TLS support (instead of OpenSSL)
 %bcond_without	dnssd
 %bcond_without	php		# don't build PHP extension/support in web interface
 %bcond_without	perl		# don't build Perl extension/support in web interface
-%bcond_without	java		# don't build Java extension/support in web interface
 %bcond_without	python		# don't build Python support in web interface
 %bcond_without	static_libs	# don't build static library
 #
 %include	/usr/lib/rpm/macros.perl
-%include	/usr/lib/rpm/macros.java
 %define		pdir CUPS
-
-%ifarch i386 i486 ppc
-%undefine	with_java
-%endif
 
 %define	_beta	b2
 
@@ -55,9 +48,6 @@ BuildRequires:	automake
 BuildRequires:	dbus-devel
 BuildRequires:	glibc-headers
 %{?with_gnutls:BuildRequires:	gnutls-devel}
-%{?with_java:BuildRequires:	jar}
-%{?with_java:BuildRequires:	jdk}
-%{?with_java:BuildRequires:	jpackage-utils}
 BuildRequires:	krb5-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
@@ -69,7 +59,6 @@ BuildRequires:	openslp-devel
 BuildRequires:	pam-devel
 %{?with_php:BuildRequires:	php-devel >= 4:5.0.0}
 BuildRequires:	pkgconfig
-%{?with_java:BuildRequires:	rpm-javaprov}
 BuildRequires:	rpm-perlprov
 BuildRequires:	rpmbuild(macros) >= 1.344
 Requires(post,preun):	/sbin/chkconfig
@@ -248,35 +237,6 @@ PHP module for Common Unix Printing System.
 %description -n php-cups -l pl.UTF-8
 Moduł PHP do ogólnego systemu druku dla Uniksa.
 
-%package -n java-cups
-Summary:	CUPS java classes
-Summary(pl.UTF-8):	Klasy javy CUPS
-License:	GPL v2 + openssl exception
-Group:		Development/Languages/Java
-Requires:	jpackage-utils
-
-%description -n java-cups
-Common Unix Printing System Java classes.
-
-%description -n java-cups -l pl.UTF-8
-Klasy javy do ogólnego systemu druku dla Uniksa.
-
-%package -n java-cups-javadoc
-Summary:	Online manual for %{name}
-Summary(pl.UTF-8):	Dokumentacja online do %{name}
-License:	GPL v2 + openssl exception
-Group:		Documentation
-Requires:	jpackage-utils
-
-%description -n java-cups-javadoc
-Documentation for %{name}.
-
-%description -n java-cups-javadoc -l pl.UTF-8
-Dokumentacja do %{name}.
-
-%description -n java-cups-javadoc -l fr.UTF-8
-Javadoc pour %{name}.
-
 %package backend-usb
 Summary:	USB backend for CUPS
 Summary(pl.UTF-8):	Backend USB dla CUPS-a
@@ -374,7 +334,6 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 	--with-optim=-Wno-format-y2k \
 	%{?with_dnssd:--with-dnssd-libs=x} \
 	%{?with_dnssd:--with-dnssd-includes=x} \
-	%{?with_java:--with-java} \
 	%{?with_perl:--with-perl} \
 	%{?with_php:--with-php} \
 	%{?with_python:--with-python}
@@ -396,15 +355,6 @@ cd scripting/perl
 %{__make}
 cd ../..
 %endif
-
-#%%if %{with java}
-#cd scripting/java
-#rm -rf classes/* cups.jar
-#%%javac -d classes src/com/easysw/cups/*.java
-#cd classes
-#%%jar cvf ../cups.jar com/easysw/cups
-#cd ../../..
-#%%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -437,19 +387,6 @@ EOF
 %{__make} -C scripting/perl install \
 	DESTDIR=$RPM_BUILD_ROOT
 %endif
-
-#%%if %{with java}
-#install -d $RPM_BUILD_ROOT{%{_javadir},%{_examplesdir}/java-cups-%{version}}
-# jars
-#cp -a scripting/java/cups.jar $RPM_BUILD_ROOT%{_javadir}/%{name}-%{version}.jar
-#ln -s %{name}-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/%{name}.jar
-# examples
-#cp -a scripting/java/{CUPSPrinter.java,example} $RPM_BUILD_ROOT%{_examplesdir}/java-cups-%{version}
-# javadoc
-#install -d $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-#cp -a scripting/java/docs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-#ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{name} # ghost symlink
-#%%endif
 
 install %{SOURCE1}	$RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install %{SOURCE2}	$RPM_BUILD_ROOT/etc/pam.d/%{name}
@@ -513,9 +450,6 @@ fi
 if [ "$1" = 0 ]; then
 	%php_webserver_restart
 fi
-
-%post -n java-cups-javadoc
-ln -nfs %{name}-%{version} %{_javadocdir}/%{name}
 
 %post lpd
 %service -q rc-inetd reload
@@ -755,18 +689,6 @@ fi
 %attr(755,root,root) %{php_extensiondir}/phpcups.so
 %config(noreplace) %verify(not md5 mtime size) %{php_sysconfdir}/conf.d/phpcups.ini
 %endif
-
-#%%if %{with java}
-#%%files -n java-cups
-#%%defattr(644,root,root,755)
-#%%{_javadir}/*.jar
-#%%{_examplesdir}/java-cups-%{version}
-
-#%%files -n java-cups-javadoc
-#%%defattr(644,root,root,755)
-#%%{_javadocdir}/%{name}-%{version}
-#%%ghost %{_javadocdir}/%{name}
-#%%endif
 
 %files backend-usb
 %defattr(644,root,root,755)
