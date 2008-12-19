@@ -1,54 +1,40 @@
---- cups-1.4b2/cups/Makefile~	2008-12-10 06:03:11.000000000 +0100
-+++ cups-1.4b2/cups/Makefile	2008-12-16 12:26:08.000000000 +0100
-@@ -288,7 +288,7 @@
+--- cups-1.4b2/Makedefs.in~	2008-12-19 16:19:46.000000000 +0100
++++ cups-1.4b2/Makedefs.in	2008-12-19 16:20:36.000000000 +0100
+@@ -124,7 +124,7 @@
+ BACKLIBS	=	@BACKLIBS@
+ BANNERTOPS	=	@BANNERTOPS@
+ CFLAGS		=	@CPPFLAGS@ @CFLAGS@
+-COMMONLIBS	=	@LIBS@
++COMMONLIBS	=	@LIBS@ $(DNSSDLIBS)
+ CUPSDLIBS	=	@CUPSDLIBS@
+ CXXFLAGS	=	@CPPFLAGS@ @CXXFLAGS@
+ CXXLIBS		=	@CXXLIBS@
+--- cups-1.4b2/scheduler/dirsvc.c~	2008-10-08 06:26:38.000000000 +0200
++++ cups-1.4b2/scheduler/dirsvc.c	2008-12-19 16:22:36.000000000 +0100
+@@ -1948,7 +1948,7 @@
  
- libcups.so.2 libcups.sl.2:	$(LIBOBJS)
- 	echo Linking $@...
--	$(DSO) $(ARCHFLAGS) $(DSOFLAGS) -o $@ $(LIBOBJS) $(LIBGSSAPI) $(SSLLIBS) $(COMMONLIBS) $(LIBZ)
-+	$(DSO) $(ARCHFLAGS) $(DSOFLAGS) -o $@ $(LIBOBJS) $(LIBGSSAPI) $(SSLLIBS) $(COMMONLIBS) $(LIBZ) $(DNSSDLIBS)
- 	$(RM) `basename $@ .2`
- 	$(LN) $@ `basename $@ .2`
+     WebIFRef = DNSSDRef;
+     if ((error = DNSServiceRegister(&WebIFRef,
+-				    kDNSServiceFlagsShareConnection,
++				    0,
+ 				    0, webif, "_http._tcp", NULL,
+ 				    NULL, htons(DNSSDPort), 7,
+ 				    "\006path=/", dnssdRegisterCallback,
+@@ -2622,7 +2622,7 @@
+     do
+     {
+       p->ipp_ref = DNSSDRef;
+-      if ((se = DNSServiceRegister(&p->ipp_ref, kDNSServiceFlagsShareConnection,
++      if ((se = DNSServiceRegister(&p->ipp_ref, 0,
+                                    0, name, regtype, domain, NULL,
+ 				   htons(DNSSDPort), ipp_len, ipp_txt,
+ 				   dnssdRegisterCallback,
+@@ -2693,7 +2693,7 @@
  
- #
---- cups-1.4b2/backend/Makefile~	2008-12-16 12:49:18.000000000 +0100
-+++ cups-1.4b2/backend/Makefile	2008-12-16 12:48:53.000000000 +0100
-@@ -137,7 +137,7 @@
- test1284:	test1284.o ../cups/libcups.a
- 	echo Linking $@...
- 	$(CC) $(LDFLAGS) -o test1284 test1284.o ../cups/libcups.a \
--		$(LIBGSSAPI) $(SSLLIBS) $(COMMONLIBS) $(LIBZ)
-+		$(LIBGSSAPI) $(SSLLIBS) $(COMMONLIBS) $(LIBZ) $(DNSSDLIBS)
- 
- 
- #
-@@ -157,7 +157,7 @@
- testsupplies:	testsupplies.o libbackend.a ../cups/libcups.a
- 	echo Linking $@...
- 	$(CC) $(LDFLAGS) -o testsupplies testsupplies.o libbackend.a \
--		../cups/libcups.a $(LIBGSSAPI) $(SSLLIBS) $(COMMONLIBS) $(LIBZ)
-+		../cups/libcups.a $(LIBGSSAPI) $(SSLLIBS) $(COMMONLIBS) $(LIBZ) $(DNSSDLIBS)
- 
- 
- #
---- cups-1.4b2/cgi-bin/Makefile~	2008-10-27 23:46:23.000000000 +0100
-+++ cups-1.4b2/cgi-bin/Makefile	2008-12-16 12:56:59.000000000 +0100
-@@ -349,7 +349,7 @@
- websearch:	websearch.o ../Makedefs libcupscgi.a ../cups/libcups.a
- 	echo Linking $@...
- 	$(CC) $(ARCHFLAGS) $(LDFLAGS) -o $@ websearch.o libcupscgi.a \
--		../cups/libcups.a $(COMMONLIBS) $(SSLLIBS) $(LIBZ) $(LIBGSSAPI)
-+		../cups/libcups.a $(COMMONLIBS) $(SSLLIBS) $(LIBZ) $(LIBGSSAPI) $(DNSSDLIBS)
- 
- 
- #
---- cups-1.4b2/ppdc/Makefile~	2008-10-27 23:46:23.000000000 +0100
-+++ cups-1.4b2/ppdc/Makefile	2008-12-16 13:07:10.000000000 +0100
-@@ -237,7 +237,7 @@
- 	echo Linking $@...
- 	$(CXX) $(ARCHFLAGS) $(LDFLAGS) -o genstrings genstrings.o \
- 		libcupsppdc.a ../cups/libcups.a $(LIBGSSAPI) $(SSLLIBS) \
--		$(COMMONLIBS) $(LIBZ)
-+		$(COMMONLIBS) $(LIBZ) $(DNSSDLIBS)
- 	echo Generating localization strings...
- 	./genstrings >sample.c
- 
+       p->printer_ref = DNSSDRef;
+       if ((se = DNSServiceRegister(&p->printer_ref,
+-                                   kDNSServiceFlagsShareConnection,
++                                   0,
+ 				   0, name, "_printer._tcp", domain, NULL,
+ 				   htons(515), printer_len, printer_txt,
+ 				   dnssdRegisterCallback,
