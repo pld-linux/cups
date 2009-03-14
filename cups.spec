@@ -21,7 +21,7 @@ Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.3.9
-Release:	1
+Release:	2
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
@@ -47,8 +47,8 @@ Patch11:	%{name}-translate.patch
 URL:		http://www.cups.org/
 # http://www.cups.org/str.php?L2974
 # Upgrade to 1.3.10 or patch: http://www.cups.org/strfiles/2974/str2974.patch
-BuildRequires:	security(CVE-2008-5286)
-BuildRequires:	security(CVE-2008-5183)
+#BuildRequires:	security(CVE-2008-5286)
+#BuildRequires:	security(CVE-2008-5183)
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
 BuildRequires:	automake
