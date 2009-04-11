@@ -253,7 +253,7 @@ Moduł PHP do ogólnego systemu druku dla Uniksa.
 Summary:	CUPS java classes
 Summary(pl.UTF-8):	Klasy javy CUPS
 License:	GPL v2 + openssl exception
-Group:		Development/Languages/Java
+Group:		Libraries/Java
 Requires:	jpackage-utils
 
 %description -n java-cups
