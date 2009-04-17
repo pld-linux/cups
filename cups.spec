@@ -20,13 +20,13 @@ Summary:	Common Unix Printing System
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.3.7
-Release:	3
+Version:	1.3.10
+Release:	1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
 Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	db4a45a17104f10f3ee599d88267c9e5
+# Source0-md5:	84fffe96b8537c81a463faccead80026
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -37,15 +37,13 @@ Patch1:		%{name}-lp-lpr.patch
 Patch2:		%{name}-options.patch
 Patch3:		%{name}-man_pages_linking.patch
 Patch4:		%{name}-nostrip.patch
-Patch5:		%{name}-templates.patch
-Patch6:		%{name}-certs_FHS.patch
-Patch7:		%{name}-direct_usb.patch
-Patch8:		%{name}-satisfy-any.patch
-Patch9:		%{name}-no-polluted-krb5config.patch
-Patch10:	%{name}-java-fix.patch
-Patch11:	%{name}-verbose-compilation.patch
-Patch12:	%{name}-CVE-2008-1722.patch
-Patch13:	%{name}-translate.patch
+Patch5:		%{name}-certs_FHS.patch
+Patch6:		%{name}-direct_usb.patch
+Patch7:		%{name}-no-polluted-krb5config.patch
+Patch8:		%{name}-java-fix.patch
+Patch9:		%{name}-verbose-compilation.patch
+Patch10:	%{name}-peercred.patch
+Patch11:	%{name}-translate.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
@@ -73,6 +71,7 @@ BuildRequires:	rpm-perlprov
 BuildRequires:	rpmbuild(macros) >= 1.344
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
+Requires:	openssl-tools
 Requires:	pam >= 0.77.3
 Requires:	rc-scripts
 Provides:	printingdaemon
@@ -250,7 +249,7 @@ Moduł PHP do ogólnego systemu druku dla Uniksa.
 Summary:	CUPS java classes
 Summary(pl.UTF-8):	Klasy javy CUPS
 License:	GPL v2 + openssl exception
-Group:		Development/Languages/Java
+Group:		Libraries/Java
 Requires:	jpackage-utils
 
 %description -n java-cups
@@ -346,35 +345,35 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
-%patch12 -p1
-%patch13 -p1
 
 %build
 %{__aclocal} -I config-scripts
 %{__autoconf}
 %configure \
 	--libdir=%{_ulibdir} \
+	--disable-cdsassl \
+	--enable-dbus \
 	--enable-shared \
+	--enable-ssl \
+	%{?debug:--enable-debug} \
+	--%{!?with_dnssd:dis}%{?with_dnssd:en}able-dnssd \
+	--%{!?with_gnutls:dis}%{?with_gnutls:en}able-gnutls \
+	--%{?with_gnutls:dis}%{!?with_gnutls:en}able-openssl \
+	%{?with_static_libs:--enable-static} \
 	--with-cups-user=lp \
 	--with-cups-group=lp \
 	--with-system-groups=sys \
 	--with-printcap=/etc/printcap \
-	%{?with_static_libs:--enable-static} \
-	--enable-ssl \
-	--%{?with_gnutls:dis}%{!?with_gnutls:en}able-openssl \
-	--%{!?with_gnutls:dis}%{?with_gnutls:en}able-gnutls \
-	--%{!?with_dnssd:dis}%{?with_dnssd:en}able-dnssd \
-	--disable-cdsassl \
-	--enable-dbus \
-	%{?debug:--enable-debug} \
+	--with-dbusdir=/etc/dbus-1 \
 	--with-docdir=%{_ulibdir}/%{name}/cgi-bin \
 	--with-config-file-perm=0640 \
 	--with-log-file-perm=0640 \
+	--with-optim=-Wno-format-y2k \
 	%{?with_dnssd:--with-dnssd-libs=x} \
 	%{?with_dnssd:--with-dnssd-includes=x} \
-	%{?with_php:--with-php} \
-	%{?with_perl:--with-perl} \
 	%{?with_java:--with-java} \
+	%{?with_perl:--with-perl} \
+	%{?with_php:--with-php} \
 	%{?with_python:--with-python}
 
 %{__make}
@@ -563,6 +562,7 @@ fi
 %lang(et) %{_ulibdir}/cups/cgi-bin/et
 %lang(fr) %{_ulibdir}/cups/cgi-bin/fr
 %lang(he) %{_ulibdir}/cups/cgi-bin/he
+%lang(id) %{_ulibdir}/cups/cgi-bin/id
 %lang(it) %{_ulibdir}/cups/cgi-bin/it
 %lang(ja) %{_ulibdir}/cups/cgi-bin/ja
 %lang(pl) %{_ulibdir}/cups/cgi-bin/pl
@@ -603,6 +603,7 @@ fi
 %lang(et) %{_datadir}/cups/templates/et
 %lang(fr) %{_datadir}/cups/templates/fr
 %lang(he) %{_datadir}/cups/templates/he
+%lang(id) %{_datadir}/cups/templates/id
 %lang(it) %{_datadir}/cups/templates/it
 %lang(ja) %{_datadir}/cups/templates/ja
 %lang(pl) %{_datadir}/cups/templates/pl
@@ -654,6 +655,7 @@ fi
 %lang(fi) %{_datadir}/locale/fi/cups_fi.po
 %lang(fr) %{_datadir}/locale/fr/cups_fr.po
 %lang(he) %{_datadir}/locale/he/cups_he.po
+%lang(id) %{_datadir}/locale/id/cups_id.po
 %lang(it) %{_datadir}/locale/it/cups_it.po
 %lang(ko) %{_datadir}/locale/ko/cups_ko.po
 %lang(ja) %{_datadir}/locale/ja/cups_ja.po
