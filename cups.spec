@@ -45,9 +45,6 @@ Patch9:		%{name}-verbose-compilation.patch
 Patch10:	%{name}-peercred.patch
 Patch11:	%{name}-translate.patch
 URL:		http://www.cups.org/
-# http://www.cups.org/str.php?L2974
-# Upgrade to 1.3.10 or patch: http://www.cups.org/strfiles/2974/str2974.patch
-BuildRequires:	security(CVE-2008-5183)
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -439,7 +436,7 @@ EOF
 %endif
 
 %if %{with java}
-install -d $RPM_BUILD_ROOT{%{_datadir}/java,%{_examplesdir}/java-cups-%{version}}
+install -d $RPM_BUILD_ROOT{%{_javadir},%{_examplesdir}/java-cups-%{version}}
 # jars
 cp -a scripting/java/cups.jar $RPM_BUILD_ROOT%{_javadir}/%{name}-%{version}.jar
 ln -s %{name}-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/%{name}.jar
