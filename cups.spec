@@ -417,7 +417,9 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,logrotate.d,security,sysconfig
 if [ "%{_lib}" != "lib" ] ; then
 	install -d $RPM_BUILD_ROOT%{_libdir}
 	mv $RPM_BUILD_ROOT%{_ulibdir}/*.so* $RPM_BUILD_ROOT%{_libdir}
+%if %{with static_libs}
 	mv $RPM_BUILD_ROOT%{_ulibdir}/*.a $RPM_BUILD_ROOT%{_libdir}
+%endif
 fi
 
 %if %{with php}
