@@ -31,7 +31,7 @@ start() {
 	# Check if the service is already running?
 	if [ ! -f /var/lock/subsys/cups ]; then
 		msg_starting CUPS
-		daemon cupsd -c /etc/cups/cupsd.conf
+		daemon /usr/sbin/cupsd -c /etc/cups/cupsd.conf
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/cups
 	else
