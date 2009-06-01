@@ -465,8 +465,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-#%doc *.gz doc/*.html doc/*.css doc/images
-%doc *.txt
+%doc *.txt doc
 %attr(640,root,root) %config %verify(not md5 mtime size) /etc/pam.d/*
 %attr(754,root,root) /etc/rc.d/init.d/cups
 /etc/dbus-1/system.d/cups.conf
