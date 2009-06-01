@@ -475,19 +475,24 @@ fi
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/printers.conf
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/mailto.conf
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/snmp.conf
-#%%attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/*.convs
-#%%attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/*.types
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/security/blacklist.cups
 %dir %attr(700,root,lp) %{_sysconfdir}/%{name}/ssl
 %dir %{_sysconfdir}/%{name}/interfaces
 %dir %attr(755,root,lp) %{_sysconfdir}/%{name}/ppd
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
-%attr(4755,lp,root) %{_bindir}/lppasswd
-%attr(755,root,root) %{_bindir}/cupstestppd
 %attr(755,root,root) %{_bindir}/cupstestdsc
+%attr(755,root,root) %{_bindir}/cupstestppd
+%attr(4755,lp,root) %{_bindir}/lppasswd
+%attr(755,root,root) %{_bindir}/ppdc
+%attr(755,root,root) %{_bindir}/ppdhtml
+%attr(755,root,root) %{_bindir}/ppdi
+%attr(755,root,root) %{_bindir}/ppdmerge
+%attr(755,root,root) %{_bindir}/ppdpo
+%attr(755,root,root) %{_sbindir}/cupsaccept
 %attr(755,root,root) %{_sbindir}/cupsctl
 %attr(755,root,root) %{_sbindir}/cupsd
 %attr(755,root,root) %{_sbindir}/cupsfilter
+%attr(755,root,root) %{_sbindir}/cupsreject
 
 %dir %{_ulibdir}/cups
 %dir %{_ulibdir}/cups/*
@@ -527,6 +532,7 @@ fi
 %{_datadir}/cups/data
 %{_datadir}/cups/drivers
 %{_datadir}/cups/fonts
+%{_datadir}/cups/mime
 %dir %{_datadir}/cups/model
 #%%{_datadir}/cups/model/*.ppd.gz
 # dirs for gimp-print-cups-4.2.7-1
@@ -552,12 +558,28 @@ fi
 %lang(ru) %{_datadir}/cups/templates/ru
 #%%lang(sv) %{_datadir}/cups/templates/sv
 #%%lang(zh_TW) %{_datadir}/cups/templates/zh_TW
-%{_mandir}/man1/cupstestppd.1*
 %{_mandir}/man1/cupstestdsc.1*
+%{_mandir}/man1/cupstestppd.1*
 %{_mandir}/man1/lppasswd.1*
+%{_mandir}/man1/ppdc.1*
+%{_mandir}/man1/ppdhtml.1*
+%{_mandir}/man1/ppdi.1*
+%{_mandir}/man1/ppdmerge.1*
+%{_mandir}/man1/ppdpo.1*
+%{_mandir}/man5/classes.conf.5*
+%{_mandir}/man5/client.conf.5*
+%{_mandir}/man5/cups-snmp.conf.5*
+%{_mandir}/man5/cupsd.conf.5*
+%{_mandir}/man5/mailto.conf.5*
+%{_mandir}/man5/mime.convs.5*
+%{_mandir}/man5/mime.types.5*
+%{_mandir}/man5/ppdcfile.5*
+%{_mandir}/man5/printers.conf.5*
+%{_mandir}/man5/subscriptions.conf.5*
 %{_mandir}/man7/backend.7*
+%{_mandir}/man7/drv.7*
 %{_mandir}/man7/filter.7*
-%{_mandir}/man5/*
+%{_mandir}/man7/notifier.7*
 %{_mandir}/man8/cups-deviced.8*
 %{_mandir}/man8/cups-driverd.8*
 %{_mandir}/man8/cups-polld.8*
@@ -567,7 +589,10 @@ fi
 %{_mandir}/man8/cupsd.8*
 %{_mandir}/man8/cupsenable.8*
 %{_mandir}/man8/cupsfilter.8*
-%{_mandir}/man8/lp*
+%{_mandir}/man8/lpadmin.8*
+%{_mandir}/man8/lpc.8*
+%{_mandir}/man8/lpinfo.8*
+%{_mandir}/man8/lpmove.8*
 
 %dir %attr(775,root,lp) /var/cache/cups
 %dir %attr(755,root,lp) /var/lib/cups
