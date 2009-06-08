@@ -1,0 +1,3 @@
+- version 1.3.10 [fixes: CVE-2008-5286, CVE-2009-0163]
+- security(CVE-2008-5286) removed (it has been fixed)
+  [CVE-2009-0146, CVE-2009-0147, CVE-2009-0164, CVE-2009-0166, CVE-2009-0949]
