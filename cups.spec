@@ -1,5 +1,6 @@
+#Revision: 1.247.2.9 $, $Date: 2009-06-16 09:22:37 $
 #
-# TODO:	- check files section
+# TODO:	- unpackaged files
 #
 # Conditional build:
 %bcond_with	gnutls		# use GNU TLS for SSL/TLS support (instead of OpenSSL)
@@ -12,19 +13,19 @@
 %include	/usr/lib/rpm/macros.perl
 %define		pdir CUPS
 
-%define	_beta	b3
+%define	_rc	rc1
 
 Summary:	Common Unix Printing System
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.4
-Release:	0.%{_beta}.1
+Release:	0.%{_rc}.1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
-Source0:	http://ftp.easysw.com/pub/cups/%{version}%{_beta}/%{name}-%{version}%{_beta}-source.tar.bz2
-# Source0-md5:	4977eb1b439c8c256daf657fb81f5917
+Source0:	http://ftp.easysw.com/pub/cups/%{version}%{_rc}/%{name}-%{version}%{_rc}-source.tar.bz2
+# Source0-md5:	79948fc1a46e1a3f7aabe5a76fb99e8e
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -296,7 +297,7 @@ LPD compatibility support for CUPS print server.
 Wsparcie dla LPD w serwerze wydruków CUPS.
 
 %prep
-%setup -q -n %{name}-%{version}%{_beta}
+%setup -q -n %{name}-%{version}%{_rc}
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -697,7 +698,7 @@ fi
 %attr(755,root,root) %{_libdir}/libcupsimage.so
 %attr(755,root,root) %{_libdir}/libcupsmime.so
 %attr(755,root,root) %{_libdir}/libcupsppdc.so
-%{_includedir}/cups
+%{_includedir}/cups/*.h
 %{_mandir}/man1/cups-config.1*
 #%lang(fr) %{_mandir}/fr/man1/cups-config.1*
 #%lang(es) %{_mandir}/es/man1/cups-config.1*
