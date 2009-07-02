@@ -21,7 +21,7 @@ Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.3.10
-Release:	2
+Release:	3
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
@@ -55,7 +55,7 @@ BuildRequires:	glibc-headers
 %{?with_java:BuildRequires:	jar}
 %{?with_java:BuildRequires:	jdk}
 %{?with_java:BuildRequires:	jpackage-utils}
-BuildRequires:	krb5-devel
+BuildRequires:	heimdal-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
@@ -178,7 +178,7 @@ Requires:	%{name}-image-lib = %{epoch}:%{version}-%{release}
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 # for libcups
 %{?with_gnutls:Requires:	gnutls-devel}
-Requires:	krb5-devel
+Requires:	heimdal-devel
 %{!?with_gnutls:Requires:	openssl-devel}
 Requires:	zlib-devel
 # for libcupsimage
