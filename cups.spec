@@ -47,9 +47,11 @@ BuildRequires:	glibc-headers
 %{?with_java:BuildRequires:	jpackage-utils}
 BuildRequires:	heimdal-devel
 BuildRequires:	libjpeg-devel
+BuildRequires:	libpaper-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
+BuildRequires:	libusb-devel
 BuildRequires:	openldap-devel
 BuildRequires:	openslp-devel
 %{!?with_gnutls:BuildRequires:	openssl-devel}
@@ -339,7 +341,13 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 %configure \
 	--libdir=%{_ulibdir} \
 	--disable-cdsassl \
+	--enable-libpaper \
+	--enable-libusb \
+	--enable-acl \
 	--enable-dbus \
+	--enable-image \
+	--enable-bannertops \
+	--enable-texttops \
 	--enable-shared \
 	--enable-ssl \
 	%{?debug:--enable-debug} \
