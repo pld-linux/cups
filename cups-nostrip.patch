@@ -1,11 +1,11 @@
---- cups-1.2.0.org/Makedefs.in	2006-04-27 13:40:30.000000000 +0000
-+++ cups-1.2.0/Makedefs.in	2006-05-11 21:43:13.378701000 +0000
-@@ -43,7 +43,7 @@
- RMDIR		=	@RMDIR@
- SED		=	@SED@
- SHELL		=	/bin/sh
--STRIP		=	@STRIP@
-+STRIP		=	/bin/true
+--- cups-1.4.0/configure~	2009-08-28 17:35:34.000000000 +0200
++++ cups-1.4.0/configure	2009-08-29 21:27:34.296848459 +0200
+@@ -10815,8 +10815,6 @@
  
- #
- # Installation programs...
+ if test x$enable_debug = xyes; then
+ 	OPTIM="-g"
+-else
+-	INSTALL_STRIP="-s"
+ fi
+ 
+ if test x$enable_debug_printfs = xyes; then

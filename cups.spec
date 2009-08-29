@@ -4,46 +4,36 @@
 %bcond_without	dnssd
 %bcond_without	php		# don't build PHP extension/support in web interface
 %bcond_without	perl		# don't build Perl extension/support in web interface
-%bcond_without	java		# don't build Java extension/support in web interface
 %bcond_without	python		# don't build Python support in web interface
 %bcond_without	static_libs	# don't build static library
 #
 %include	/usr/lib/rpm/macros.perl
-%include	/usr/lib/rpm/macros.java
 %define		pdir CUPS
 
-%ifarch i386 i486 ppc
-%undefine	with_java
-%endif
-
-Summary:	Common Unix Printing System
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.3.11
-Release:	3
+Version:	1.4.0
+Release:	0.1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
 Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	17f3e2bcb3cae3dd9dceb65a2bfd295f
+# Source0-md5:	bc5e777d4320cecdd1a64de8035171a8
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
 Source4:	%{name}.mailto.conf
 Source5:	%{name}-lpd.inetd
 Patch0:		%{name}-config.patch
-Patch1:		%{name}-lp-lpr.patch
 Patch2:		%{name}-options.patch
 Patch3:		%{name}-man_pages_linking.patch
 Patch4:		%{name}-nostrip.patch
 Patch5:		%{name}-certs_FHS.patch
 Patch6:		%{name}-direct_usb.patch
 Patch7:		%{name}-no-polluted-krb5config.patch
-Patch8:		%{name}-java-fix.patch
 Patch9:		%{name}-verbose-compilation.patch
 Patch10:	%{name}-peercred.patch
-Patch11:	%{name}-translate.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf
@@ -334,17 +324,14 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%patch8 -p1
 %patch9 -p1
 %patch10 -p1
-%patch11 -p1
 
 %build
 %{__aclocal} -I config-scripts
@@ -371,7 +358,7 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 	--with-optim=-Wno-format-y2k \
 	%{?with_dnssd:--with-dnssd-libs=x} \
 	%{?with_dnssd:--with-dnssd-includes=x} \
-	%{?with_java:--with-java} \
+	--with-java=%{_bindir}/java \
 	%{?with_perl:--with-perl} \
 	%{?with_php:--with-php} \
 	%{?with_python:--with-python}
@@ -392,15 +379,6 @@ cd scripting/perl
 
 %{__make}
 cd ../..
-%endif
-
-%if %{with java}
-cd scripting/java
-rm -rf classes/* cups.jar
-%javac -d classes src/com/easysw/cups/*.java
-cd classes
-%jar cvf ../cups.jar com/easysw/cups
-cd ../../..
 %endif
 
 %install
@@ -437,26 +415,11 @@ EOF
 	DESTDIR=$RPM_BUILD_ROOT
 %endif
 
-%if %{with java}
-install -d $RPM_BUILD_ROOT{%{_javadir},%{_examplesdir}/java-cups-%{version}}
-# jars
-cp -a scripting/java/cups.jar $RPM_BUILD_ROOT%{_javadir}/%{name}-%{version}.jar
-ln -s %{name}-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/%{name}.jar
-# examples
-cp -a scripting/java/{CUPSPrinter.java,example} $RPM_BUILD_ROOT%{_examplesdir}/java-cups-%{version}
-# javadoc
-install -d $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-cp -a scripting/java/docs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{name} # ghost symlink
-%endif
-
 install %{SOURCE1}	$RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install %{SOURCE2}	$RPM_BUILD_ROOT/etc/pam.d/%{name}
 install %{SOURCE3}	$RPM_BUILD_ROOT/etc/logrotate.d/%{name}
 install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/cups/mailto.conf
 sed -e 's|__ULIBDIR__|%{_ulibdir}|g' %{SOURCE5} > $RPM_BUILD_ROOT/etc/sysconfig/rc-inetd/cups-lpd
-
-gzip -9nf $RPM_BUILD_ROOT%{_datadir}/%{name}/model/*.ppd
 
 touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
 touch $RPM_BUILD_ROOT/etc/security/blacklist.cups
@@ -513,9 +476,6 @@ if [ "$1" = 0 ]; then
 	%php_webserver_restart
 fi
 
-%post -n java-cups-javadoc
-ln -nfs %{name}-%{version} %{_javadocdir}/%{name}
-
 %post lpd
 %service -q rc-inetd reload
 
@@ -536,8 +496,8 @@ fi
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/printers.conf
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/mailto.conf
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/snmp.conf
-%attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/*.convs
-%attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/*.types
+#%attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/*.convs
+#%attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/*.types
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/security/blacklist.cups
 %dir %attr(700,root,lp) %{_sysconfdir}/%{name}/ssl
 %dir %{_sysconfdir}/%{name}/interfaces
@@ -557,19 +517,19 @@ fi
 %attr(755,root,root) %{_ulibdir}/cups/cgi-bin/*.cgi
 %{_ulibdir}/cups/cgi-bin/*.css
 %{_ulibdir}/cups/cgi-bin/*.html
-%{_ulibdir}/cups/cgi-bin/*.ico
+#%{_ulibdir}/cups/cgi-bin/*.ico
 %{_ulibdir}/cups/cgi-bin/*.txt
 %lang(de) %{_ulibdir}/cups/cgi-bin/de
 %lang(es) %{_ulibdir}/cups/cgi-bin/es
-%lang(et) %{_ulibdir}/cups/cgi-bin/et
-%lang(fr) %{_ulibdir}/cups/cgi-bin/fr
-%lang(he) %{_ulibdir}/cups/cgi-bin/he
-%lang(id) %{_ulibdir}/cups/cgi-bin/id
-%lang(it) %{_ulibdir}/cups/cgi-bin/it
+%lang(eu) %{_ulibdir}/cups/cgi-bin/eu
+#%lang(fr) %{_ulibdir}/cups/cgi-bin/fr
+#%lang(he) %{_ulibdir}/cups/cgi-bin/he
+#%lang(id) %{_ulibdir}/cups/cgi-bin/id
+#%lang(it) %{_ulibdir}/cups/cgi-bin/it
 %lang(ja) %{_ulibdir}/cups/cgi-bin/ja
 %lang(pl) %{_ulibdir}/cups/cgi-bin/pl
-%lang(sv) %{_ulibdir}/cups/cgi-bin/sv
-%lang(zh_TW) %{_ulibdir}/cups/cgi-bin/zh_TW
+%lang(ru) %{_ulibdir}/cups/cgi-bin/ru
+#%lang(zh_TW) %{_ulibdir}/cups/cgi-bin/zh_TW
 
 %exclude %{_ulibdir}/cups/backend/usb
 %exclude %{_ulibdir}/cups/backend/serial
@@ -588,7 +548,7 @@ fi
 %{_datadir}/cups/drivers
 %{_datadir}/cups/fonts
 %dir %{_datadir}/cups/model
-%{_datadir}/cups/model/*.ppd.gz
+#%{_datadir}/cups/model/*.ppd.gz
 # dirs for gimp-print-cups-4.2.7-1
 %dir %{_datadir}/cups/model/C
 %lang(da) %dir %{_datadir}/cups/model/da
@@ -602,15 +562,15 @@ fi
 %{_datadir}/cups/templates/*.tmpl
 %lang(de) %{_datadir}/cups/templates/de
 %lang(es) %{_datadir}/cups/templates/es
-%lang(et) %{_datadir}/cups/templates/et
-%lang(fr) %{_datadir}/cups/templates/fr
-%lang(he) %{_datadir}/cups/templates/he
-%lang(id) %{_datadir}/cups/templates/id
-%lang(it) %{_datadir}/cups/templates/it
+%lang(eu) %{_datadir}/cups/templates/eu
+#%lang(fr) %{_datadir}/cups/templates/fr
+#%lang(he) %{_datadir}/cups/templates/he
+#%lang(id) %{_datadir}/cups/templates/id
+#%lang(it) %{_datadir}/cups/templates/it
 %lang(ja) %{_datadir}/cups/templates/ja
 %lang(pl) %{_datadir}/cups/templates/pl
-%lang(sv) %{_datadir}/cups/templates/sv
-%lang(zh_TW) %{_datadir}/cups/templates/zh_TW
+%lang(ru) %{_datadir}/cups/templates/ru
+#%lang(zh_TW) %{_datadir}/cups/templates/zh_TW
 %{_mandir}/man1/cupstestppd.1*
 %{_mandir}/man1/cupstestdsc.1*
 %{_mandir}/man1/lppasswd.1*
@@ -653,11 +613,11 @@ fi
 %lang(da) %{_datadir}/locale/da/cups_da.po
 %lang(de) %{_datadir}/locale/de/cups_de.po
 %lang(es) %{_datadir}/locale/es/cups_es.po
-%lang(et) %{_datadir}/locale/et/cups_et.po
+%lang(eu) %{_datadir}/locale/eu/cups_eu.po
 %lang(fi) %{_datadir}/locale/fi/cups_fi.po
 %lang(fr) %{_datadir}/locale/fr/cups_fr.po
-%lang(he) %{_datadir}/locale/he/cups_he.po
-%lang(id) %{_datadir}/locale/id/cups_id.po
+#%lang(he) %{_datadir}/locale/he/cups_he.po
+#%lang(id) %{_datadir}/locale/id/cups_id.po
 %lang(it) %{_datadir}/locale/it/cups_it.po
 %lang(ko) %{_datadir}/locale/ko/cups_ko.po
 %lang(ja) %{_datadir}/locale/ja/cups_ja.po
@@ -753,18 +713,6 @@ fi
 %doc scripting/php/README
 %attr(755,root,root) %{php_extensiondir}/phpcups.so
 %config(noreplace) %verify(not md5 mtime size) %{php_sysconfdir}/conf.d/phpcups.ini
-%endif
-
-%if %{with java}
-%files -n java-cups
-%defattr(644,root,root,755)
-%{_javadir}/*.jar
-%{_examplesdir}/java-cups-%{version}
-
-%files -n java-cups-javadoc
-%defattr(644,root,root,755)
-%{_javadocdir}/%{name}-%{version}
-%ghost %{_javadocdir}/%{name}
 %endif
 
 %files backend-usb

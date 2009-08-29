@@ -8,6 +8,7 @@ diff -urN cups-1.2.0.org/conf/cupsd.conf.in cups-1.2.0/conf/cupsd.conf.in
 +MaxLogSize 0
 +Printcap /etc/printcap
 +
- # Log general information in error_log - change "info" to "debug" for
- # troubleshooting...
- LogLevel info
+ # Log general information in error_log - change "@CUPS_LOG_LEVEL@" to "debug"
+ # for troubleshooting...
+ LogLevel @CUPS_LOG_LEVEL@
+
