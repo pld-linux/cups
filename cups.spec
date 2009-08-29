@@ -14,7 +14,7 @@ Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.4.0
-Release:	0.1
+Release:	1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
@@ -486,7 +486,6 @@ fi
 
 %files
 %defattr(644,root,root,755)
-#%doc *.gz doc/*.html doc/*.css doc/images
 %doc *.txt
 %attr(640,root,root) %config %verify(not md5 mtime size) /etc/pam.d/*
 %attr(754,root,root) /etc/rc.d/init.d/cups
@@ -496,8 +495,6 @@ fi
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/printers.conf
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/mailto.conf
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/snmp.conf
-#%attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/*.convs
-#%attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/*.types
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/security/blacklist.cups
 %dir %attr(700,root,lp) %{_sysconfdir}/%{name}/ssl
 %dir %{_sysconfdir}/%{name}/interfaces
@@ -506,6 +503,7 @@ fi
 %attr(4755,lp,root) %{_bindir}/lppasswd
 %attr(755,root,root) %{_bindir}/cupstestppd
 %attr(755,root,root) %{_bindir}/cupstestdsc
+%attr(755,root,root) %{_bindir}/ppd*
 %attr(755,root,root) %{_sbindir}/cupsctl
 %attr(755,root,root) %{_sbindir}/cupsd
 %attr(755,root,root) %{_sbindir}/cupsfilter
@@ -517,19 +515,13 @@ fi
 %attr(755,root,root) %{_ulibdir}/cups/cgi-bin/*.cgi
 %{_ulibdir}/cups/cgi-bin/*.css
 %{_ulibdir}/cups/cgi-bin/*.html
-#%{_ulibdir}/cups/cgi-bin/*.ico
 %{_ulibdir}/cups/cgi-bin/*.txt
 %lang(de) %{_ulibdir}/cups/cgi-bin/de
 %lang(es) %{_ulibdir}/cups/cgi-bin/es
 %lang(eu) %{_ulibdir}/cups/cgi-bin/eu
-#%lang(fr) %{_ulibdir}/cups/cgi-bin/fr
-#%lang(he) %{_ulibdir}/cups/cgi-bin/he
-#%lang(id) %{_ulibdir}/cups/cgi-bin/id
-#%lang(it) %{_ulibdir}/cups/cgi-bin/it
 %lang(ja) %{_ulibdir}/cups/cgi-bin/ja
 %lang(pl) %{_ulibdir}/cups/cgi-bin/pl
 %lang(ru) %{_ulibdir}/cups/cgi-bin/ru
-#%lang(zh_TW) %{_ulibdir}/cups/cgi-bin/zh_TW
 
 %exclude %{_ulibdir}/cups/backend/usb
 %exclude %{_ulibdir}/cups/backend/serial
@@ -546,9 +538,11 @@ fi
 %{_datadir}/cups/charsets
 %{_datadir}/cups/data
 %{_datadir}/cups/drivers
+%{_datadir}/cups/drv
+%{_datadir}/cups/examples
 %{_datadir}/cups/fonts
+%{_datadir}/cups/mime
 %dir %{_datadir}/cups/model
-#%{_datadir}/cups/model/*.ppd.gz
 # dirs for gimp-print-cups-4.2.7-1
 %dir %{_datadir}/cups/model/C
 %lang(da) %dir %{_datadir}/cups/model/da
@@ -558,24 +552,24 @@ fi
 %lang(pl) %dir %{_datadir}/cups/model/pl
 %lang(sv) %dir %{_datadir}/cups/model/sv
 
+%{_datadir}/cups/ppdc
+
 %dir %{_datadir}/cups/templates
 %{_datadir}/cups/templates/*.tmpl
 %lang(de) %{_datadir}/cups/templates/de
 %lang(es) %{_datadir}/cups/templates/es
 %lang(eu) %{_datadir}/cups/templates/eu
-#%lang(fr) %{_datadir}/cups/templates/fr
-#%lang(he) %{_datadir}/cups/templates/he
-#%lang(id) %{_datadir}/cups/templates/id
-#%lang(it) %{_datadir}/cups/templates/it
 %lang(ja) %{_datadir}/cups/templates/ja
 %lang(pl) %{_datadir}/cups/templates/pl
 %lang(ru) %{_datadir}/cups/templates/ru
-#%lang(zh_TW) %{_datadir}/cups/templates/zh_TW
 %{_mandir}/man1/cupstestppd.1*
 %{_mandir}/man1/cupstestdsc.1*
 %{_mandir}/man1/lppasswd.1*
+%{_mandir}/man1/ppd*.1*
 %{_mandir}/man7/backend.7*
+%{_mandir}/man7/drv.7*
 %{_mandir}/man7/filter.7*
+%{_mandir}/man7/notifier.7*
 %{_mandir}/man5/*
 %{_mandir}/man8/accept.8*
 %{_mandir}/man8/cups-deviced.8*
@@ -608,6 +602,10 @@ fi
 %defattr(644,root,root,755)
 %dir %attr(755,root,lp) %{_sysconfdir}/%{name}
 %attr(755,root,root) %{_libdir}/libcups.so.*
+%attr(755,root,root) %{_libdir}/libcupscgi.so.*
+%attr(755,root,root) %{_libdir}/libcupsdriver.so.*
+%attr(755,root,root) %{_libdir}/libcupsmime.so.*
+%attr(755,root,root) %{_libdir}/libcupsppdc.so.*
 %dir %{_datadir}/cups
 %{_datadir}/cups/charmaps
 %lang(da) %{_datadir}/locale/da/cups_da.po
@@ -616,8 +614,6 @@ fi
 %lang(eu) %{_datadir}/locale/eu/cups_eu.po
 %lang(fi) %{_datadir}/locale/fi/cups_fi.po
 %lang(fr) %{_datadir}/locale/fr/cups_fr.po
-#%lang(he) %{_datadir}/locale/he/cups_he.po
-#%lang(id) %{_datadir}/locale/id/cups_id.po
 %lang(it) %{_datadir}/locale/it/cups_it.po
 %lang(ko) %{_datadir}/locale/ko/cups_ko.po
 %lang(ja) %{_datadir}/locale/ja/cups_ja.po
@@ -642,9 +638,11 @@ fi
 %attr(755,root,root) %{_bindir}/lprm
 %attr(755,root,root) %{_bindir}/lpstat
 %attr(755,root,root) %{_sbindir}/accept
+%attr(755,root,root) %{_sbindir}/cupsaccept
 %attr(755,root,root) %{_sbindir}/cupsaddsmb
 %attr(755,root,root) %{_sbindir}/cupsenable
 %attr(755,root,root) %{_sbindir}/cupsdisable
+%attr(755,root,root) %{_sbindir}/cupsreject
 %attr(755,root,root) %{_sbindir}/disable
 %attr(755,root,root) %{_sbindir}/enable
 %attr(755,root,root) %{_sbindir}/lpadmin
@@ -661,19 +659,10 @@ fi
 %{_mandir}/man1/lpr.1*
 %{_mandir}/man1/lprm.1*
 %{_mandir}/man1/lpstat.1*
-#%lang(fr) %{_mandir}/fr/man1/cancel.1*
-#%lang(fr) %{_mandir}/fr/man1/lp.1*
-#%lang(fr) %{_mandir}/fr/man1/lpoptions.1*
-#%lang(fr) %{_mandir}/fr/man1/lpq.1*
-#%lang(fr) %{_mandir}/fr/man1/lpr.1*
-#%lang(fr) %{_mandir}/fr/man1/lprm.1*
-#%lang(fr) %{_mandir}/fr/man1/lpstat.1*
-#%lang(es) %{_mandir}/es/man1/lp.1*
-#%lang(es) %{_mandir}/es/man1/lpoptions.1*
-#%lang(es) %{_mandir}/es/man1/lpq.1*
-#%lang(es) %{_mandir}/es/man1/lpr.1*
-#%lang(es) %{_mandir}/es/man1/lprm.1*
-#%lang(es) %{_mandir}/es/man1/lpstat.1*
+%{_mandir}/man8/cupsaccept.8*
+%{_mandir}/man8/cupsdisable.8*
+%{_mandir}/man8/cupsreject.8*
+%{_mandir}/man8/reject.8*
 
 %files image-lib
 %defattr(644,root,root,755)
@@ -683,17 +672,23 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/cups-config
 %attr(755,root,root) %{_libdir}/libcups.so
+%attr(755,root,root) %{_libdir}/libcupscgi.so
+%attr(755,root,root) %{_libdir}/libcupsdriver.so
 %attr(755,root,root) %{_libdir}/libcupsimage.so
+%attr(755,root,root) %{_libdir}/libcupsmime.so
+%attr(755,root,root) %{_libdir}/libcupsppdc.so
 %{_includedir}/cups
 %{_mandir}/man1/cups-config.1*
-#%lang(fr) %{_mandir}/fr/man1/cups-config.1*
-#%lang(es) %{_mandir}/es/man1/cups-config.1*
 
 %if %{with static_libs}
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libcups.a
+%{_libdir}/libcupscgi.a
+%{_libdir}/libcupsdriver.a
 %{_libdir}/libcupsimage.a
+%{_libdir}/libcupsmime.a
+%{_libdir}/libcupsppdc.a
 %endif
 
 %if %{with perl}
