@@ -14,7 +14,7 @@ Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.4.0
-Release:	2
+Release:	3
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
@@ -25,6 +25,9 @@ Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
 Source4:	%{name}.mailto.conf
 Source5:	%{name}-lpd.inetd
+# svn diff http://svn.easysw.com/public/cups/tags/release-1.4.0/ http://svn.easysw.com/public/cups/branches/branch-1.4/ > cups-branch.diff
+# + drop config-scripts/cups-common.m4 change
+Patch100:	%{name}-branch.diff
 Patch0:		%{name}-config.patch
 Patch2:		%{name}-options.patch
 Patch3:		%{name}-man_pages_linking.patch
@@ -325,6 +328,7 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 
 %prep
 %setup -q
+%patch100 -p0
 %patch0 -p1
 %patch2 -p1
 %patch3 -p1
