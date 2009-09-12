@@ -13,19 +13,19 @@
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.4.0
+Version:	1.4.1
 Release:	3
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
 Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	bc5e777d4320cecdd1a64de8035171a8
+# Source0-md5:	587a58039c112ecb3c932e048c8a7b01
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
 Source4:	%{name}.mailto.conf
 Source5:	%{name}-lpd.inetd
-# svn diff http://svn.easysw.com/public/cups/tags/release-1.4.0/ http://svn.easysw.com/public/cups/branches/branch-1.4/ > cups-branch.diff
+# svn diff http://svn.easysw.com/public/cups/tags/release-1.4.1/ http://svn.easysw.com/public/cups/branches/branch-1.4/ > cups-branch.diff
 # + drop config-scripts/cups-common.m4 change
 Patch100:	%{name}-branch.diff
 Patch0:		%{name}-config.patch
