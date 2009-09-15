@@ -14,7 +14,7 @@ Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.4.1
-Release:	3
+Release:	4
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
@@ -25,6 +25,7 @@ Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
 Source4:	%{name}.mailto.conf
 Source5:	%{name}-lpd.inetd
+Source6:	%{name}-modprobe.conf
 # svn diff http://svn.easysw.com/public/cups/tags/release-1.4.1/ http://svn.easysw.com/public/cups/branches/branch-1.4/ > cups-branch.diff
 # + drop config-scripts/cups-common.m4 change
 Patch100:	%{name}-branch.diff
@@ -395,7 +396,7 @@ cd ../..
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,logrotate.d,security,sysconfig/rc-inetd} \
+install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,logrotate.d,modprobe.d,security,sysconfig/rc-inetd} \
 	$RPM_BUILD_ROOT/var/run/cups \
 	$RPM_BUILD_ROOT/var/log/{,archive/}cups
 
@@ -432,6 +433,7 @@ install %{SOURCE2}	$RPM_BUILD_ROOT/etc/pam.d/%{name}
 install %{SOURCE3}	$RPM_BUILD_ROOT/etc/logrotate.d/%{name}
 install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/cups/mailto.conf
 sed -e 's|__ULIBDIR__|%{_ulibdir}|g' %{SOURCE5} > $RPM_BUILD_ROOT/etc/sysconfig/rc-inetd/cups-lpd
+install %{SOURCE6}	$RPM_BUILD_ROOT/etc/modprobe.d/cups.conf
 
 touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
 touch $RPM_BUILD_ROOT/etc/security/blacklist.cups
@@ -468,6 +470,7 @@ rm -rf $RPM_BUILD_ROOT
 %post
 /sbin/chkconfig --add cups
 %service cups restart "cups daemon"
+/sbin/rmmod usblp > /dev/null 2>&1
 
 %preun
 if [ "$1" = "0" ]; then
@@ -502,6 +505,7 @@ fi
 %attr(640,root,root) %config %verify(not md5 mtime size) /etc/pam.d/*
 %attr(754,root,root) /etc/rc.d/init.d/cups
 /etc/dbus-1/system.d/cups.conf
+/etc/modprobe.d/cups.conf
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/classes.conf
 %attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/cupsd.conf
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/printers.conf
