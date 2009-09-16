@@ -14,7 +14,7 @@ Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.4.1
-Release:	4
+Release:	5
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
@@ -470,7 +470,7 @@ rm -rf $RPM_BUILD_ROOT
 %post
 /sbin/chkconfig --add cups
 %service cups restart "cups daemon"
-/sbin/rmmod usblp > /dev/null 2>&1
+/sbin/rmmod usblp > /dev/null 2>&1 || :
 
 %preun
 if [ "$1" = "0" ]; then
