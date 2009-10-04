@@ -1,0 +1,593 @@
+Index: conf/pam.irix
+===================================================================
+--- conf/pam.irix	(.../tags/release-1.4.1)	(wersja 8833)
++++ conf/pam.irix	(.../branches/branch-1.4)	(wersja 8833)
+@@ -1,3 +0,0 @@
+-#%PAM-1.0
+-auth	required	pam_unix.so shadow nodelay nullok
+-account	required	pam_unix.so
+Index: conf/pam.std.in
+===================================================================
+--- conf/pam.std.in	(.../tags/release-1.4.1)	(wersja 8833)
++++ conf/pam.std.in	(.../branches/branch-1.4)	(wersja 8833)
+@@ -1,2 +1,2 @@
+-auth	required	@PAMMOD@ nullok shadow
++auth	required	@PAMMODAUTH@
+ account	required	@PAMMOD@
+Index: conf/Makefile
+===================================================================
+--- conf/Makefile	(.../tags/release-1.4.1)	(wersja 8833)
++++ conf/Makefile	(.../branches/branch-1.4)	(wersja 8833)
+@@ -90,7 +90,7 @@
+ 	done
+ 	-if test x$(PAMDIR) != x; then \
+ 		$(INSTALL_DIR) -m 755 $(BUILDROOT)$(PAMDIR); \
+-		if test -r $(BUILDROOT)$(PAMDIR)/cups/$(PAMFILE) ; then \
++		if test -r $(BUILDROOT)$(PAMDIR)/cups ; then \
+ 			$(INSTALL_DATA) $(PAMFILE) $(BUILDROOT)$(PAMDIR)/cups.N ; \
+ 		else \
+ 			$(INSTALL_DATA) $(PAMFILE) $(BUILDROOT)$(PAMDIR)/cups ; \
+Index: backend/usb-unix.c
+===================================================================
+--- backend/usb-unix.c	(.../tags/release-1.4.1)	(wersja 8833)
++++ backend/usb-unix.c	(.../branches/branch-1.4)	(wersja 8833)
+@@ -560,7 +560,7 @@
+  * 'side_cb()' - Handle side-channel requests...
+  */
+ 
+-static void
++static int				/* O - 0 on success, -1 on error */
+ side_cb(int         print_fd,		/* I - Print file */
+         int         device_fd,		/* I - Device file */
+         int         snmp_fd,		/* I - SNMP socket (unused) */
+Index: backend/usb-darwin.c
+===================================================================
+--- backend/usb-darwin.c	(.../tags/release-1.4.1)	(wersja 8833)
++++ backend/usb-darwin.c	(.../branches/branch-1.4)	(wersja 8833)
+@@ -292,9 +292,8 @@
+ #if defined(__i386__) || defined(__x86_64__)
+ static pid_t	child_pid;		/* Child PID */
+ static void run_legacy_backend(int argc, char *argv[], int fd);	/* Starts child backend process running as a ppc executable */
+-#endif /* __i386__ || __x86_64__ */
+-static int	job_canceled = 0;	/* Was the job canceled? */
+ static void sigterm_handler(int sig);	/* SIGTERM handler */
++#endif /* __i386__ || __x86_64__ */
+ 
+ #ifdef PARSE_PS_ERRORS
+ static const char *next_line (const char *buffer);
+@@ -461,9 +460,9 @@
+   fputs("STATE: -connecting-to-device\n", stderr);
+ 
+   /*
+-   * Now that we are "connected" to the port, catch SIGTERM so that we
++   * Now that we are "connected" to the port, ignore SIGTERM so that we
+    * can finish out any page data the driver sends (e.g. to eject the
+-   * current page...  Only catch SIGTERM if we are printing data from
++   * current page...  Only ignore SIGTERM if we are printing data from
+    * stdin (otherwise you can't cancel raw jobs...)
+    */
+ 
+@@ -475,7 +474,7 @@
+     memset(&action, 0, sizeof(action));
+ 
+     sigemptyset(&action.sa_mask);
+-    action.sa_handler = sigterm_handler;
++    action.sa_handler = SIG_IGN;
+     sigaction(SIGTERM, &action, NULL);
+   }
+ 
+@@ -725,7 +724,7 @@
+ 	  fprintf(stderr, "DEBUG: USB class driver Abort returned %x\n",
+ 	          err);
+ 
+-	  status = job_canceled ? CUPS_BACKEND_FAILED : CUPS_BACKEND_STOP;
++	  status = CUPS_BACKEND_FAILED;
+ 	  break;
+ 	}
+ 	else if (bytes > 0)
+@@ -944,7 +943,7 @@
+     datalen = sizeof(data);
+ 
+     if (cupsSideChannelRead(&command, &status, data, &datalen, 1.0))
+-      continue;
++      break;
+ 
+     switch (command)
+     {
+@@ -2020,9 +2019,7 @@
+ 
+   exit(exitstatus);
+ }
+-#endif /* __i386__ || __x86_64__ */
+ 
+-
+ /*
+  * 'sigterm_handler()' - SIGTERM handler.
+  */
+@@ -2030,7 +2027,8 @@
+ static void
+ sigterm_handler(int sig)		/* I - Signal */
+ {
+-#if defined(__i386__) || defined(__x86_64__)
++  /* If we started a child process pass the signal on to it...
++   */
+   if (child_pid)
+   {
+    /*
+@@ -2052,16 +2050,11 @@
+       exit(CUPS_BACKEND_STOP);
+     }
+   }
+-#endif /* __i386__ || __x86_64__ */
+-
+- /*
+-  * Otherwise just flag that the job has been canceled...
+-  */
+-
+-  job_canceled = 1;
+ }
+ 
++#endif /* __i386__ || __x86_64__ */
+ 
++
+ #ifdef PARSE_PS_ERRORS
+ /*
+  * 'next_line()' - Find the next line in a buffer.
+Index: config-scripts/cups-pam.m4
+===================================================================
+--- config-scripts/cups-pam.m4	(.../tags/release-1.4.1)	(wersja 8833)
++++ config-scripts/cups-pam.m4	(.../branches/branch-1.4)	(wersja 8833)
+@@ -22,9 +22,10 @@
+ fi
+ 
+ PAMDIR=""
+-PAMFILE=""
++PAMFILE="pam.std"
+ PAMLIBS=""
+ PAMMOD="pam_unknown.so"
++PAMMODAUTH="pam_unknown.so"
+ 
+ if test x$enable_pam != xno; then
+ 	SAVELIBS="$LIBS"
+@@ -60,7 +61,7 @@
+ 
+ 	case "$uname" in
+ 		Darwin*)
+-			# Darwin, MacOS X
++			# Darwin/Mac OS X
+ 			if test "x$with_pam_module" != x; then
+ 				PAMFILE="pam.$with_pam_module"
+ 			elif test -f /usr/lib/pam/pam_opendirectory.so.2; then
+@@ -70,26 +71,22 @@
+ 			fi
+ 			;;
+ 
+-		IRIX)
+-			# SGI IRIX
+-			PAMFILE="pam.irix"
+-			;;
+-
+ 		*)
+ 			# All others; this test might need to be updated
+ 			# as Linux distributors move things around...
+ 			if test "x$with_pam_module" != x; then
+ 				PAMMOD="pam_${with_pam_module}.so"
+-			else
+-				for mod in pam_unix2.so pam_unix.so pam_pwdb.so; do
+-					if test -f /lib/security/$mod; then
+-						PAMMOD="$mod"
+-						break;
+-					fi
+-				done
++			elif test -f /lib/security/pam_unix2.so; then
++				PAMMOD="pam_unix2.so"
++			elif test -f /lib/security/pam_unix.so; then
++				PAMMOD="pam_unix.so"
+ 			fi
+ 
+-			PAMFILE="pam.std"
++			if test "x$PAMMOD" = xpam_unix.so; then
++				PAMMODAUTH="$PAMMOD shadow nodelay"
++			else
++				PAMMODAUTH="$PAMMOD nodelay"
++			fi
+ 			;;
+ 	esac
+ fi
+@@ -98,6 +95,7 @@
+ AC_SUBST(PAMFILE)
+ AC_SUBST(PAMLIBS)
+ AC_SUBST(PAMMOD)
++AC_SUBST(PAMMODAUTH)
+ 
+ dnl
+ dnl End of "$Id$".
+Index: doc/help/spec-ipp.html
+===================================================================
+--- doc/help/spec-ipp.html	(.../tags/release-1.4.1)	(wersja 8833)
++++ doc/help/spec-ipp.html	(.../branches/branch-1.4)	(wersja 8833)
+@@ -558,7 +558,7 @@
+ <h4>Cancel-Job Request</h4>
+ 
+ <p>The following groups of attributes are supplied as part of the
+-Set-Job-Attributes request:
++Cancel-Job request:
+ 
+ <p>Group 1: Operation Attributes
+ 
+@@ -632,6 +632,17 @@
+ 	<dd>The client MUST supply a URI for the specified printer or
+ 	"ipp://.../printers" for all printers and classes.
+ 
++	<dt><span class="info">CUPS 1.2/Mac OS X 10.5</span>"requesting-user-name" (name(MAX)):
++
++	<dd>The client OPTIONALLY supplies this attribute to specify whose jobs
++	jobs are purged or canceled.
++
++	<dt><span class="info">CUPS 1.2/Mac OS X 10.5</span>"my-jobs" (boolean):
++
++	<dd>The client OPTIONALLY supplies this attribute to specify that only
++	the jobs owned by the requesting user are purged or canceled. The
++	default is false.
++
+ 	<dt><span class="info">CUPS 1.2/Mac OS X 10.5</span>"purge-jobs" (boolean):
+ 
+ 	<dd>The client OPTIONALLY supplies this attribute to specify
+Index: desktop/cups.desktop.in
+===================================================================
+--- desktop/cups.desktop.in	(.../tags/release-1.4.1)	(wersja 8833)
++++ desktop/cups.desktop.in	(.../branches/branch-1.4)	(wersja 8833)
+@@ -7,33 +7,33 @@
+ Type=Application
+ Name=Manage Printing
+ Comment=CUPS Web Interface
+-Name[de.UTF-8]=Druckerverwaltung
+-Comment[de.UTF-8]=CUPS Webinterface
+-Name[en_US.UTF-8]=Manage Printing
+-Comment[en_US.UTF-8]=CUPS Web Interface
+-Name[es.UTF-8]=Administrar impresión
+-Comment[es.UTF-8]=Interfaz Web de CUPS
+-Name[et.UTF-8]=Trükkimise haldur
+-Comment[et.UTF-8]=CUPS-i veebiliides
+-Name[eu.UTF-8]=Kudeatu inprimaketak
+-Comment[eu.UTF-8]=CUPSen web interfazea
+-Name[fr.UTF-8]=Gestionnaire d'impression
+-Comment[fr.UTF-8]=Interface Web de CUPS
+-Name[he.UTF-8]=נהל הדפסות
+-Comment[he.UTF-8]=ממשק דפדפן של CUPS
+-Name[id.UTF-8]=Manajemen Pencetakan
+-Comment[id.UTF-8]=Antarmuka Web CUPS
+-Name[it.UTF-8]=Gestione stampa
+-Comment[it.UTF-8]=Interfaccia web di CUPS
+-Name[ja.UTF-8]=印刷の管理
+-Comment[ja.UTF-8]=CUPS Web インタフェース
+-Name[pl.UTF-8]=Zarządzanie drukowaniem
+-Comment[pl.UTF-8]=Interfejs WWW CUPS
+-Name[ru.UTF-8]=Настройка печати
+-Comment[ru.UTF-8]=Настройка CUPS
+-Name[sv.UTF-8]=Hantera skrivare
+-Comment[sv.UTF-8]=CUPS webb-gränssnitt
+-Name[zh.UTF-8]=打印机管理
+-Comment[zh.UTF-8]=CUPS网页界面
+-Name[zh_TW.UTF-8]=印表管理
+-Comment[zh_TW.UTF-8]=CUPS 網頁介面
++Name[de]=Druckerverwaltung
++Comment[de]=CUPS Webinterface
++Name[en_US]=Manage Printing
++Comment[en_US]=CUPS Web Interface
++Name[es]=Administrar impresión
++Comment[es]=Interfaz Web de CUPS
++Name[et]=Trükkimise haldur
++Comment[et]=CUPS-i veebiliides
++Name[eu]=Kudeatu inprimaketak
++Comment[eu]=CUPSen web interfazea
++Name[fr]=Gestionnaire d'impression
++Comment[fr]=Interface Web de CUPS
++Name[he]=נהל הדפסות
++Comment[he]=ממשק דפדפן של CUPS
++Name[id]=Manajemen Pencetakan
++Comment[id]=Antarmuka Web CUPS
++Name[it]=Gestione stampa
++Comment[it]=Interfaccia web di CUPS
++Name[ja]=印刷の管理
++Comment[ja]=CUPS Web インタフェース
++Name[pl]=Zarządzanie drukowaniem
++Comment[pl]=Interfejs WWW CUPS
++Name[ru]=Настройка печати
++Comment[ru]=Настройка CUPS
++Name[sv]=Hantera skrivare
++Comment[sv]=CUPS webb-gränssnitt
++Name[zh]=打印机管理
++Comment[zh]=CUPS网页界面
++Name[zh_TW]=印表管理
++Comment[zh_TW]=CUPS 網頁介面
+Index: cups/sidechannel.c
+===================================================================
+--- cups/sidechannel.c	(.../tags/release-1.4.1)	(wersja 8833)
++++ cups/sidechannel.c	(.../branches/branch-1.4)	(wersja 8833)
+@@ -191,10 +191,24 @@
+     if (errno != EINTR && errno != EAGAIN)
+     {
+       DEBUG_printf(("1cupsSideChannelRead: Read error: %s", strerror(errno)));
++      *command = CUPS_SC_CMD_NONE;
++      *status  = CUPS_SC_STATUS_IO_ERROR;
+       return (-1);
+     }
+ 
+  /*
++  * Watch for EOF or too few bytes...
++  */
++
++  if (bytes < 4)
++  {
++    DEBUG_printf(("1cupsSideChannelRead: Short read of %d bytes", bytes));
++    *command = CUPS_SC_CMD_NONE;
++    *status  = CUPS_SC_STATUS_BAD_MESSAGE;
++    return (-1);
++  }
++
++ /*
+   * Validate the command code in the message...
+   */
+ 
+@@ -202,6 +216,8 @@
+       buffer[0] > CUPS_SC_CMD_SNMP_GET_NEXT)
+   {
+     DEBUG_printf(("1cupsSideChannelRead: Bad command %d!", buffer[0]));
++    *command = CUPS_SC_CMD_NONE;
++    *status  = CUPS_SC_STATUS_BAD_MESSAGE;
+     return (-1);
+   }
+ 
+@@ -379,6 +395,7 @@
+ 			real_oidlen,	/* Length of returned OID string */
+ 			oidlen;		/* Length of first OID */
+   const char		*current_oid;	/* Current OID */
++  char			last_oid[2048];	/* Last OID */
+ 
+ 
+   DEBUG_printf(("cupsSideChannelSNMPWalk(oid=\"%s\", timeout=%.3f, cb=%p, "
+@@ -397,6 +414,7 @@
+ 
+   current_oid = oid;
+   oidlen      = (int)strlen(oid);
++  last_oid[0] = '\0';
+ 
+   do
+   {
+@@ -422,7 +440,8 @@
+       * Parse the response of the form "oid\0value"...
+       */
+ 
+-      if (strncmp(real_data, oid, oidlen) || real_data[oidlen] != '.')
++      if (strncmp(real_data, oid, oidlen) || real_data[oidlen] != '.' ||
++          !strcmp(real_data, last_oid))
+       {
+        /*
+         * Done with this set of OIDs...
+@@ -448,6 +467,7 @@
+       */
+ 
+       current_oid = real_data;
++      strlcpy(last_oid, current_oid, sizeof(last_oid));
+     }
+   }
+   while (status == CUPS_SC_STATUS_OK);
+Index: cups/cups.h
+===================================================================
+--- cups/cups.h	(.../tags/release-1.4.1)	(wersja 8833)
++++ cups/cups.h	(.../branches/branch-1.4)	(wersja 8833)
+@@ -59,10 +59,10 @@
+  * Constants...
+  */
+ 
+-#  define CUPS_VERSION		1.0401
++#  define CUPS_VERSION		1.0402
+ #  define CUPS_VERSION_MAJOR	1
+ #  define CUPS_VERSION_MINOR	4
+-#  define CUPS_VERSION_PATCH	1
++#  define CUPS_VERSION_PATCH	2
+ 
+ #  define CUPS_BC_FD		3	/* Back-channel file descriptor for select/poll */
+ #  define CUPS_DATE_ANY		(time_t)-1
+Index: cups/sidechannel.h
+===================================================================
+--- cups/sidechannel.h	(.../tags/release-1.4.1)	(wersja 8833)
++++ cups/sidechannel.h	(.../branches/branch-1.4)	(wersja 8833)
+@@ -55,6 +55,7 @@
+ 
+ enum cups_sc_command_e			/**** Request command codes ****/
+ {
++  CUPS_SC_CMD_NONE = 0,			/* No command @private@ */
+   CUPS_SC_CMD_SOFT_RESET = 1,		/* Do a soft reset */
+   CUPS_SC_CMD_DRAIN_OUTPUT = 2,		/* Drain all pending output */
+   CUPS_SC_CMD_GET_BIDI = 3,		/* Return bidirectional capabilities */
+Index: cups/snmp.c
+===================================================================
+--- cups/snmp.c	(.../tags/release-1.4.1)	(wersja 8833)
++++ cups/snmp.c	(.../branches/branch-1.4)	(wersja 8833)
+@@ -608,6 +608,8 @@
+   int		count = 0;		/* Number of OIDs found */
+   int		request_id = 0;		/* Current request ID */
+   cups_snmp_t	packet;			/* Current response packet */
++  int		lastoid[CUPS_SNMP_MAX_OID];
++					/* Last OID we got */
+ 
+ 
+  /*
+@@ -631,14 +633,15 @@
+   */
+ 
+   _cupsSNMPCopyOID(packet.object_name, prefix, CUPS_SNMP_MAX_OID);
++  lastoid[0] = -1;
+ 
+   for (;;)
+   {
+     request_id ++;
+ 
+     if (!_cupsSNMPWrite(fd, address, version, community,
+-                       CUPS_ASN1_GET_NEXT_REQUEST, request_id,
+-		       packet.object_name))
++                        CUPS_ASN1_GET_NEXT_REQUEST, request_id,
++		        packet.object_name))
+     {
+       DEBUG_puts("5_cupsSNMPWalk: Returning -1");
+ 
+@@ -652,7 +655,8 @@
+       return (-1);
+     }
+ 
+-    if (!_cupsSNMPIsOIDPrefixed(&packet, prefix))
++    if (!_cupsSNMPIsOIDPrefixed(&packet, prefix) ||
++        _cupsSNMPIsOID(&packet, lastoid))
+     {
+       DEBUG_printf(("5_cupsSNMPWalk: Returning %d", count));
+ 
+@@ -666,6 +670,8 @@
+       return (count > 0 ? count : -1);
+     }
+ 
++    _cupsSNMPCopyOID(lastoid, packet.object_name, CUPS_SNMP_MAX_OID);
++
+     count ++;
+ 
+     (*cb)(&packet, data);
+Index: filter/hpgl-input.c
+===================================================================
+--- filter/hpgl-input.c	(.../tags/release-1.4.1)	(wersja 8833)
++++ filter/hpgl-input.c	(.../branches/branch-1.4)	(wersja 8833)
+@@ -144,7 +144,7 @@
+   if (!strcasecmp(name, "LB"))
+   {
+     bufptr = buf;
+-    while ((ch = getc(fp)) != StringTerminator)
++    while ((ch = getc(fp)) != StringTerminator && ch != EOF)
+       if (bufptr < (buf + sizeof(buf) - 1))
+         *bufptr++ = ch;
+     *bufptr = '\0';
+Index: CHANGES.txt
+===================================================================
+--- CHANGES.txt	(.../tags/release-1.4.1)	(wersja 8833)
++++ CHANGES.txt	(.../branches/branch-1.4)	(wersja 8833)
+@@ -1,6 +1,23 @@
+-CHANGES.txt - 2009-09-11
++CHANGES.txt - 2009-10-02
+ ------------------------
+ 
++CHANGES IN CUPS V1.4.2
++
++	- The Russian web interface templates had errors (STR #3359)
++	- The cups.desktop file used the wrong locale names (STR #3358)
++	- cupsSideChannelRead() did not return an error for short reads.
++	- The installed PAM configuration file did not use the correct options
++	  with the pam_unix2 module (STR #3313)
++	- The scheduler did not preserve default options that contained special
++	  characters (STR #3340)
++	- The scheduler did not remove old pre-filters when updating a printer
++	  driver (STR #3342)
++	- The HP/GL-2 filter did not check for early end-of-file (STR #3319)
++	- The USB backend did not compile on some platforms (STR #3332)
++	- cupsSideChannelSNMPWalk() could go into an infinite loop with broken
++	  SNMP implementations.
++
++
+ CHANGES IN CUPS V1.4.1
+ 
+ 	- Documention fixes (STR #3296)
+Index: templates/ru/printer-reject.tmpl
+===================================================================
+--- templates/ru/printer-reject.tmpl	(.../tags/release-1.4.1)	(wersja 8833)
++++ templates/ru/printer-reject.tmpl	(.../branches/branch-1.4)	(wersja 8833)
+@@ -3,7 +3,7 @@
+ <H2 CLASS="title">Отмена заданий для {is_class?группы:принтера} {printer_name}</H2>
+ 
+ <P>{is_class?Группа:Принтер} «<A
+-HREF="/{is_class?группы:принтеры}/{printer_name}">{printer_name}</A>»
++HREF="/{is_class?classes:printers}/{printer_name}">{printer_name}</A>»
+ больше не принимает задания.</P>
+ 
+ </DIV>
+Index: templates/ru/printer-stop.tmpl
+===================================================================
+--- templates/ru/printer-stop.tmpl	(.../tags/release-1.4.1)	(wersja 8833)
++++ templates/ru/printer-stop.tmpl	(.../branches/branch-1.4)	(wersja 8833)
+@@ -3,7 +3,7 @@
+ <H2 CLASS="title">Приостановить {is_class?группу:принтер} {printer_name}</H2>
+ 
+ <P>{is_class?Группа:Принтер} «<A
+-HREF="/{is_class?группы:принтеры}/{printer_name}">{printer_name}</A>»
++HREF="/{is_class?classes:printers}/{printer_name}">{printer_name}</A>»
+ {is_class?была приостановлена:был приостановлен}.</P>
+ 
+-</DIV>
+\ No newline at end of file
++</DIV>
+Index: templates/ru/printer-start.tmpl
+===================================================================
+--- templates/ru/printer-start.tmpl	(.../tags/release-1.4.1)	(wersja 8833)
++++ templates/ru/printer-start.tmpl	(.../branches/branch-1.4)	(wersja 8833)
+@@ -3,7 +3,7 @@
+ <H2 CLASS="title">Возобновить работу {is_class?группы:принтера} {printer_name}</H2>
+ 
+ <P>{is_class?Группа:Принтер} «<A
+-HREF="/{is_class?группы:принтеры}/{printer_name}">{printer_name}</A>»
++HREF="/{is_class?classes:printers}/{printer_name}">{printer_name}</A>»
+ теперь принимают задания.</P>
+ 
+-</DIV>
+\ No newline at end of file
++</DIV>
+Index: templates/ru/printer-purge.tmpl
+===================================================================
+--- templates/ru/printer-purge.tmpl	(.../tags/release-1.4.1)	(wersja 8833)
++++ templates/ru/printer-purge.tmpl	(.../branches/branch-1.4)	(wersja 8833)
+@@ -3,7 +3,7 @@
+ <H2 CLASS="title">Очистка всех заданий для {is_class?группы:принтера} {printer_name}</H2>
+ 
+ <P>Все задания для {is_class?группы:принтера} «<A
+-HREF="/{is_class?группы:принтеры}/{printer_name}">{printer_name}</A>»
++HREF="/{is_class?classes:printers}/{printer_name}">{printer_name}</A>»
+ очищены.</P>
+ 
+-</DIV>
+\ No newline at end of file
++</DIV>
+Index: scheduler/ipp.c
+===================================================================
+--- scheduler/ipp.c	(.../tags/release-1.4.1)	(wersja 8833)
++++ scheduler/ipp.c	(.../branches/branch-1.4)	(wersja 8833)
+@@ -8470,7 +8470,9 @@
+   * Read the option name...
+   */
+ 
+-  for (line += 8, olen --; isalnum(*line & 255); line ++)
++  for (line += 8, olen --;
++       *line > ' ' && *line < 0x7f && *line != ':' && *line != '/';
++       line ++)
+     if (olen > 0)
+     {
+       *option++ = *line;
+@@ -8498,7 +8500,9 @@
+   while (isspace(*line & 255))
+     line ++;
+ 
+-  for (clen --; isalnum(*line & 255); line ++)
++  for (clen --;
++       *line > ' ' && *line < 0x7f && *line != ':' && *line != '/';
++       line ++)
+     if (clen > 0)
+     {
+       *choice++ = *line;
+Index: scheduler/printers.c
+===================================================================
+--- scheduler/printers.c	(.../tags/release-1.4.1)	(wersja 8833)
++++ scheduler/printers.c	(.../branches/branch-1.4)	(wersja 8833)
+@@ -3834,7 +3834,7 @@
+   for (filter = mimeFirstFilter(MimeDatabase);
+        filter;
+        filter = mimeNextFilter(MimeDatabase))
+-    if (filter->dst == p->filetype)
++    if (filter->dst == p->filetype || filter->dst == p->prefiltertype)
+     {
+      /*
+       * Delete the current filter...
