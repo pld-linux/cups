@@ -1,23 +1,23 @@
 Index: conf/pam.irix
 ===================================================================
---- conf/pam.irix	(.../tags/release-1.4.1)	(wersja 8833)
-+++ conf/pam.irix	(.../branches/branch-1.4)	(wersja 8833)
+--- conf/pam.irix	(.../tags/release-1.4.1)	(wersja 8857)
++++ conf/pam.irix	(.../branches/branch-1.4)	(wersja 8857)
 @@ -1,3 +0,0 @@
 -#%PAM-1.0
 -auth	required	pam_unix.so shadow nodelay nullok
 -account	required	pam_unix.so
 Index: conf/pam.std.in
 ===================================================================
---- conf/pam.std.in	(.../tags/release-1.4.1)	(wersja 8833)
-+++ conf/pam.std.in	(.../branches/branch-1.4)	(wersja 8833)
+--- conf/pam.std.in	(.../tags/release-1.4.1)	(wersja 8857)
++++ conf/pam.std.in	(.../branches/branch-1.4)	(wersja 8857)
 @@ -1,2 +1,2 @@
 -auth	required	@PAMMOD@ nullok shadow
 +auth	required	@PAMMODAUTH@
  account	required	@PAMMOD@
 Index: conf/Makefile
 ===================================================================
---- conf/Makefile	(.../tags/release-1.4.1)	(wersja 8833)
-+++ conf/Makefile	(.../branches/branch-1.4)	(wersja 8833)
+--- conf/Makefile	(.../tags/release-1.4.1)	(wersja 8857)
++++ conf/Makefile	(.../branches/branch-1.4)	(wersja 8857)
 @@ -90,7 +90,7 @@
  	done
  	-if test x$(PAMDIR) != x; then \
@@ -29,8 +29,8 @@ Index: conf/Makefile
  			$(INSTALL_DATA) $(PAMFILE) $(BUILDROOT)$(PAMDIR)/cups ; \
 Index: backend/usb-unix.c
 ===================================================================
---- backend/usb-unix.c	(.../tags/release-1.4.1)	(wersja 8833)
-+++ backend/usb-unix.c	(.../branches/branch-1.4)	(wersja 8833)
+--- backend/usb-unix.c	(.../tags/release-1.4.1)	(wersja 8857)
++++ backend/usb-unix.c	(.../branches/branch-1.4)	(wersja 8857)
 @@ -560,7 +560,7 @@
   * 'side_cb()' - Handle side-channel requests...
   */
@@ -42,8 +42,8 @@ Index: backend/usb-unix.c
          int         snmp_fd,		/* I - SNMP socket (unused) */
 Index: backend/usb-darwin.c
 ===================================================================
---- backend/usb-darwin.c	(.../tags/release-1.4.1)	(wersja 8833)
-+++ backend/usb-darwin.c	(.../branches/branch-1.4)	(wersja 8833)
+--- backend/usb-darwin.c	(.../tags/release-1.4.1)	(wersja 8857)
++++ backend/usb-darwin.c	(.../branches/branch-1.4)	(wersja 8857)
 @@ -292,9 +292,8 @@
  #if defined(__i386__) || defined(__x86_64__)
  static pid_t	child_pid;		/* Child PID */
@@ -76,6 +76,15 @@ Index: backend/usb-darwin.c
      sigaction(SIGTERM, &action, NULL);
    }
  
+@@ -698,7 +697,7 @@
+ 
+ 	else if (iostatus == kIOReturnAborted)
+ 	{
+-	  fputs("DEBUG: Got return aborted during write!\n", stderr);
++	  fputs("DEBUG: Got USB return aborted during write!\n", stderr);
+ 
+ 	  IOReturn err = (*g.classdriver)->Abort(g.classdriver);
+ 	  fprintf(stderr, "DEBUG: USB class driver Abort returned %x\n", err);
 @@ -725,7 +724,7 @@
  	  fprintf(stderr, "DEBUG: USB class driver Abort returned %x\n",
  	          err);
@@ -85,6 +94,20 @@ Index: backend/usb-darwin.c
  	  break;
  	}
  	else if (bytes > 0)
+@@ -898,11 +897,11 @@
+ #endif
+     }
+     else if (readstatus == kIOUSBTransactionTimeout)
+-      fputs("DEBUG: Got USB transaction timeout during write!\n", stderr);
++      fputs("DEBUG: Got USB transaction timeout during read!\n", stderr);
+     else if (readstatus == kIOUSBPipeStalled)
+       fputs("DEBUG: Got USB pipe stalled during read!\n", stderr);
+     else if (readstatus == kIOReturnAborted)
+-      fputs("DEBUG: Got return aborted during read!\n", stderr);
++      fputs("DEBUG: Got USB return aborted during read!\n", stderr);
+ 
+    /*
+     * Make sure this loop executes no more than once every 250 miliseconds...
 @@ -944,7 +943,7 @@
      datalen = sizeof(data);
  
@@ -133,10 +156,49 @@ Index: backend/usb-darwin.c
  #ifdef PARSE_PS_ERRORS
  /*
   * 'next_line()' - Find the next line in a buffer.
+Index: config-scripts/cups-common.m4
+===================================================================
+--- config-scripts/cups-common.m4	(.../tags/release-1.4.1)	(wersja 8857)
++++ config-scripts/cups-common.m4	(.../branches/branch-1.4)	(wersja 8857)
+@@ -266,11 +266,6 @@
+ 				dbus_message_iter_init_append,
+ 				AC_DEFINE(HAVE_DBUS_MESSAGE_ITER_INIT_APPEND),,
+ 				`$PKGCONFIG --libs dbus-1`)
+-			if $PKGCONFIG --exists glib-2.0 && $PKGCONFIG --exists dbus-glib-1; then
+-				DBUS_NOTIFIER="dbus"
+-				DBUS_NOTIFIERLIBS="`$PKGCONFIG --libs glib-2.0` `$PKGCONFIG --libs dbus-glib-1` `$PKGCONFIG --libs dbus-1`"
+-				CFLAGS="$CFLAGS `$PKGCONFIG --cflags glib-2.0`"
+-			fi
+ 		else
+ 			AC_MSG_RESULT(no)
+ 		fi
+@@ -289,7 +284,6 @@
+ 
+ case $uname in
+         Darwin*)
+-#		FONTS=""
+ 		LEGACY_BACKENDS=""
+                 BACKLIBS="$BACKLIBS -framework IOKit"
+                 CUPSDLIBS="$CUPSDLIBS -sectorder __TEXT __text cupsd.order -e start -framework IOKit -framework SystemConfiguration -weak_framework ApplicationServices"
+Index: config-scripts/cups-defaults.m4
+===================================================================
+--- config-scripts/cups-defaults.m4	(.../tags/release-1.4.1)	(wersja 8857)
++++ config-scripts/cups-defaults.m4	(.../branches/branch-1.4)	(wersja 8857)
+@@ -325,8 +325,8 @@
+ 				CUPS_DEFAULT_LPD_CONFIG_FILE="launchd:///System/Library/LaunchDaemons/org.cups.cups-lpd.plist"
+ 				;;
+ 			*)
+-				if test -d /etc/xinetd.d; then
+-					CUPS_DEFAULT_LPD_CONFIG_FILE="xinetd:///etc/xinetd.d/cups-lpd"
++				if test "x$XINETD" != x; then
++					CUPS_DEFAULT_LPD_CONFIG_FILE="xinetd://$XINETD/cups-lpd"
+ 				else
+ 					CUPS_DEFAULT_LPD_CONFIG_FILE=""
+ 				fi
 Index: config-scripts/cups-pam.m4
 ===================================================================
---- config-scripts/cups-pam.m4	(.../tags/release-1.4.1)	(wersja 8833)
-+++ config-scripts/cups-pam.m4	(.../branches/branch-1.4)	(wersja 8833)
+--- config-scripts/cups-pam.m4	(.../tags/release-1.4.1)	(wersja 8857)
++++ config-scripts/cups-pam.m4	(.../branches/branch-1.4)	(wersja 8857)
 @@ -22,9 +22,10 @@
  fi
  
@@ -202,10 +264,359 @@ Index: config-scripts/cups-pam.m4
  
  dnl
  dnl End of "$Id$".
+Index: doc/de/index.html.in
+===================================================================
+--- doc/de/index.html.in	(.../tags/release-1.4.1)	(wersja 8857)
++++ doc/de/index.html.in	(.../branches/branch-1.4)	(wersja 8857)
+@@ -17,7 +17,7 @@
+ <TD CLASS="unsel"><A HREF="/admin">&nbsp;&nbsp;Verwaltung&nbsp;&nbsp;</A></TD>
+ <TD CLASS="unsel"><A HREF="/classes/">&nbsp;&nbsp;Klassen&nbsp;&nbsp;</A></TD>
+ <TD CLASS="unsel"><A HREF="/help/">&nbsp;&nbsp;On-Line&nbsp;Hilfe&nbsp;&nbsp;</A></TD>
+-<TD CLASS="unsel"><A HREF="/jobs/">&nbsp;&nbsp;Auftr&uuml;ge&nbsp;&nbsp;</A></TD>
++<TD CLASS="unsel"><A HREF="/jobs/">&nbsp;&nbsp;Auftr&auml;ge&nbsp;&nbsp;</A></TD>
+ <TD CLASS="unsel"><A HREF="/printers/">&nbsp;&nbsp;Drucker&nbsp;&nbsp;</A></TD>
+ <TD CLASS="unsel" WIDTH="100%"><FORM ACTION="/help/" METHOD="GET"><INPUT
+ TYPE="SEARCH" NAME="QUERY" SIZE="20" PLACEHOLDER="Search Help"
+Index: doc/help/ref-ppdcfile.html
+===================================================================
+--- doc/help/ref-ppdcfile.html	(.../tags/release-1.4.1)	(wersja 8857)
++++ doc/help/ref-ppdcfile.html	(.../branches/branch-1.4)	(wersja 8857)
+@@ -380,10 +380,10 @@
+ inclusion in a driver. The name with optional user text defines
+ the name for the media size and is used with the <a
+ href='#MediaSize'><code>MediaSize</code></a> directive to associate
+-the media size with the driver. The name may only contain
+-letters, numbers, and the underscore and may not exceed 40
+-characters in length. The user text, if supplied, may not exceed
+-80 characters in length.</p>
++the media size with the driver. The name may contain up to 40 ASCII
++characters within the range of decimal 33 to decimal 126 inclusive,
++except for the characters comma (44), slash (47) and colon (58).
++The user text, if supplied, may not exceed 80 bytes in length.</p>
+ 
+ <p>The width and length define the dimensions of the media. Each
+ number is optionally followed by one of the following unit
+@@ -459,17 +459,15 @@
+ <h3>Description</h3>
+ 
+ <p>The <code>Attribute</code> directive creates a PPD attribute. The
+-name is any combination of letters, numbers, and the underscore
+-and can be up to 40 characters in length.</p>
++name may contain up to 40 ASCII characters within the range of decimal
++33 to decimal 126 inclusive, except for the characters comma (44),
++slash (47) and colon (58).</p>
+ 
+-<p>The selector can be the empty string (<code>""</code>), a keyword
+-consisting of up to 40 letters, numbers, and the underscore, or
+-a string composed of a keyword and user text of up to 80
+-characters.</p>
++<p>The selector can be the empty string (<code>""</code>) or text of up
++to 80 bytes.</p>
+ 
+-<p>The value is any string or number; the string may contain
+-multiple lines, however no one line may exceed 255
+-characters.</p>
++<p>The value is any string or number; the string may contain multiple
++lines, however no one line may exceed 255 bytes.</p>
+ 
+ <h3>See Also</h3>
+ 
+@@ -495,14 +493,15 @@
+ <h3>Description</h3>
+ 
+ <p>The <code>Choice</code> directive adds a single choice to the
+-current option. The name is any combination of letters, numbers,
+-and the underscore and can be up to 40 characters in length.</p>
++current option. The name may contain up to 40 ASCII characters within
++the range of decimal 33 to decimal 126 inclusive, except for the
++characters comma (44), slash (47) and colon (58).</p>
+ 
+-<p>If provided, the text can be any string up to 80 characters
++<p>If provided, the text can be any string up to 80 bytes
+ in length. If no text is provided, the name is used.</p>
+ 
+ <p>The code is any string and may contain multiple lines,
+-however no one line may exceed 255 characters.</p>
++however no one line may exceed 255 bytes.</p>
+ 
+ <h3>See Also</h3>
+ 
+@@ -568,11 +567,12 @@
+ 
+ <p>The <code>ColorModel</code> directive is a convenience directive
+ which creates a ColorModel option and choice for the current
+-printer driver. The name is any combination of letters, numbers,
+-and the underscore and can be up to 40 characters in length.</p>
++printer driver. The name may contain up to 40 ASCII characters within
++the range of decimal 33 to decimal 126 inclusive, except for the
++characters comma (44), slash (47) and colon (58).</p>
+ 
+-<p>If provided, the text can be any string up to 80 characters
+-in length. If no text is provided, the name is used.</p>
++<p>If provided, the text can be any string up to 80 bytes in length.
++If no text is provided, the name is used.</p>
+ 
+ <p>The colorspace argument is one of the standard colorspace
+ keywords defined later in this appendix in the section titled,
+@@ -698,7 +698,7 @@
+ <p>The <code>Copyright</code> directive adds text comments to the
+ top of a PPD file, typically for use in copyright notices. The
+ text argument can contain multiple lines of text, but no line
+-may exceed 255 characters.</p>
++may exceed 255 bytes.</p>
+ 
+ 
+ <h2 class="title"><a name='CustomMedia'>CustomMedia</a></h2>
+@@ -730,11 +730,12 @@
+ <h3>Description</h3>
+ 
+ <p>The <code>CustomMedia</code> directive adds a custom media size to
+-the driver. The name is any combination of letters, numbers,
+-and the underscore and can be up to 40 characters in length.</p>
++the driver. The name may contain up to 40 ASCII characters within the
++range of decimal 33 to decimal 126 inclusive, except for the characters
++comma (44), slash (47) and colon (58).</p>
+ 
+-<p>If provided, the text can be any string up to 80 characters
+-in length. If no text is provided, the name is used.</p>
++<p>If provided, the text can be any string up to 80 bytes in length.
++If no text is provided, the name is used.</p>
+ 
+ <p>The width and length arguments specify the dimensions of the
+ media as defined for the <a href="#_media"><code>#media</code></a>
+@@ -747,7 +748,7 @@
+ PostScript commands to run for the <code>PageSize</code> and
+ <code>PageRegion</code> options, respectively. The commands can
+ contain multiple lines, however no line may be more than 255
+-characters in length.</p>
++bytes in length.</p>
+ 
+ <h3>See Also</h3>
+ 
+@@ -823,11 +824,12 @@
+ the Dymo driver from 0 (lowest) to 3 (highest), with 2
+ representing the normal setting.</p>
+ 
+-<p>The name is any combination of letters, numbers, and the
+-underscore and can be up to 40 characters in length.</p>
++<p>The name may contain up to 40 ASCII characters within the range of
++decimal 33 to decimal 126 inclusive, except for the characters comma
++(44), slash (47) and colon (58).</p>
+ 
+-<p>If provided, the text can be any string up to 80 characters
+-in length. If no text is provided, the name is used.</p>
++<p>If provided, the text can be any string up to 80 bytes in length.
++If no text is provided, the name is used.</p>
+ 
+ <h3>See Also</h3>
+ 
+@@ -1044,15 +1046,16 @@
+ <h3>Description</h3>
+ 
+ <p>The <code>Finishing</code> directive adds a choice to the
+-<code>cupsFinishing</code> option. The name is any combination of
+-letters, numbers, and the underscore and can be up to 40
+-characters in length. The name is stored in the
+-<code>OutputType</code> attribute in the PostScript page device
+-dictionary.</p>
++<code>cupsFinishing</code> option. The name may contain up to 40 ASCII
++characters within the range of decimal 33 to decimal 126 inclusive,
++except for the characters comma (44), slash (47) and colon (58).</p>
+ 
+-<p>If provided, the text can be any string up to 80 characters
+-in length. If no text is provided, the name is used.</p>
++<p>If provided, the text can be any string up to 80 bytes in length.
++If no text is provided, the name is used.</p>
+ 
++<p>The name is stored in the <code>OutputType</code> attribute in the
++PostScript page device dictionary.</p>
++
+ <h3>See Also</h3>
+ 
+ <p><a href='#Choice'><code>Choice</code></a>,
+@@ -1091,8 +1094,7 @@
+ <h3>Description</h3>
+ 
+ <p>The <code>Font</code> directive defines a "device font" for the
+-current printer driver. The name is the PostScript font
+-name.</p>
++current printer driver. The name is the PostScript font name.</p>
+ 
+ <p>The encoding is the default encoding of the font, usually
+ <code>Standard</code>, <code>Expert</code>, or <code>Special</code>, as
+@@ -1139,23 +1141,25 @@
+ <h3>Description</h3>
+ 
+ <p>The <code>Group</code> directive specifies the group for new
+-<code>Option</code> directives. The name is any combination of
+-letters, numbers, and the underscore and can be up to 40
+-characters in length. The names <code>General</code> and
+-<code>InstallableOptions</code> are predefined for the standard
+-Adobe UI keywords and for installable options, respectively.</p>
++<code>Option</code> directives. The name may contain up to 40 ASCII
++characters within the range of decimal 33 to decimal 126 inclusive,
++except for the characters comma (44), slash (47) and colon (58).</p>
+ 
+-<p>If provided, the text can be any string up to 40 characters
+-in length. If no text is provided, the name is used.</p>
++<p>If provided, the text can be any string up to 40 bytes in length.
++If no text is provided, the name is used.</p>
+ 
++<p>The names <code>General</code> and <code>InstallableOptions</code>
++are predefined for the standard Adobe UI keywords and for installable
++options, respectively.</p>
++
+ <center><table width='80%' border='1' bgcolor='#cccccc' cellpadding='5' cellspacing='0'>
+ <tr>
+ 	<td align='justify'><b>Note:</b>
+ 
+ 	<p>Because of certain API binary compatibility issues,
+ 	CUPS limits the length of PPD group translation strings
+-	(text) to 40 characters, while the PPD specification
+-	allows for up to 80 characters.</p>
++	(text) to 40 bytes, while the PPD specification
++	allows for up to 80 bytes.</p>
+ 
+ 	</td>
+ </tr>
+@@ -1229,11 +1233,12 @@
+ in the <code>MediaPosition</code> attribute in the PostScript page
+ device dictionary.</p>
+ 
+-<p>The name is any combination of letters, numbers, and the
+-underscore and can be up to 40 characters in length.</p>
++<p>The name may contain up to 40 ASCII characters within the range of
++decimal 33 to decimal 126 inclusive, except for the characters comma
++(44), slash (47) and colon (58).</p>
+ 
+-<p>If provided, the text can be any string up to 80 characters
+-in length. If no text is provided, the name is used.</p>
++<p>If provided, the text can be any string up to 80 bytes in length.
++If no text is provided, the name is used.</p>
+ 
+ <h3>See Also</h3>
+ 
+@@ -1271,11 +1276,12 @@
+ 
+ <p>The <code>Installable</code> directive adds a new boolean option
+ to the <code>InstallableOptions</code> group with a default value of
+-<code>False</code>. The name is any combination of letters, numbers,
+-and the underscore and can be up to 40 characters in length.</p>
++<code>False</code>. The name may contain up to 40 ASCII characters
++within the range of decimal 33 to decimal 126 inclusive, except for
++the characters comma (44), slash (47) and colon (58).</p>
+ 
+-<p>If provided, the text can be any string up to 80 characters
+-in length. If no text is provided, the name is used.</p>
++<p>If provided, the text can be any string up to 80 bytes in length.
++If no text is provided, the name is used.</p>
+ 
+ 
+ <h2 class="title"><a name='LocAttribute'>LocAttribute</a></h2>
+@@ -1295,17 +1301,15 @@
+ <h3>Description</h3>
+ 
+ <p>The <code>LocAttribute</code> directive creates a localized PPD
+-attribute. The name is any combination of letters, numbers, and the
+-underscore and can be up to 40 characters in length.</p>
++attribute. The name may contain up to 40 ASCII characters within the
++range of decimal 33 to decimal 126 inclusive, except for the characters
++comma (44), slash (47) and colon (58).</p>
+ 
+-<p>The selector can be the empty string (<code>""</code>), a keyword
+-consisting of up to 40 letters, numbers, and the underscore, or
+-a string composed of a keyword and user text of up to 80
+-characters.</p>
++<p>The selector can be the empty string (<code>""</code>) or text of up
++to 80 bytes.</p>
+ 
+-<p>The value is any string or number; the string may contain
+-multiple lines, however no one line may exceed 255
+-characters.</p>
++<p>The value is any string or number; the string may contain multiple
++lines, however no one line may exceed 255 bytes.</p>
+ 
+ <h3>See Also</h3>
+ 
+@@ -1458,14 +1462,16 @@
+ in the <code>cupsMediaType</code> attribute in the PostScript page
+ device dictionary.</p>
+ 
+-<p>The name is any combination of letters, numbers, and the
+-underscore and can be up to 40 characters in length. The name is
+-placed in the <code>MediaType</code> attribute in the PostScript
+-page device dictionary.</p>
++<p>The name may contain up to 40 ASCII characters within the range of
++decimal 33 to decimal 126 inclusive, except for the characters comma
++(44), slash (47) and colon (58).</p>
+ 
+-<p>If provided, the text can be any string up to 80 characters
+-in length. If no text is provided, the name is used.</p>
++<p>If provided, the text can be any string up to 80 bytes in length.
++If no text is provided, the name is used.</p>
+ 
++<p>The name is placed in the <code>MediaType</code> attribute in the
++PostScript page device dictionary.</p>
++
+ <h3>See Also</h3>
+ 
+ <p><a href='#Choice'><code>Choice</code></a>,
+@@ -1532,7 +1538,7 @@
+ characters ".", "/", "-", and "+" and should not begin with the
+ manufacturer name since the PPD compiler will add this
+ automatically for you. The maximum length of the name string is
+-31 characters to conform to the Adobe limits on the length of
++31 bytes to conform to the Adobe limits on the length of
+ <code>ShortNickName</code>.</p>
+ 
+ <h3>See Also</h3>
+@@ -1598,11 +1604,12 @@
+ 
+ <p>The <code>Option</code> directive creates a new option in the
+ current group, by default the <code>General</code> group. The name
+-is any combination of letters, numbers, and the underscore and
+-can be up to 40 characters in length.</p>
++may contain up to 40 ASCII characters within the range of decimal 33
++to decimal 126 inclusive, except for the characters comma (44), slash
++(47) and colon (58).</p>
+ 
+-<p>If provided, the text can be any string up to 80 characters
+-in length. If no text is provided, the name is used.</p>
++<p>If provided, the text can be any string up to 80 bytes in length.
++If no text is provided, the name is used.</p>
+ 
+ <p>The type argument is one of the following keywords:</p>
+ 
+@@ -1749,8 +1756,8 @@
+ the examples represent the horizontal and vertical resolutions
+ which must be positive integer values.</p>
+ 
+-<p>If provided, the text can be any string up to 80 characters
+-in length. If no text is provided, the name is used.</p>
++<p>If provided, the text can be any string up to 80 bytes in length.
++If no text is provided, the name is used.</p>
+ 
+ <h3>See Also</h3>
+ 
+Index: doc/help/ref-printers-conf.html
+===================================================================
+--- doc/help/ref-printers-conf.html	(.../tags/release-1.4.1)	(wersja 8857)
++++ doc/help/ref-printers-conf.html	(.../branches/branch-1.4)	(wersja 8857)
+@@ -21,8 +21,8 @@
+ normally use the <A HREF="man-lpadmin.html">lpadmin(8)</A>
+ command, web interface, or any of the available GUIs to manage
+ your printers instead. If you do choose to edit this file
+-manually, you will need to restart the scheduler to make them
+-active.</P>
++manually, you will need to stop the scheduler first, make your
++changes, and then start the scheduler to make them active.</P>
+ 
+ 
+ <H2 CLASS="title"><A NAME="Accepting">Accepting</A></H2>
 Index: doc/help/spec-ipp.html
 ===================================================================
---- doc/help/spec-ipp.html	(.../tags/release-1.4.1)	(wersja 8833)
-+++ doc/help/spec-ipp.html	(.../branches/branch-1.4)	(wersja 8833)
+--- doc/help/spec-ipp.html	(.../tags/release-1.4.1)	(wersja 8857)
++++ doc/help/spec-ipp.html	(.../branches/branch-1.4)	(wersja 8857)
 @@ -558,7 +558,7 @@
  <h4>Cancel-Job Request</h4>
  
@@ -233,10 +644,40 @@ Index: doc/help/spec-ipp.html
  	<dt><span class="info">CUPS 1.2/Mac OS X 10.5</span>"purge-jobs" (boolean):
  
  	<dd>The client OPTIONALLY supplies this attribute to specify
+Index: doc/help/ref-classes-conf.html
+===================================================================
+--- doc/help/ref-classes-conf.html	(.../tags/release-1.4.1)	(wersja 8857)
++++ doc/help/ref-classes-conf.html	(.../branches/branch-1.4)	(wersja 8857)
+@@ -21,8 +21,8 @@
+ normally use the <A HREF="man-lpadmin.html">lpadmin(8)</A>
+ command, web interface, or any of the available GUIs to manage
+ your classes instead. If you do choose to edit this file
+-manually, you will need to restart the scheduler to make them
+-active.</P>
++manually, you will need to stop the scheduler first, make your
++changes, and then start the scheduler to make them active.</P>
+ 
+ 
+ <H2 CLASS="title"><A NAME="Accepting">Accepting</A></H2>
+Index: doc/Makefile
+===================================================================
+--- doc/Makefile	(.../tags/release-1.4.1)	(wersja 8857)
++++ doc/Makefile	(.../branches/branch-1.4)	(wersja 8857)
+@@ -190,8 +190,8 @@
+ 	for lang in $(LANGUAGES); do \
+ 		if test -d $$lang; then \
+ 			$(INSTALL_DIR) -m 755 $(DOCDIR)/$$lang; \
+-			$(INSTALL_MAN) $$lang/index.html $(DOCDIR)/$$lang; \
+-			test -f $$lang/cups.css && $(INSTALL_MAN) $$lang/cups.css $(DOCDIR)/$$lang; \
++			$(INSTALL_DATA) $$lang/index.html $(DOCDIR)/$$lang; \
++			$(INSTALL_DATA) $$lang/cups.css $(DOCDIR)/$$lang >/dev/null 2>&1 || true; \
+ 		fi; \
+ 	done
+ 
 Index: desktop/cups.desktop.in
 ===================================================================
---- desktop/cups.desktop.in	(.../tags/release-1.4.1)	(wersja 8833)
-+++ desktop/cups.desktop.in	(.../branches/branch-1.4)	(wersja 8833)
+--- desktop/cups.desktop.in	(.../tags/release-1.4.1)	(wersja 8857)
++++ desktop/cups.desktop.in	(.../branches/branch-1.4)	(wersja 8857)
 @@ -7,33 +7,33 @@
  Type=Application
  Name=Manage Printing
@@ -303,8 +744,8 @@ Index: desktop/cups.desktop.in
 +Comment[zh_TW]=CUPS 網頁介面
 Index: cups/sidechannel.c
 ===================================================================
---- cups/sidechannel.c	(.../tags/release-1.4.1)	(wersja 8833)
-+++ cups/sidechannel.c	(.../branches/branch-1.4)	(wersja 8833)
+--- cups/sidechannel.c	(.../tags/release-1.4.1)	(wersja 8857)
++++ cups/sidechannel.c	(.../branches/branch-1.4)	(wersja 8857)
 @@ -191,10 +191,24 @@
      if (errno != EINTR && errno != EAGAIN)
      {
@@ -375,8 +816,8 @@ Index: cups/sidechannel.c
    while (status == CUPS_SC_STATUS_OK);
 Index: cups/cups.h
 ===================================================================
---- cups/cups.h	(.../tags/release-1.4.1)	(wersja 8833)
-+++ cups/cups.h	(.../branches/branch-1.4)	(wersja 8833)
+--- cups/cups.h	(.../tags/release-1.4.1)	(wersja 8857)
++++ cups/cups.h	(.../branches/branch-1.4)	(wersja 8857)
 @@ -59,10 +59,10 @@
   * Constants...
   */
@@ -392,8 +833,8 @@ Index: cups/cups.h
  #  define CUPS_DATE_ANY		(time_t)-1
 Index: cups/sidechannel.h
 ===================================================================
---- cups/sidechannel.h	(.../tags/release-1.4.1)	(wersja 8833)
-+++ cups/sidechannel.h	(.../branches/branch-1.4)	(wersja 8833)
+--- cups/sidechannel.h	(.../tags/release-1.4.1)	(wersja 8857)
++++ cups/sidechannel.h	(.../branches/branch-1.4)	(wersja 8857)
 @@ -55,6 +55,7 @@
  
  enum cups_sc_command_e			/**** Request command codes ****/
@@ -404,8 +845,8 @@ Index: cups/sidechannel.h
    CUPS_SC_CMD_GET_BIDI = 3,		/* Return bidirectional capabilities */
 Index: cups/snmp.c
 ===================================================================
---- cups/snmp.c	(.../tags/release-1.4.1)	(wersja 8833)
-+++ cups/snmp.c	(.../branches/branch-1.4)	(wersja 8833)
+--- cups/snmp.c	(.../tags/release-1.4.1)	(wersja 8857)
++++ cups/snmp.c	(.../branches/branch-1.4)	(wersja 8857)
 @@ -608,6 +608,8 @@
    int		count = 0;		/* Number of OIDs found */
    int		request_id = 0;		/* Current request ID */
@@ -452,10 +893,392 @@ Index: cups/snmp.c
      count ++;
  
      (*cb)(&packet, data);
+Index: systemv/cupstestppd.c
+===================================================================
+--- systemv/cupstestppd.c	(.../tags/release-1.4.1)	(wersja 8857)
++++ systemv/cupstestppd.c	(.../branches/branch-1.4)	(wersja 8857)
+@@ -101,6 +101,17 @@
+ 
+ 
+ /*
++ * File permissions...
++ */
++
++#define MODE_WRITE	0002		/* Other write */
++#define MODE_MASK	0555		/* Owner/group/other read+exec/search */
++#define MODE_DATAFILE	0444		/* Owner/group/other read */
++#define MODE_DIRECTORY	0555		/* Owner/group/other read+search */
++#define MODE_PROGRAM	0555		/* Owner/group/other read+exec */
++
++
++/*
+  * Standard Adobe media keywords (must remain sorted)...
+  */
+ 
+@@ -357,7 +368,7 @@
+               root = argv[i];
+ 	      break;
+ 
+-	  case 'W' :			/* Turn errors into warnings  */
++	  case 'W' :			/* Turn errors into warnings */
+ 	      i ++;
+ 
+ 	      if (i >= argc)
+@@ -1387,18 +1398,18 @@
+       {
+         check_basics(argv[i]);
+ 
++	if (warn & WARN_DEFAULTS)
++	  errors = check_defaults(ppd, errors, verbose, 1);
++
+ 	if (warn & WARN_CONSTRAINTS)
+ 	  errors = check_constraints(ppd, errors, verbose, 1);
+ 
+-	if (warn & WARN_DEFAULTS)
+-	  errors = check_defaults(ppd, errors, verbose, 1);
++	if (warn & WARN_FILTERS)
++	  errors = check_filters(ppd, root, errors, verbose, 1);
+ 
+ 	if (warn & WARN_PROFILES)
+ 	  errors = check_profiles(ppd, root, errors, verbose, 1);
+ 
+-	if (warn & WARN_FILTERS)
+-	  errors = check_filters(ppd, root, errors, verbose, 1);
+-
+         if (warn & WARN_SIZES)
+ 	  errors = check_sizes(ppd, errors, verbose, 1);
+         else
+@@ -2411,6 +2422,7 @@
+ 		pathprog[1024];		/* Complete path to program/filter */
+   int		cost;			/* Cost of filter */
+   const char	*prefix;		/* WARN/FAIL prefix */
++  struct stat	fileinfo;		/* File information */
+ 
+ 
+   prefix = warn ? "  WARN  " : "**FAIL**";
+@@ -2452,18 +2464,32 @@
+ 		   program);
+       }
+ 
+-      if (access(pathprog, X_OK))
++      if (stat(pathprog, &fileinfo))
+       {
+ 	if (!warn && !errors && !verbose)
+ 	  _cupsLangPuts(stdout, _(" FAIL\n"));
+ 
+ 	if (verbose >= 0)
+ 	  _cupsLangPrintf(stdout, _("      %s  Missing cupsFilter "
+-				    "file \"%s\"\n"), prefix, program);
++				    "file \"%s\"\n"), prefix, pathprog);
+ 
+ 	if (!warn)
+ 	  errors ++;
+       }
++      else if (fileinfo.st_uid != 0 ||
++               (fileinfo.st_mode & MODE_WRITE) ||
++	       (fileinfo.st_mode & MODE_MASK) != MODE_PROGRAM)
++      {
++	if (!warn && !errors && !verbose)
++	  _cupsLangPuts(stdout, _(" FAIL\n"));
++
++	if (verbose >= 0)
++	  _cupsLangPrintf(stdout, _("      %s  Bad permissions on cupsFilter "
++				    "file \"%s\"\n"), prefix, pathprog);
++
++	if (!warn)
++	  errors ++;
++      }
+       else
+         errors = valid_path("cupsFilter", pathprog, errors, verbose, warn);
+     }
+@@ -2523,18 +2549,33 @@
+ 		   program);
+       }
+ 
+-      if (access(pathprog, X_OK))
++      if (stat(pathprog, &fileinfo))
+       {
+ 	if (!warn && !errors && !verbose)
+ 	  _cupsLangPuts(stdout, _(" FAIL\n"));
+ 
+ 	if (verbose >= 0)
+ 	  _cupsLangPrintf(stdout, _("      %s  Missing cupsPreFilter "
+-				    "file \"%s\"\n"), prefix, program);
++				    "file \"%s\"\n"), prefix, pathprog);
+ 
+         if (!warn)
+ 	  errors ++;
+       }
++      else if (fileinfo.st_uid != 0 ||
++               (fileinfo.st_mode & MODE_WRITE) ||
++	       (fileinfo.st_mode & MODE_MASK) != MODE_PROGRAM)
++      {
++	if (!warn && !errors && !verbose)
++	  _cupsLangPuts(stdout, _(" FAIL\n"));
++
++	if (verbose >= 0)
++	  _cupsLangPrintf(stdout, _("      %s  Bad permissions on "
++	                            "cupsPreFilter file \"%s\"\n"), prefix,
++			  pathprog);
++
++	if (!warn)
++	  errors ++;
++      }
+       else
+         errors = valid_path("cupsPreFilter", pathprog, errors, verbose, warn);
+     }
+@@ -2562,8 +2603,11 @@
+       if (!warn)
+         errors ++;
+     }
++    
++    snprintf(pathprog, sizeof(pathprog), "%s%s", root,
++             attr->value ? attr->value : "(null)");
+ 
+-    if (!attr->value || access(attr->value, 0))
++    if (!attr->value || stat(pathprog, &fileinfo))
+     {
+       if (!warn && !errors && !verbose)
+ 	_cupsLangPuts(stdout, _(" FAIL\n"));
+@@ -2571,13 +2615,28 @@
+       if (verbose >= 0)
+ 	_cupsLangPrintf(stdout, _("      %s  Missing "
+ 				  "APDialogExtension file \"%s\"\n"),
+-			prefix, attr->value ? attr->value : "<NULL>");
++			prefix, pathprog);
+ 
+       if (!warn)
+ 	errors ++;
+     }
++    else if (fileinfo.st_uid != 0 ||
++	     (fileinfo.st_mode & MODE_WRITE) ||
++	     (fileinfo.st_mode & MODE_MASK) != MODE_DIRECTORY)
++    {
++      if (!warn && !errors && !verbose)
++	_cupsLangPuts(stdout, _(" FAIL\n"));
++
++      if (verbose >= 0)
++	_cupsLangPrintf(stdout, _("      %s  Bad permissions on "
++	                          "APDialogExtension file \"%s\"\n"), prefix,
++			pathprog);
++
++      if (!warn)
++	errors ++;
++    }
+     else
+-      errors = valid_path("APDialogExtension", attr->value, errors, verbose,
++      errors = valid_path("APDialogExtension", pathprog, errors, verbose,
+                           warn);
+   }
+ 
+@@ -2601,7 +2660,10 @@
+         errors ++;
+     }
+ 
+-    if (!attr->value || access(attr->value, 0))
++    snprintf(pathprog, sizeof(pathprog), "%s%s", root,
++             attr->value ? attr->value : "(null)");
++
++    if (!attr->value || stat(pathprog, &fileinfo))
+     {
+       if (!warn && !errors && !verbose)
+ 	_cupsLangPuts(stdout, _(" FAIL\n"));
+@@ -2609,13 +2671,28 @@
+       if (verbose >= 0)
+ 	_cupsLangPrintf(stdout, _("      %s  Missing "
+ 				  "APPrinterIconPath file \"%s\"\n"),
+-			prefix, attr->value ? attr->value : "<NULL>");
++			prefix, pathprog);
+ 
+       if (!warn)
+ 	errors ++;
+     }
++    else if (fileinfo.st_uid != 0 ||
++	     (fileinfo.st_mode & MODE_WRITE) ||
++	     (fileinfo.st_mode & MODE_MASK) != MODE_DATAFILE)
++    {
++      if (!warn && !errors && !verbose)
++	_cupsLangPuts(stdout, _(" FAIL\n"));
++
++      if (verbose >= 0)
++	_cupsLangPrintf(stdout, _("      %s  Bad permissions on "
++	                          "APPrinterIconPath file \"%s\"\n"), prefix,
++			pathprog);
++
++      if (!warn)
++	errors ++;
++    }
+     else
+-      errors = valid_path("APPrinterIconPath", attr->value, errors, verbose,
++      errors = valid_path("APPrinterIconPath", pathprog, errors, verbose,
+                           warn);
+   }
+ 
+@@ -2639,7 +2716,10 @@
+         errors ++;
+     }
+ 
+-    if (!attr->value || access(attr->value, 0))
++    snprintf(pathprog, sizeof(pathprog), "%s%s", root,
++             attr->value ? attr->value : "(null)");
++
++    if (!attr->value || stat(pathprog, &fileinfo))
+     {
+       if (!warn && !errors && !verbose)
+ 	_cupsLangPuts(stdout, _(" FAIL\n"));
+@@ -2647,13 +2727,28 @@
+       if (verbose >= 0)
+ 	_cupsLangPrintf(stdout, _("      %s  Missing "
+ 				  "APPrinterLowInkTool file \"%s\"\n"),
+-			prefix, attr->value ? attr->value : "<NULL>");
++			prefix, pathprog);
+ 
+       if (!warn)
+ 	errors ++;
+     }
++    else if (fileinfo.st_uid != 0 ||
++	     (fileinfo.st_mode & MODE_WRITE) ||
++	     (fileinfo.st_mode & MODE_MASK) != MODE_DIRECTORY)
++    {
++      if (!warn && !errors && !verbose)
++	_cupsLangPuts(stdout, _(" FAIL\n"));
++
++      if (verbose >= 0)
++	_cupsLangPrintf(stdout, _("      %s  Bad permissions on "
++	                          "APPrinterLowInkTool file \"%s\"\n"), prefix,
++			pathprog);
++
++      if (!warn)
++	errors ++;
++    }
+     else
+-      errors = valid_path("APPrinterLowInkTool", attr->value, errors, verbose,
++      errors = valid_path("APPrinterLowInkTool", pathprog, errors, verbose,
+                           warn);
+   }
+ 
+@@ -2677,7 +2772,10 @@
+         errors ++;
+     }
+ 
+-    if (!attr->value || access(attr->value, 0))
++    snprintf(pathprog, sizeof(pathprog), "%s%s", root,
++             attr->value ? attr->value : "(null)");
++
++    if (!attr->value || stat(pathprog, &fileinfo))
+     {
+       if (!warn && !errors && !verbose)
+ 	_cupsLangPuts(stdout, _(" FAIL\n"));
+@@ -2685,13 +2783,28 @@
+       if (verbose >= 0)
+ 	_cupsLangPrintf(stdout, _("      %s  Missing "
+ 				  "APPrinterUtilityPath file \"%s\"\n"),
+-			prefix, attr->value ? attr->value : "<NULL>");
++			prefix, pathprog);
+ 
+       if (!warn)
+ 	errors ++;
+     }
++    else if (fileinfo.st_uid != 0 ||
++	     (fileinfo.st_mode & MODE_WRITE) ||
++	     (fileinfo.st_mode & MODE_MASK) != MODE_DIRECTORY)
++    {
++      if (!warn && !errors && !verbose)
++	_cupsLangPuts(stdout, _(" FAIL\n"));
++
++      if (verbose >= 0)
++	_cupsLangPrintf(stdout, _("      %s  Bad permissions on "
++	                          "APPrinterUtilityPath file \"%s\"\n"), prefix,
++			pathprog);
++
++      if (!warn)
++	errors ++;
++    }
+     else
+-      errors = valid_path("APPrinterUtilityPath", attr->value, errors, verbose,
++      errors = valid_path("APPrinterUtilityPath", pathprog, errors, verbose,
+                           warn);
+   }
+ 
+@@ -2715,7 +2828,7 @@
+         errors ++;
+     }
+ 
+-    if (!attr->value || access(attr->value, 0))
++    if (!attr->value || stat(attr->value, &fileinfo))
+     {
+       if (!warn && !errors && !verbose)
+ 	_cupsLangPuts(stdout, _(" FAIL\n"));
+@@ -2728,6 +2841,21 @@
+       if (!warn)
+ 	errors ++;
+     }
++    else if (fileinfo.st_uid != 0 ||
++	     (fileinfo.st_mode & MODE_WRITE) ||
++	     (fileinfo.st_mode & MODE_MASK) != MODE_DIRECTORY)
++    {
++      if (!warn && !errors && !verbose)
++	_cupsLangPuts(stdout, _(" FAIL\n"));
++
++      if (verbose >= 0)
++	_cupsLangPrintf(stdout, _("      %s  Bad permissions on "
++	                          "APScanAppPath file \"%s\"\n"), prefix,
++			attr->value);
++
++      if (!warn)
++	errors ++;
++    }
+     else
+       errors = valid_path("APScanAppPath", attr->value, errors, verbose,
+                           warn);
+@@ -2768,6 +2896,7 @@
+   const char	*ptr;			/* Pointer into string */
+   const char	*prefix;		/* WARN/FAIL prefix */
+   char		filename[1024];		/* Profile filename */
++  struct stat	fileinfo;		/* File information */
+   int		num_profiles = 0;	/* Number of profiles */
+   unsigned	hash,			/* Current hash value */
+ 		hashes[1000];		/* Hash values of profile names */
+@@ -2822,18 +2951,33 @@
+ 		 attr->value);
+     }
+ 
+-    if (access(filename, 0))
++    if (stat(filename, &fileinfo))
+     {
+       if (!warn && !errors && !verbose)
+ 	_cupsLangPuts(stdout, _(" FAIL\n"));
+ 
+       if (verbose >= 0)
+ 	_cupsLangPrintf(stdout, _("      %s  Missing cupsICCProfile "
+-				  "file \"%s\"!\n"), prefix, attr->value);
++				  "file \"%s\"!\n"), prefix, filename);
+ 
+       if (!warn)
+ 	errors ++;
+     }
++    else if (fileinfo.st_uid != 0 ||
++	     (fileinfo.st_mode & MODE_WRITE) ||
++	     (fileinfo.st_mode & MODE_MASK) != MODE_DATAFILE)
++    {
++      if (!warn && !errors && !verbose)
++	_cupsLangPuts(stdout, _(" FAIL\n"));
++
++      if (verbose >= 0)
++	_cupsLangPrintf(stdout, _("      %s  Bad permissions on "
++	                          "cupsICCProfile file \"%s\"\n"), prefix,
++			filename);
++
++      if (!warn)
++	errors ++;
++    }
+     else
+       errors = valid_path("cupsICCProfile", filename, errors, verbose, warn);
+ 
 Index: filter/hpgl-input.c
 ===================================================================
---- filter/hpgl-input.c	(.../tags/release-1.4.1)	(wersja 8833)
-+++ filter/hpgl-input.c	(.../branches/branch-1.4)	(wersja 8833)
+--- filter/hpgl-input.c	(.../tags/release-1.4.1)	(wersja 8857)
++++ filter/hpgl-input.c	(.../branches/branch-1.4)	(wersja 8857)
 @@ -144,7 +144,7 @@
    if (!strcasecmp(name, "LB"))
    {
@@ -467,16 +1290,28 @@ Index: filter/hpgl-input.c
      *bufptr = '\0';
 Index: CHANGES.txt
 ===================================================================
---- CHANGES.txt	(.../tags/release-1.4.1)	(wersja 8833)
-+++ CHANGES.txt	(.../branches/branch-1.4)	(wersja 8833)
-@@ -1,6 +1,23 @@
+--- CHANGES.txt	(.../tags/release-1.4.1)	(wersja 8857)
++++ CHANGES.txt	(.../branches/branch-1.4)	(wersja 8857)
+@@ -1,6 +1,35 @@
 -CHANGES.txt - 2009-09-11
-+CHANGES.txt - 2009-10-02
++CHANGES.txt - 2009-10-26
  ------------------------
  
 +CHANGES IN CUPS V1.4.2
 +
-+	- The Russian web interface templates had errors (STR #3359)
++	- Fixed localization errors (STR #3359, STR #3372, STR #3380, STR #3387)
++	- The documentation for classes.conf and printers.conf did not provide
++	  the correct instructions for manual changes (STR #3351)
++	- The scheduler did not always rebuild printer cache files when the
++	  driver was changed (STR #3356)
++	- The documentation makefile failed to install localizations when using
++	  newer versions of Bash (STR #3360)
++	- The configure script did not use the --with-xinetd value for the
++	  default LPD configuration path (STR #3347)
++	- The configure script incorrectly required glib for DBUS support
++	  (STR #3346)
++	- The cupstestppd program incorrectly reported filters with bad
++	  permisssions as missing (STR #3363)
 +	- The cups.desktop file used the wrong locale names (STR #3358)
 +	- cupsSideChannelRead() did not return an error for short reads.
 +	- The installed PAM configuration file did not use the correct options
@@ -494,10 +1329,32 @@ Index: CHANGES.txt
  CHANGES IN CUPS V1.4.1
  
  	- Documention fixes (STR #3296)
+Index: templates/Makefile
+===================================================================
+--- templates/Makefile	(.../tags/release-1.4.1)	(wersja 8857)
++++ templates/Makefile	(.../branches/branch-1.4)	(wersja 8857)
+@@ -3,7 +3,7 @@
+ #
+ #   Template makefile for the Common UNIX Printing System (CUPS).
+ #
+-#   Copyright 2007-2008 by Apple Inc.
++#   Copyright 2007-2009 by Apple Inc.
+ #   Copyright 1993-2007 by Easy Software Products.
+ #
+ #   These coded instructions, statements, and computer programs are the
+@@ -149,7 +149,7 @@
+ 		if test -d $$lang; then \
+ 			$(INSTALL_DIR) -m 755 $(DATADIR)/templates/$$lang; \
+ 			for file in $(FILES); do \
+-				$(INSTALL_DATA) $$lang/$$file $(DATADIR)/templates/$$lang 2>/dev/null || true; \
++				$(INSTALL_DATA) $$lang/$$file $(DATADIR)/templates/$$lang >/dev/null 2>&1 || true; \
+ 			done \
+ 		fi \
+ 	done
 Index: templates/ru/printer-reject.tmpl
 ===================================================================
---- templates/ru/printer-reject.tmpl	(.../tags/release-1.4.1)	(wersja 8833)
-+++ templates/ru/printer-reject.tmpl	(.../branches/branch-1.4)	(wersja 8833)
+--- templates/ru/printer-reject.tmpl	(.../tags/release-1.4.1)	(wersja 8857)
++++ templates/ru/printer-reject.tmpl	(.../branches/branch-1.4)	(wersja 8857)
 @@ -3,7 +3,7 @@
  <H2 CLASS="title">Отмена заданий для {is_class?группы:принтера} {printer_name}</H2>
  
@@ -509,8 +1366,8 @@ Index: templates/ru/printer-reject.tmpl
  </DIV>
 Index: templates/ru/printer-stop.tmpl
 ===================================================================
---- templates/ru/printer-stop.tmpl	(.../tags/release-1.4.1)	(wersja 8833)
-+++ templates/ru/printer-stop.tmpl	(.../branches/branch-1.4)	(wersja 8833)
+--- templates/ru/printer-stop.tmpl	(.../tags/release-1.4.1)	(wersja 8857)
++++ templates/ru/printer-stop.tmpl	(.../branches/branch-1.4)	(wersja 8857)
 @@ -3,7 +3,7 @@
  <H2 CLASS="title">Приостановить {is_class?группу:принтер} {printer_name}</H2>
  
@@ -524,8 +1381,8 @@ Index: templates/ru/printer-stop.tmpl
 +</DIV>
 Index: templates/ru/printer-start.tmpl
 ===================================================================
---- templates/ru/printer-start.tmpl	(.../tags/release-1.4.1)	(wersja 8833)
-+++ templates/ru/printer-start.tmpl	(.../branches/branch-1.4)	(wersja 8833)
+--- templates/ru/printer-start.tmpl	(.../tags/release-1.4.1)	(wersja 8857)
++++ templates/ru/printer-start.tmpl	(.../branches/branch-1.4)	(wersja 8857)
 @@ -3,7 +3,7 @@
  <H2 CLASS="title">Возобновить работу {is_class?группы:принтера} {printer_name}</H2>
  
@@ -537,10 +1394,23 @@ Index: templates/ru/printer-start.tmpl
 -</DIV>
 \ No newline at end of file
 +</DIV>
+Index: templates/ru/admin.tmpl
+===================================================================
+--- templates/ru/admin.tmpl	(.../tags/release-1.4.1)	(wersja 8857)
++++ templates/ru/admin.tmpl	(.../branches/branch-1.4)	(wersja 8857)
+@@ -31,7 +31,7 @@
+ <FORM ACTION="/admin/" METHOD="POST"><INPUT TYPE="HIDDEN" NAME="OP" VALUE="config-server"><INPUT TYPE="SUBMIT" VALUE="Редактировать конфигурационный файл"></FORM>
+ <FORM ACTION="/admin/log/access_log" METHOD="GET"><INPUT TYPE="SUBMIT" VALUE="Показать журнал заданий"></FORM>
+ <FORM ACTION="/admin/log/error_log" METHOD="GET"><INPUT TYPE="SUBMIT" VALUE="Показать журнал ошибок"></FORM>
+-<FORM ACTION="/admin/log/page_log" METHOD="GET"><INPUT TYPE="SUBMIT" VALUE="Показать журнал страниц">
++<FORM ACTION="/admin/log/page_log" METHOD="GET"><INPUT TYPE="SUBMIT" VALUE="Показать журнал страниц"></FORM>
+ </P>
+ 
+ {SETTINGS_ERROR?<P>{SETTINGS_MESSAGE}</P>
 Index: templates/ru/printer-purge.tmpl
 ===================================================================
---- templates/ru/printer-purge.tmpl	(.../tags/release-1.4.1)	(wersja 8833)
-+++ templates/ru/printer-purge.tmpl	(.../branches/branch-1.4)	(wersja 8833)
+--- templates/ru/printer-purge.tmpl	(.../tags/release-1.4.1)	(wersja 8857)
++++ templates/ru/printer-purge.tmpl	(.../branches/branch-1.4)	(wersja 8857)
 @@ -3,7 +3,7 @@
  <H2 CLASS="title">Очистка всех заданий для {is_class?группы:принтера} {printer_name}</H2>
  
@@ -552,11 +1422,121 @@ Index: templates/ru/printer-purge.tmpl
 -</DIV>
 \ No newline at end of file
 +</DIV>
+Index: templates/de/set-printer-options-header.tmpl
+===================================================================
+--- templates/de/set-printer-options-header.tmpl	(.../tags/release-1.4.1)	(wersja 8857)
++++ templates/de/set-printer-options-header.tmpl	(.../branches/branch-1.4)	(wersja 8857)
+@@ -1,6 +1,6 @@
+ <DIV CLASS="indent">
+ 
+-<H2 CLASS="title">Standardeinstellungen f%uuml;r {printer_name} festlegen</H2>
++<H2 CLASS="title">Standardeinstellungen f&uuml;r {printer_name} festlegen</H2>
+ 
+ <FORM METHOD="POST" ACTION="/admin">
+ <INPUT TYPE="HIDDEN" NAME="PRINTER_NAME" VALUE="{printer_name}">
 Index: scheduler/ipp.c
 ===================================================================
---- scheduler/ipp.c	(.../tags/release-1.4.1)	(wersja 8833)
-+++ scheduler/ipp.c	(.../branches/branch-1.4)	(wersja 8833)
-@@ -8470,7 +8470,9 @@
+--- scheduler/ipp.c	(.../tags/release-1.4.1)	(wersja 8857)
++++ scheduler/ipp.c	(.../branches/branch-1.4)	(wersja 8857)
+@@ -2324,8 +2324,9 @@
+ 		dstfile[1024];		/* Destination Script/PPD file */
+   int		modify;			/* Non-zero if we are modifying */
+   char		newname[IPP_MAX_NAME];	/* New printer name */
+-  int		need_restart_job;	/* Need to restart job? */
+-  int		set_device_uri,		/* Did we set the device URI? */
++  int		changed_driver,		/* Changed the PPD/interface script? */
++		need_restart_job,	/* Need to restart job? */
++		set_device_uri,		/* Did we set the device URI? */
+ 		set_port_monitor;	/* Did we set the port monitor? */
+ 
+ 
+@@ -2469,6 +2470,7 @@
+   * Look for attributes and copy them over as needed...
+   */
+ 
++  changed_driver   = 0;
+   need_restart_job = 0;
+ 
+   if ((attr = ippFindAttribute(con->request, "printer-location",
+@@ -2722,6 +2724,7 @@
+   if (con->filename)
+   {
+     need_restart_job = 1;
++    changed_driver   = 1;
+ 
+     strlcpy(srcfile, con->filename, sizeof(srcfile));
+ 
+@@ -2792,18 +2795,6 @@
+ 	cupsdLogMessage(CUPSD_LOG_DEBUG,
+ 			"Copied PPD file successfully!");
+ 	chmod(dstfile, 0644);
+-
+-#ifdef __APPLE__
+-       /*
+-        * (Re)register color profiles...
+-	*/
+-
+-        if (!RunUser)
+-	{
+-	  apple_unregister_profiles(printer);
+-	  apple_register_profiles(printer);
+-        }
+-#endif /* __APPLE__ */
+       }
+       else
+       {
+@@ -2820,6 +2811,7 @@
+                                     IPP_TAG_NAME)) != NULL)
+   {
+     need_restart_job = 1;
++    changed_driver   = 1;
+ 
+     if (!strcmp(attr->values[0].string.text, "raw"))
+     {
+@@ -2857,19 +2849,33 @@
+       cupsdLogMessage(CUPSD_LOG_DEBUG,
+ 		      "Copied PPD file successfully!");
+       chmod(dstfile, 0644);
++    }
++  }
+ 
++  if (changed_driver)
++  {
++   /*
++    * If we changed the PPD/interface script, then remove the printer's cache
++    * file...
++    */
++
++    char cache_name[1024];		/* Cache filename for printer attrs */
++
++    snprintf(cache_name, sizeof(cache_name), "%s/%s.ipp", CacheDir,
++             printer->name);
++    unlink(cache_name);
++
+ #ifdef __APPLE__
+-     /*
+-      * (Re)register color profiles...
+-      */
++   /*
++    * (Re)register color profiles...
++    */
+ 
+-      if (!RunUser)
+-      {
+-	apple_unregister_profiles(printer);
+-	apple_register_profiles(printer);
+-      }
++    if (!RunUser)
++    {
++      apple_unregister_profiles(printer);
++      apple_register_profiles(printer);
++    }
+ #endif /* __APPLE__ */
+-    }
+   }
+ 
+  /*
+@@ -8470,7 +8476,9 @@
    * Read the option name...
    */
  
@@ -567,7 +1547,7 @@ Index: scheduler/ipp.c
      if (olen > 0)
      {
        *option++ = *line;
-@@ -8498,7 +8500,9 @@
+@@ -8498,7 +8506,9 @@
    while (isspace(*line & 255))
      line ++;
  
@@ -580,9 +1560,17 @@ Index: scheduler/ipp.c
        *choice++ = *line;
 Index: scheduler/printers.c
 ===================================================================
---- scheduler/printers.c	(.../tags/release-1.4.1)	(wersja 8833)
-+++ scheduler/printers.c	(.../branches/branch-1.4)	(wersja 8833)
-@@ -3834,7 +3834,7 @@
+--- scheduler/printers.c	(.../tags/release-1.4.1)	(wersja 8857)
++++ scheduler/printers.c	(.../branches/branch-1.4)	(wersja 8857)
+@@ -1518,6 +1518,7 @@
+ 
+   cupsFilePuts(fp, "# Printer configuration file for " CUPS_SVERSION "\n");
+   cupsFilePrintf(fp, "# Written by cupsd on %s\n", temp);
++  cupsFilePuts(fp, "# DO NOT EDIT THIS FILE WHEN CUPSD IS RUNNING\n");
+ 
+  /*
+   * Write each local printer known to the system...
+@@ -3834,7 +3835,7 @@
    for (filter = mimeFirstFilter(MimeDatabase);
         filter;
         filter = mimeNextFilter(MimeDatabase))
@@ -591,3 +1579,15 @@ Index: scheduler/printers.c
      {
       /*
        * Delete the current filter...
+Index: scheduler/classes.c
+===================================================================
+--- scheduler/classes.c	(.../tags/release-1.4.1)	(wersja 8857)
++++ scheduler/classes.c	(.../branches/branch-1.4)	(wersja 8857)
+@@ -728,6 +728,7 @@
+ 
+   cupsFilePuts(fp, "# Class configuration file for " CUPS_SVERSION "\n");
+   cupsFilePrintf(fp, "# Written by cupsd on %s\n", temp);
++  cupsFilePuts(fp, "# DO NOT EDIT THIS FILE WHEN CUPSD IS RUNNING\n");
+ 
+  /*
+   * Write each local class known to the system...
