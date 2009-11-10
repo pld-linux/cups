@@ -13,13 +13,13 @@
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.4.1
-Release:	7
+Version:	1.4.2
+Release:	1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
 Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	587a58039c112ecb3c932e048c8a7b01
+# Source0-md5:	d95e2d588e3d36e563027a963b117b1b
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -28,7 +28,6 @@ Source5:	%{name}-lpd.inetd
 Source6:	%{name}-modprobe.conf
 # svn diff http://svn.easysw.com/public/cups/tags/release-1.4.1/ http://svn.easysw.com/public/cups/branches/branch-1.4/ > cups-branch.diff
 # + drop config-scripts/cups-common.m4 change
-Patch100:	%{name}-branch.diff
 Patch0:		%{name}-config.patch
 Patch2:		%{name}-options.patch
 Patch3:		%{name}-man_pages_linking.patch
@@ -45,11 +44,11 @@ BuildRequires:	automake
 %{?with_dnssd:BuildRequires:	avahi-compat-libdns_sd-devel}
 BuildRequires:	dbus-devel
 BuildRequires:	glibc-headers
+BuildRequires:	heimdal-devel
 %{?with_gnutls:BuildRequires:	gnutls-devel}
 %{?with_java:BuildRequires:	jar}
 %{?with_java:BuildRequires:	jdk}
 %{?with_java:BuildRequires:	jpackage-utils}
-BuildRequires:	heimdal-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpaper-devel
 BuildRequires:	libpng-devel
@@ -329,7 +328,6 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 
 %prep
 %setup -q
-%patch100 -p0
 %patch0 -p1
 %patch2 -p1
 %patch3 -p1
