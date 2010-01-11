@@ -56,6 +56,7 @@ BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	libusb-devel
+BuildRequires:	libusb-compact-devel
 BuildRequires:	openldap-devel
 BuildRequires:	openslp-devel
 %{!?with_gnutls:BuildRequires:	openssl-devel}
