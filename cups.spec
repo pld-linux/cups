@@ -2,9 +2,12 @@
 # Conditional build:
 %bcond_with	gnutls		# use GNU TLS for SSL/TLS support (instead of OpenSSL)
 %bcond_without	dnssd
+%bcond_without	ldap		# do not include LDAP support
+%bcond_without	gssapi		# do not include GSSAPI support
 %bcond_without	php		# don't build PHP extension/support in web interface
 %bcond_without	perl		# don't build Perl extension/support in web interface
 %bcond_without	python		# don't build Python support in web interface
+%bcond_without	slp		# do not include SLP support
 %bcond_without	static_libs	# don't build static library
 #
 %include	/usr/lib/rpm/macros.perl
@@ -45,7 +48,7 @@ BuildRequires:	automake
 %{?with_dnssd:BuildRequires:	avahi-compat-libdns_sd-devel}
 BuildRequires:	dbus-devel
 BuildRequires:	glibc-headers
-BuildRequires:	heimdal-devel
+%{?with_gssapi:BuildRequires:	heimdal-devel}
 %{?with_gnutls:BuildRequires:	gnutls-devel}
 %{?with_java:BuildRequires:	jar}
 %{?with_java:BuildRequires:	jdk}
@@ -57,8 +60,8 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	libusb-devel
 BuildRequires:	libusb-compat-devel
-BuildRequires:	openldap-devel
-BuildRequires:	openslp-devel
+%{?with_ldap:BuildRequires:	openldap-devel}
+%{?with_slp:BuildRequires:	openslp-devel}
 %{!?with_gnutls:BuildRequires:	openssl-devel}
 BuildRequires:	pam-devel
 %{?with_php:BuildRequires:	php-devel >= 4:5.0.0}
@@ -351,8 +354,11 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 	--enable-ssl \
 	%{?debug:--enable-debug} \
 	--%{!?with_dnssd:dis}%{?with_dnssd:en}able-dnssd \
+	--%{!?with_ldap:dis}%{?with_ldap:en}able-ldap \
+	--%{!?with_gssapi:dis}%{?with_gssapi:en}able-gssapi \
 	--%{!?with_gnutls:dis}%{?with_gnutls:en}able-gnutls \
 	--%{?with_gnutls:dis}%{!?with_gnutls:en}able-openssl \
+	--%{!?with_slp:dis}%{?with_slp:en}able-slp \
 	%{?with_static_libs:--enable-static} \
 	--with-cups-user=lp \
 	--with-cups-group=lp \
