@@ -171,7 +171,7 @@ Requires:	%{name}-image-lib = %{epoch}:%{version}-%{release}
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 # for libcups
 %{?with_gnutls:Requires:	gnutls-devel}
-Requires:	heimdal-devel
+%{?with_gssapi:Requires:	heimdal-devel}
 %{!?with_gnutls:Requires:	openssl-devel}
 Requires:	zlib-devel
 # for libcupsimage
