@@ -16,20 +16,20 @@
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.4.2
-Release:	8
+Version:	1.4.3
+Release:	1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
 Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	d95e2d588e3d36e563027a963b117b1b
+# Source0-md5:	e70b1c3f60143d7310c1d74c111a21ab
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
 Source4:	%{name}.mailto.conf
 Source5:	%{name}-lpd.inetd
 Source6:	%{name}-modprobe.conf
-# svn diff http://svn.easysw.com/public/cups/tags/release-1.4.1/ http://svn.easysw.com/public/cups/branches/branch-1.4/ > cups-branch.diff
+# svn diff http://svn.easysw.com/public/cups/tags/release-1.4.3/ http://svn.easysw.com/public/cups/branches/branch-1.4/ > cups-branch.diff
 # + drop config-scripts/cups-common.m4 change
 Patch0:		%{name}-config.patch
 Patch2:		%{name}-options.patch
@@ -535,6 +535,8 @@ fi
 %lang(de) %{_ulibdir}/cups/cgi-bin/de
 %lang(es) %{_ulibdir}/cups/cgi-bin/es
 %lang(eu) %{_ulibdir}/cups/cgi-bin/eu
+%lang(id) %{_ulibdir}/cups/cgi-bin/id
+%lang(it) %{_ulibdir}/cups/cgi-bin/it
 %lang(ja) %{_ulibdir}/cups/cgi-bin/ja
 %lang(pl) %{_ulibdir}/cups/cgi-bin/pl
 %lang(ru) %{_ulibdir}/cups/cgi-bin/ru
@@ -575,6 +577,8 @@ fi
 %lang(de) %{_datadir}/cups/templates/de
 %lang(es) %{_datadir}/cups/templates/es
 %lang(eu) %{_datadir}/cups/templates/eu
+%lang(id) %{_datadir}/cups/templates/id
+%lang(it) %{_datadir}/cups/templates/it
 %lang(ja) %{_datadir}/cups/templates/ja
 %lang(pl) %{_datadir}/cups/templates/pl
 %lang(ru) %{_datadir}/cups/templates/ru
@@ -630,6 +634,7 @@ fi
 %lang(eu) %{_datadir}/locale/eu/cups_eu.po
 %lang(fi) %{_datadir}/locale/fi/cups_fi.po
 %lang(fr) %{_datadir}/locale/fr/cups_fr.po
+%lang(id) %{_datadir}/locale/id/cups_id.po
 %lang(it) %{_datadir}/locale/it/cups_it.po
 %lang(ko) %{_datadir}/locale/ko/cups_ko.po
 %lang(ja) %{_datadir}/locale/ja/cups_ja.po

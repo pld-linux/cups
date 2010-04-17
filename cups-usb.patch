@@ -421,12 +421,12 @@ diff -urNad cups-1.4.2~/backend/usb-unix.c cups-1.4.2/backend/usb-unix.c
      }
    }
    while (device_fd < 0);
-@@ -190,7 +195,7 @@
-     tbytes = backendRunLoop(print_fd, device_fd, -1, NULL, use_bc, NULL);
+@@ -197,7 +197,7 @@
+     tbytes = backendRunLoop(print_fd, device_fd, -1, NULL, use_bc, 1, NULL);
  
  #else
--    tbytes = backendRunLoop(print_fd, device_fd, -1, NULL, use_bc, side_cb);
-+    tbytes = backendRunLoop(print_fd, device_fd, -1, NULL, use_bc, side_cb_unix);
+-    tbytes = backendRunLoop(print_fd, device_fd, -1, NULL, use_bc, 1, side_cb);
++    tbytes = backendRunLoop(print_fd, device_fd, -1, NULL, use_bc, 1, side_cb_unix);
  #endif /* __sun */
  
      if (print_fd != 0 && tbytes >= 0)
