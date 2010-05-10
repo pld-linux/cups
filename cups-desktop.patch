@@ -1,0 +1,9 @@
+--- cups-1.4.3/desktop/cups.desktop.in~	2009-10-02 19:15:07.000000000 +0200
++++ cups-1.4.3/desktop/cups.desktop.in	2010-05-11 00:59:47.072863946 +0200
+@@ -1,5 +1,5 @@
+ [Desktop Entry]
+-Categories=System;Printing;HardwareSettings;X-Red-Hat-Base;
++Categories=System;Printing;Settings;
+ Exec=@CUPS_HTMLVIEW@ http://localhost:631/
+ Icon=cups
+ StartupNotify=false
