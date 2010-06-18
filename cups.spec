@@ -16,13 +16,13 @@
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.4.3
-Release:	4
+Version:	1.4.4
+Release:	1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
 Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	e70b1c3f60143d7310c1d74c111a21ab
+# Source0-md5:	8776403ad60fea9e85eab9c04d88560d
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -49,8 +49,8 @@ BuildRequires:	automake
 %{?with_dnssd:BuildRequires:	avahi-compat-libdns_sd-devel}
 BuildRequires:	dbus-devel
 BuildRequires:	glibc-headers
-%{?with_gssapi:BuildRequires:	heimdal-devel}
 %{?with_gnutls:BuildRequires:	gnutls-devel}
+%{?with_gssapi:BuildRequires:	heimdal-devel}
 %{?with_java:BuildRequires:	jar}
 %{?with_java:BuildRequires:	jdk}
 %{?with_java:BuildRequires:	jpackage-utils}
@@ -59,8 +59,8 @@ BuildRequires:	libpaper-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
-BuildRequires:	libusb-devel
 BuildRequires:	libusb-compat-devel
+BuildRequires:	libusb-devel
 %{?with_ldap:BuildRequires:	openldap-devel}
 %{?with_slp:BuildRequires:	openslp-devel}
 %{!?with_gnutls:BuildRequires:	openssl-devel}
@@ -75,11 +75,11 @@ Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Requires:	openssl-tools
 Requires:	pam >= 0.77.3
 Requires:	rc-scripts
+Suggests:	cups-filter-pstoraster
 Provides:	printingdaemon
 Obsoletes:	printingdaemon
 Conflicts:	ghostscript < 7.05.4
 Conflicts:	logrotate < 3.7-4
-Suggests:	cups-filter-pstoraster
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_ulibdir	%{_prefix}/lib
