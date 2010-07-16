@@ -74,7 +74,9 @@ Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Requires:	openssl-tools
 Requires:	pam >= 0.77.3
+Requires:	perl-modules
 Requires:	rc-scripts
+Suggests:	ImageMagick-coder-pdf
 Suggests:	cups-filter-pstoraster
 Provides:	printingdaemon
 Obsoletes:	printingdaemon
