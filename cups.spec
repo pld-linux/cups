@@ -78,6 +78,7 @@ Requires:	perl-modules
 Requires:	rc-scripts
 Suggests:	ImageMagick-coder-pdf
 Suggests:	cups-filter-pstoraster
+Suggests:	poppler-progs
 Provides:	printingdaemon
 Obsoletes:	printingdaemon
 Conflicts:	ghostscript < 7.05.4
