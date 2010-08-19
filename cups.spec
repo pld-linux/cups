@@ -51,9 +51,6 @@ BuildRequires:	dbus-devel
 BuildRequires:	glibc-headers
 %{?with_gnutls:BuildRequires:	gnutls-devel}
 %{?with_gssapi:BuildRequires:	heimdal-devel}
-%{?with_java:BuildRequires:	jar}
-%{?with_java:BuildRequires:	jdk}
-%{?with_java:BuildRequires:	jpackage-utils}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpaper-devel
 BuildRequires:	libpng-devel
@@ -67,7 +64,6 @@ BuildRequires:	libusb-devel
 BuildRequires:	pam-devel
 %{?with_php:BuildRequires:	php-devel >= 4:5.0.0}
 BuildRequires:	pkgconfig
-%{?with_java:BuildRequires:	rpm-javaprov}
 BuildRequires:	rpm-perlprov
 BuildRequires:	rpmbuild(macros) >= 1.344
 Requires(post,preun):	/sbin/chkconfig
@@ -242,35 +238,6 @@ PHP module for Common Unix Printing System.
 %description -n php-cups -l pl.UTF-8
 Moduł PHP do ogólnego systemu druku dla Uniksa.
 
-%package -n java-cups
-Summary:	CUPS java classes
-Summary(pl.UTF-8):	Klasy javy CUPS
-License:	GPL v2 + openssl exception
-Group:		Libraries/Java
-Requires:	jpackage-utils
-
-%description -n java-cups
-Common Unix Printing System Java classes.
-
-%description -n java-cups -l pl.UTF-8
-Klasy javy do ogólnego systemu druku dla Uniksa.
-
-%package -n java-cups-javadoc
-Summary:	Online manual for %{name}
-Summary(pl.UTF-8):	Dokumentacja online do %{name}
-License:	GPL v2 + openssl exception
-Group:		Documentation
-Requires:	jpackage-utils
-
-%description -n java-cups-javadoc
-Documentation for %{name}.
-
-%description -n java-cups-javadoc -l pl.UTF-8
-Dokumentacja do %{name}.
-
-%description -n java-cups-javadoc -l fr.UTF-8
-Javadoc pour %{name}.
-
 %package backend-usb
 Summary:	USB backend for CUPS
 Summary(pl.UTF-8):	Backend USB dla CUPS-a
@@ -376,7 +343,6 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 	--with-optim=-Wno-format-y2k \
 	%{?with_dnssd:--with-dnssd-libs=x} \
 	%{?with_dnssd:--with-dnssd-includes=x} \
-	--with-java=%{_bindir}/java \
 	%{?with_perl:--with-perl=%{_bindir}/perl} \
 	%{?with_php:--with-php=%{_bindir}/php} \
 	%{?with_python:--with-python=%{_bindir}/python}
