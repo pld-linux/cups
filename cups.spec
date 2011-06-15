@@ -16,13 +16,13 @@
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.4.6
-Release:	1
+Version:	1.5rc1
+Release:	0.1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
 Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	de8fb5a29c36554925c0c6a6e2c0dae1
+# Source0-md5:	f2895d2df9e17aa2c5b05838a56e79a8
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -303,11 +303,13 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
-%patch6 -p1
+# why it hasn't been merged for so long (and why no other distro uses it)
+#%patch6 -p1
 %patch7 -p1
 %patch9 -p1
 %patch10 -p1
-%patch11 -p1
+# why it hasn't been merged for so long (and why no other distro uses it)
+#%patch11 -p1
 %patch12 -p1
 
 %build
@@ -519,6 +521,7 @@ fi
 %attr(755,root,root) %{_ulibdir}/cups/backend/*
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-deviced
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-driverd
+%attr(755,root,root) %{_ulibdir}/cups/daemon/cups-exec
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-polld
 %attr(755,root,root) %{_ulibdir}/cups/filter/*
 %attr(755,root,root) %{_ulibdir}/cups/monitor/*
@@ -598,7 +601,6 @@ fi
 %attr(755,root,root) %{_libdir}/libcupsmime.so.*
 %attr(755,root,root) %{_libdir}/libcupsppdc.so.*
 %dir %{_datadir}/cups
-%{_datadir}/cups/charmaps
 %lang(da) %{_datadir}/locale/da/cups_da.po
 %lang(de) %{_datadir}/locale/de/cups_de.po
 %lang(es) %{_datadir}/locale/es/cups_es.po
@@ -623,6 +625,7 @@ fi
 %defattr(644,root,root,755)
 %attr(644,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/client.conf
 %attr(755,root,root) %{_bindir}/cancel
+%attr(755,root,root) %{_bindir}/ipptool
 %attr(755,root,root) %{_bindir}/lp
 %attr(755,root,root) %{_bindir}/lpoptions
 %attr(755,root,root) %{_bindir}/lpq
@@ -642,9 +645,11 @@ fi
 %attr(755,root,root) %{_sbindir}/lpinfo
 %attr(755,root,root) %{_sbindir}/lpmove
 %attr(755,root,root) %{_sbindir}/reject
+%{_datadir}/cups/ipptool
 %{_desktopdir}/cups.desktop
 %{_iconsdir}/hicolor/*/apps/cups.png
 %{_mandir}/man1/cancel.1*
+%{_mandir}/man1/ipptool.1*
 %{_mandir}/man1/lp.1*
 %{_mandir}/man1/lpoptions.1*
 %{_mandir}/man1/lpq.1*
