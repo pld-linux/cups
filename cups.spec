@@ -1,7 +1,7 @@
 #
 # Conditional build:
 %bcond_with	gnutls		# use GNU TLS for SSL/TLS support (instead of OpenSSL)
-%bcond_without	dnssd
+%bcond_without	dnssd		# DNS Service Discovery support
 %bcond_without	ldap		# do not include LDAP support
 %bcond_without	gssapi		# do not include GSSAPI support
 %bcond_without	php		# don't build PHP extension/support in web interface
@@ -44,7 +44,7 @@ Patch11:	%{name}-usb.patch
 Patch12:	%{name}-desktop.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
-BuildRequires:	autoconf
+BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake
 %{?with_dnssd:BuildRequires:	avahi-compat-libdns_sd-devel}
 BuildRequires:	dbus-devel
