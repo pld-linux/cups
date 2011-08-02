@@ -1,0 +1,26 @@
+--- cups-1.5.0/cups/http.c~	2011-06-16 22:12:16.000000000 +0200
++++ cups-1.5.0/cups/http.c	2011-08-02 14:06:25.143633360 +0200
+@@ -3814,7 +3814,7 @@
+   BIO_ctrl(bio, BIO_C_SET_FILE_PTR, 0, (char *)http);
+ 
+   http->tls = SSL_new(context);
+-  SSL_set_bio(http->tls_credentials, bio, bio);
++  SSL_set_bio(http->tls, bio, bio);
+ 
+   if (SSL_connect(http->tls) != 1)
+   {
+@@ -4173,11 +4173,11 @@
+ #  ifdef HAVE_LIBSSL
+   SSL_CTX	*context;		/* Context for encryption */
+ 
+-  context = SSL_get_SSL_CTX(http->tls_credentials);
++  context = SSL_get_SSL_CTX(http->tls);
+ 
+-  SSL_shutdown(http->tls_credentials);
++  SSL_shutdown(http->tls);
+   SSL_CTX_free(context);
+-  SSL_free(http->tls_credentials);
++  SSL_free(http->tls);
+ 
+ #  elif defined(HAVE_GNUTLS)
+   gnutls_certificate_client_credentials *credentials;

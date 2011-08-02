@@ -17,7 +17,7 @@ Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.5.0
-Release:	1
+Release:	2
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
@@ -42,6 +42,7 @@ Patch9:		%{name}-verbose-compilation.patch
 Patch10:	%{name}-peercred.patch
 Patch11:	%{name}-usb.patch
 Patch12:	%{name}-desktop.patch
+Patch13:	%{name}-ssl-segfault.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf >= 2.60
@@ -311,6 +312,7 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 # why it hasn't been merged for so long (and why no other distro uses it)
 #%patch11 -p1
 %patch12 -p1
+%patch13 -p1
 
 %build
 %{__aclocal} -I config-scripts
