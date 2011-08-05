@@ -348,7 +348,7 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 	%{?with_php:--with-php=%{_bindir}/php} \
 	%{?with_python:--with-python=%{_bindir}/python}
 
-%{__make}
+%{__make} %{?debug:OPTIONS="-DDEBUG"}
 
 %{__perl} -pi -e 's#-I\.\.\/\.\.#-I../.. -I../../cups#g' scripting/php/Makefile
 %{?with_php:%{__make} -C scripting/php PHPCONFIG=%{_bindir}/php-config}
