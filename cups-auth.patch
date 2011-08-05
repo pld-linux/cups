@@ -1,0 +1,43 @@
+diff -ur cups-1.5.0/cups/auth.c cups-1.5.0-auth/cups/auth.c
+--- cups-1.5.0/cups/auth.c	2011-05-20 20:22:33.000000000 +0200
++++ cups-1.5.0-auth/cups/auth.c	2011-08-05 19:39:19.587496832 +0200
+@@ -276,8 +278,7 @@
+   {
+     DEBUG_printf(("1cupsDoAuthentication: Unknown auth type: \"%s\"",
+                   http->fields[HTTP_FIELD_WWW_AUTHENTICATE]));
+-    http->status = HTTP_AUTHORIZATION_CANCELED;
+-    return (-1);
++    return (1);
+   }
+ 
+   DEBUG_printf(("1cupsDoAuthentication: authstring=\"%s\"", http->authstring));
+diff -ur cups-1.5.0/cups/request.c cups-1.5.0-auth/cups/request.c
+--- cups-1.5.0/cups/request.c	2011-05-20 05:49:49.000000000 +0200
++++ cups-1.5.0-auth/cups/request.c	2011-08-05 19:40:37.981496819 +0200
+@@ -396,7 +396,7 @@
+   {
+     status = httpUpdate(http);
+   }
+-  while (status != HTTP_ERROR && http->state == HTTP_POST_RECV);
++  while (http->state == HTTP_POST_RECV);
+ 
+   DEBUG_printf(("2cupsGetResponse: status=%d", status));
+ 
+@@ -448,7 +449,7 @@
+ 
+       DEBUG_puts("2cupsGetResponse: Need authorization...");
+ 
+-      if (!cupsDoAuthentication(http, "POST", resource))
++      if (cupsDoAuthentication(http, "POST", resource) >= 0)
+         httpReconnect(http);
+       else
+         status = HTTP_AUTHORIZATION_CANCELED;
+@@ -780,7 +781,7 @@
+           return (status);
+ 
+       case HTTP_UNAUTHORIZED :
+-          if (cupsDoAuthentication(http, "POST", resource))
++          if (cupsDoAuthentication(http, "POST", resource) < 0)
+ 	    return (HTTP_AUTHORIZATION_CANCELED);
+ 
+ 	  if (httpReconnect(http))
