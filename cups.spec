@@ -17,7 +17,7 @@ Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.4.8
-Release:	2
+Release:	3
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
@@ -310,7 +310,8 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
-%patch13 -p1
+# breaks auth
+#%patch13 -p1
 
 %build
 %{__aclocal} -I config-scripts
