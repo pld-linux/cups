@@ -1,6 +1,17 @@
---- cups-1.5.0/cups/http.c~	2011-06-16 22:12:16.000000000 +0200
-+++ cups-1.5.0/cups/http.c	2011-08-02 14:06:25.143633360 +0200
-@@ -3814,7 +3814,7 @@
+Index: cups/http.c
+===================================================================
+--- cups/http.c	(revision 9908)
++++ cups/http.c	(revision 9909)
+@@ -3807,6 +3807,8 @@
+     any_root = cg->any_root;
+ 
+ #  ifdef HAVE_LIBSSL
++  (void)any_root;
++
+   context = SSL_CTX_new(SSLv23_client_method());
+ 
+   SSL_CTX_set_options(context, SSL_OP_NO_SSLv2); /* Only use SSLv3 or TLS */
+@@ -3815,7 +3817,7 @@
    BIO_ctrl(bio, BIO_C_SET_FILE_PTR, 0, (char *)http);
  
    http->tls = SSL_new(context);
@@ -9,7 +20,7 @@
  
    if (SSL_connect(http->tls) != 1)
    {
-@@ -4173,11 +4173,11 @@
+@@ -4200,11 +4202,11 @@
  #  ifdef HAVE_LIBSSL
    SSL_CTX	*context;		/* Context for encryption */
  
