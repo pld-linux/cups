@@ -519,10 +519,13 @@ fi
 %lang(pl) %{_ulibdir}/cups/cgi-bin/pl
 %lang(ru) %{_ulibdir}/cups/cgi-bin/ru
 
-%exclude %{_ulibdir}/cups/backend/usb
-%exclude %{_ulibdir}/cups/backend/serial
-%exclude %{_ulibdir}/cups/backend/parallel
-%attr(755,root,root) %{_ulibdir}/cups/backend/*
+%attr(755,root,root) %{_ulibdir}/cups/backend/http
+%attr(755,root,root) %{_ulibdir}/cups/backend/https
+%attr(755,root,root) %{_ulibdir}/cups/backend/ipp
+%attr(755,root,root) %{_ulibdir}/cups/backend/ipps
+%attr(755,root,root) %{_ulibdir}/cups/backend/lpd
+%attr(755,root,root) %{_ulibdir}/cups/backend/snmp
+%attr(755,root,root) %{_ulibdir}/cups/backend/socket
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-deviced
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-driverd
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-exec
