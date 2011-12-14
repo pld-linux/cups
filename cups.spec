@@ -1,7 +1,8 @@
 #
 # Conditional build:
 %bcond_with	gnutls		# use GNU TLS for SSL/TLS support (instead of OpenSSL)
-%bcond_without	dnssd		# DNS Service Discovery support
+%bcond_with	dnssd		# DNS Service Discovery support (obsoleted by Avahi patch)
+%bcond_without	avahi		# DNS Service Discovery support via Avahi
 %bcond_without	ldap		# do not include LDAP support
 %bcond_without	gssapi		# do not include GSSAPI support
 %bcond_without	php		# don't build PHP extension/support in web interface
@@ -9,15 +10,14 @@
 %bcond_without	python		# don't build Python support in web interface
 %bcond_without	slp		# do not include SLP support
 %bcond_without	static_libs	# don't build static library
-#
-%include	/usr/lib/rpm/macros.perl
-%define		pdir CUPS
 
+%define		pdir CUPS
+%include	/usr/lib/rpm/macros.perl
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.5.0
-Release:	5
+Release:	6
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
@@ -44,11 +44,18 @@ Patch11:	%{name}-usb.patch
 Patch12:	%{name}-desktop.patch
 Patch13:	%{name}-ssl-segfault.patch
 Patch14:	%{name}-auth.patch
+# avahi patches from fedora
+Patch100:	%{name}-avahi-1-config.patch
+Patch101:	%{name}-avahi-2-backend.patch
+Patch102:	%{name}-avahi-3-timeouts.patch
+Patch103:	%{name}-avahi-4-poll.patch
+Patch104:	%{name}-avahi-5-services.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake
-%{?with_dnssd:BuildRequires:	avahi-compat-libdns_sd-devel}
+%{?with_dnssd:BuildRequires:    avahi-compat-libdns_sd-devel}
+%{?with_avahi:BuildRequires: avahi-devel}
 BuildRequires:	dbus-devel
 BuildRequires:	glibc-headers
 %{?with_gnutls:BuildRequires:	gnutls-devel}
@@ -316,6 +323,12 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 %patch13 -p0
 %patch14 -p0
 
+%patch100 -p1
+%patch101 -p1
+%patch102 -p1
+%patch103 -p1
+%patch104 -p1
+
 %build
 %{__aclocal} -I config-scripts
 %{__autoconf}
@@ -332,6 +345,7 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 	--enable-shared \
 	--enable-ssl \
 	%{?debug:--enable-debug} \
+	--%{!?with_avahi:dis}%{?with_avahi:en}able-avahi \
 	--%{!?with_dnssd:dis}%{?with_dnssd:en}able-dnssd \
 	--%{!?with_ldap:dis}%{?with_ldap:en}able-ldap \
 	--%{!?with_gssapi:dis}%{?with_gssapi:en}able-gssapi \
@@ -519,11 +533,13 @@ fi
 %lang(pl) %{_ulibdir}/cups/cgi-bin/pl
 %lang(ru) %{_ulibdir}/cups/cgi-bin/ru
 
+%attr(755,root,root) %{_ulibdir}/cups/backend/dnssd
 %attr(755,root,root) %{_ulibdir}/cups/backend/http
 %attr(755,root,root) %{_ulibdir}/cups/backend/https
 %attr(755,root,root) %{_ulibdir}/cups/backend/ipp
 %attr(755,root,root) %{_ulibdir}/cups/backend/ipps
 %attr(755,root,root) %{_ulibdir}/cups/backend/lpd
+%attr(755,root,root) %{_ulibdir}/cups/backend/mdns
 %attr(755,root,root) %{_ulibdir}/cups/backend/snmp
 %attr(755,root,root) %{_ulibdir}/cups/backend/socket
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-deviced
