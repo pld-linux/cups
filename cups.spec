@@ -29,6 +29,7 @@ Source3:	%{name}.logrotate
 Source4:	%{name}.mailto.conf
 Source5:	%{name}-lpd.inetd
 Source6:	%{name}-modprobe.conf
+Source7:	%{name}.tmpfiles
 # svn diff http://svn.easysw.com/public/cups/tags/release-1.4.3/ http://svn.easysw.com/public/cups/branches/branch-1.4/ > cups-branch.diff
 # + drop config-scripts/cups-common.m4 change
 Patch0:		%{name}-config.patch
@@ -373,7 +374,8 @@ cd ../..
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,logrotate.d,modprobe.d,security,sysconfig/rc-inetd} \
 	$RPM_BUILD_ROOT/var/run/cups \
-	$RPM_BUILD_ROOT/var/log/{,archive/}cups
+	$RPM_BUILD_ROOT/var/log/{,archive/}cups \
+	$RPM_BUILD_ROOT/usr/lib/tmpfiles.d
 
 %{__make} install \
 	BUILDROOT=$RPM_BUILD_ROOT \
@@ -403,12 +405,13 @@ EOF
 	DESTDIR=$RPM_BUILD_ROOT
 %endif
 
-install %{SOURCE1}	$RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
-install %{SOURCE2}	$RPM_BUILD_ROOT/etc/pam.d/%{name}
-install %{SOURCE3}	$RPM_BUILD_ROOT/etc/logrotate.d/%{name}
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/pam.d/%{name}
+install %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/%{name}
 install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/cups/mailto.conf
 sed -e 's|__ULIBDIR__|%{_ulibdir}|g' %{SOURCE5} > $RPM_BUILD_ROOT/etc/sysconfig/rc-inetd/cups-lpd
-install %{SOURCE6}	$RPM_BUILD_ROOT/etc/modprobe.d/cups.conf
+install %{SOURCE6} $RPM_BUILD_ROOT/etc/modprobe.d/cups.conf
+install %{SOURCE7} $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/%{name}.conf
 
 touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
 touch $RPM_BUILD_ROOT/etc/security/blacklist.cups
@@ -575,7 +578,7 @@ fi
 %{_mandir}/man8/cupsenable.8*
 %{_mandir}/man8/cupsfilter.8*
 %{_mandir}/man8/lp*
-
+/usr/lib/tmpfiles.d/%{name}.conf
 %dir %attr(775,root,lp) /var/cache/cups
 %dir %attr(755,root,lp) /var/lib/cups
 %dir %attr(511,lp,sys) /var/lib/cups/certs
