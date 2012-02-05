@@ -30,7 +30,6 @@ Source4:	%{name}.mailto.conf
 Source5:	%{name}-lpd.inetd
 Source6:	%{name}-modprobe.conf
 Source7:	%{name}.tmpfiles
-Source8:	%{name}.service
 # svn diff http://svn.easysw.com/public/cups/tags/release-1.4.3/ http://svn.easysw.com/public/cups/branches/branch-1.4/ > cups-branch.diff
 # + drop config-scripts/cups-common.m4 change
 Patch0:		%{name}-config.patch
@@ -44,6 +43,7 @@ Patch9:		%{name}-verbose-compilation.patch
 Patch10:	%{name}-peercred.patch
 Patch11:	%{name}-usb.patch
 Patch12:	%{name}-desktop.patch
+Patch13:	%{name}-systemd-socket.patch
 # avahi patches from fedora
 Patch100:	%{name}-avahi-1-config.patch
 Patch101:	%{name}-avahi-2-backend.patch
@@ -321,6 +321,7 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 # why it hasn't been merged for so long (and why no other distro uses it)
 #%patch11 -p1
 %patch12 -p1
+%patch13 -p1
 
 %if %{with avahi}
 %patch100 -p1
@@ -429,7 +430,6 @@ install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/cups/mailto.conf
 sed -e 's|__ULIBDIR__|%{_ulibdir}|g' %{SOURCE5} > $RPM_BUILD_ROOT/etc/sysconfig/rc-inetd/cups-lpd
 install %{SOURCE6} $RPM_BUILD_ROOT/etc/modprobe.d/cups.conf
 install %{SOURCE7} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
-install %{SOURCE8} $RPM_BUILD_ROOT%{systemdunitdir}/cups.service
 
 touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
 touch $RPM_BUILD_ROOT/etc/security/blacklist.cups
@@ -467,20 +467,20 @@ rm -rf $RPM_BUILD_ROOT
 /sbin/chkconfig --add cups
 %service cups restart "cups daemon"
 /sbin/rmmod usblp > /dev/null 2>&1 || :
-%systemd_post cups.service
+%systemd_post cups.service cups.socket cups.path
 
 %preun
 if [ "$1" = "0" ]; then
 	%service cups stop
 	/sbin/chkconfig --del cups
 fi
-%systemd_preun cups.service
+%systemd_preun cups.service cups.socket cups.path
 
 %postun
 %systemd_reload
 
 %triggerpostun -- cups < 1.5.2-1
-%systemd_trigger cups.service
+%systemd_trigger cups.service cups.socket cups.path
 
 %post	lib -p /sbin/ldconfig
 %postun	lib -p /sbin/ldconfig
