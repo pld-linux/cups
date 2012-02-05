@@ -75,6 +75,7 @@ BuildRequires:	pam-devel
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-perlprov
 BuildRequires:	rpmbuild(macros) >= 1.641
+BuildRequires:	systemd-devel
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Requires:	openssl-tools
@@ -368,7 +369,8 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 	%{?with_dnssd:--with-dnssd-includes=x} \
 	%{?with_perl:--with-perl=%{_bindir}/perl} \
 	%{?with_php:--with-php=%{_bindir}/php} \
-	%{?with_python:--with-python=%{_bindir}/python}
+	%{?with_python:--with-python=%{_bindir}/python} \
+	--with-systemdsystemunitdir=%{systemdunitdir}
 
 %{__make} %{?debug:OPTIONS="-DDEBUG"}
 
@@ -511,6 +513,8 @@ fi
 /etc/dbus-1/system.d/cups.conf
 /etc/modprobe.d/cups.conf
 %{systemdunitdir}/cups.service
+%{systemdunitdir}/cups.socket
+%{systemdunitdir}/cups.path
 %{systemdtmpfilesdir}/%{name}.conf
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/classes.conf
 %attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/cupsd.conf
