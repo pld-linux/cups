@@ -1,6 +1,6 @@
---- cups-1.4.0/configure~	2009-08-28 17:35:34.000000000 +0200
-+++ cups-1.4.0/configure	2009-08-29 21:27:34.296848459 +0200
-@@ -10815,8 +10815,6 @@
+--- cups-1.4.0/config-scripts/cups-compiler.m4~	2009-08-28 17:35:34.000000000 +0200
++++ cups-1.4.0/config-scripts/cups-compiler.m4	2009-08-29 21:27:34.296848459 +0200
+@@ -28,8 +28,6 @@
  
  if test x$enable_debug = xyes; then
  	OPTIM="-g"
