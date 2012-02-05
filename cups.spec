@@ -16,13 +16,13 @@
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.5.0
-Release:	10
+Version:	1.5.1
+Release:	0.1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
 Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	e54ed09ede2340fc3014913333520fe4
+# Source0-md5:	7e7026f5b6392deae46f889129b196a7
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -43,8 +43,6 @@ Patch9:		%{name}-verbose-compilation.patch
 Patch10:	%{name}-peercred.patch
 Patch11:	%{name}-usb.patch
 Patch12:	%{name}-desktop.patch
-Patch13:	%{name}-ssl-segfault.patch
-Patch14:	%{name}-auth.patch
 # avahi patches from fedora
 Patch100:	%{name}-avahi-1-config.patch
 Patch101:	%{name}-avahi-2-backend.patch
@@ -321,8 +319,6 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 # why it hasn't been merged for so long (and why no other distro uses it)
 #%patch11 -p1
 %patch12 -p1
-%patch13 -p0
-%patch14 -p0
 
 %patch100 -p1
 %patch101 -p1
