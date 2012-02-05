@@ -320,11 +320,13 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 #%patch11 -p1
 %patch12 -p1
 
+%if %{with avahi}
 %patch100 -p1
 %patch101 -p1
 %patch102 -p1
 %patch103 -p1
 %patch104 -p1
+%endif
 
 %build
 %{__aclocal} -I config-scripts
