@@ -22,7 +22,7 @@ Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
 Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	-
+# Source0-md5:	9471d2a7c920cfbb17133c32d2e6866f
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
