@@ -1,8 +1,8 @@
 #
 # Conditional build:
 %bcond_with	gnutls		# use GNU TLS for SSL/TLS support (instead of OpenSSL)
-%bcond_without	dnssd		# DNS Service Discovery support (obsoleted by Avahi patch)
-%bcond_with	avahi		# DNS Service Discovery support via Avahi
+%bcond_with	dnssd		# DNS Service Discovery support (obsoleted by Avahi patch)
+%bcond_without	avahi		# DNS Service Discovery support via Avahi
 %bcond_without	ldap		# do not include LDAP support
 %bcond_without	gssapi		# do not include GSSAPI support
 %bcond_without	php		# don't build PHP extension/support in web interface
@@ -16,13 +16,13 @@
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.5.1
+Version:	1.5.2
 Release:	0.1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
 Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	7e7026f5b6392deae46f889129b196a7
+# Source0-md5:	-
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -30,6 +30,7 @@ Source4:	%{name}.mailto.conf
 Source5:	%{name}-lpd.inetd
 Source6:	%{name}-modprobe.conf
 Source7:	%{name}.tmpfiles
+Source8:	%{name}.service
 # svn diff http://svn.easysw.com/public/cups/tags/release-1.4.3/ http://svn.easysw.com/public/cups/branches/branch-1.4/ > cups-branch.diff
 # + drop config-scripts/cups-common.m4 change
 Patch0:		%{name}-config.patch
@@ -73,13 +74,14 @@ BuildRequires:	pam-devel
 %{?with_php:BuildRequires:	php-devel >= 4:5.0.0}
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-perlprov
-BuildRequires:	rpmbuild(macros) >= 1.344
+BuildRequires:	rpmbuild(macros) >= 1.641
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Requires:	openssl-tools
 Requires:	pam >= 0.77.3
 Requires:	perl-modules
 Requires:	rc-scripts
+Requires:	systemd-units
 Suggests:	ImageMagick-coder-pdf
 Suggests:	cups-filter-pstoraster
 Suggests:	ghostscript-cups
@@ -390,7 +392,7 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,logrotate.d,modprobe.d,security,sysconfig/rc-inetd} \
 	$RPM_BUILD_ROOT/var/run/cups \
 	$RPM_BUILD_ROOT/var/log/{,archive/}cups \
-	$RPM_BUILD_ROOT/usr/lib/tmpfiles.d
+	$RPM_BUILD_ROOT{%{systemdunitdir},%{systemdtmpfilesdir}}
 
 %{__make} install \
 	BUILDROOT=$RPM_BUILD_ROOT \
@@ -426,7 +428,8 @@ install %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/%{name}
 install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/cups/mailto.conf
 sed -e 's|__ULIBDIR__|%{_ulibdir}|g' %{SOURCE5} > $RPM_BUILD_ROOT/etc/sysconfig/rc-inetd/cups-lpd
 install %{SOURCE6} $RPM_BUILD_ROOT/etc/modprobe.d/cups.conf
-install %{SOURCE7} $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/%{name}.conf
+install %{SOURCE7} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
+install %{SOURCE8} $RPM_BUILD_ROOT%{systemdunitdir}/cups.service
 
 touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
 touch $RPM_BUILD_ROOT/etc/security/blacklist.cups
@@ -464,12 +467,20 @@ rm -rf $RPM_BUILD_ROOT
 /sbin/chkconfig --add cups
 %service cups restart "cups daemon"
 /sbin/rmmod usblp > /dev/null 2>&1 || :
+%systemd_post cups.service
 
 %preun
 if [ "$1" = "0" ]; then
 	%service cups stop
 	/sbin/chkconfig --del cups
 fi
+%systemd_preun cups.service
+
+%postun
+%systemd_reload
+
+%triggerpostun -- cups < 1.5.2-1
+%systemd_trigger cups.service
 
 %post	lib -p /sbin/ldconfig
 %postun	lib -p /sbin/ldconfig
@@ -499,6 +510,8 @@ fi
 %attr(754,root,root) /etc/rc.d/init.d/cups
 /etc/dbus-1/system.d/cups.conf
 /etc/modprobe.d/cups.conf
+%{systemdunitdir}/cups.service
+%{systemdtmpfilesdir}/%{name}.conf
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/classes.conf
 %attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/cupsd.conf
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/printers.conf
@@ -528,6 +541,8 @@ fi
 %lang(de) %{_ulibdir}/cups/cgi-bin/de
 %lang(es) %{_ulibdir}/cups/cgi-bin/es
 %lang(eu) %{_ulibdir}/cups/cgi-bin/eu
+%lang(fr) %{_ulibdir}/cups/cgi-bin/fr
+%lang(hu) %{_ulibdir}/cups/cgi-bin/hu
 %lang(id) %{_ulibdir}/cups/cgi-bin/id
 %lang(it) %{_ulibdir}/cups/cgi-bin/it
 %lang(ja) %{_ulibdir}/cups/cgi-bin/ja
@@ -576,6 +591,8 @@ fi
 %lang(de) %{_datadir}/cups/templates/de
 %lang(es) %{_datadir}/cups/templates/es
 %lang(eu) %{_datadir}/cups/templates/eu
+%lang(fr) %{_datadir}/cups/templates/fr
+%lang(hu) %{_datadir}/cups/templates/hu
 %lang(id) %{_datadir}/cups/templates/id
 %lang(it) %{_datadir}/cups/templates/it
 %lang(ja) %{_datadir}/cups/templates/ja
@@ -600,7 +617,6 @@ fi
 %{_mandir}/man8/cupsfilter.8*
 %{_mandir}/man8/lp*
 
-/usr/lib/tmpfiles.d/%{name}.conf
 %dir %attr(775,root,lp) /var/cache/cups
 %dir %attr(755,root,lp) /var/lib/cups
 %dir %attr(511,lp,sys) /var/lib/cups/certs
@@ -632,6 +648,7 @@ fi
 %lang(eu) %{_datadir}/locale/eu/cups_eu.po
 %lang(fi) %{_datadir}/locale/fi/cups_fi.po
 %lang(fr) %{_datadir}/locale/fr/cups_fr.po
+%lang(hu) %{_datadir}/locale/hu/cups_hu.po
 %lang(id) %{_datadir}/locale/id/cups_id.po
 %lang(it) %{_datadir}/locale/it/cups_it.po
 %lang(ko) %{_datadir}/locale/ko/cups_ko.po
