@@ -1,8 +1,8 @@
 #
 # Conditional build:
 %bcond_with	gnutls		# use GNU TLS for SSL/TLS support (instead of OpenSSL)
-%bcond_with	dnssd		# DNS Service Discovery support (obsoleted by Avahi patch)
-%bcond_without	avahi		# DNS Service Discovery support via Avahi
+%bcond_without	dnssd		# DNS Service Discovery support (obsoleted by Avahi patch)
+%bcond_with	avahi		# DNS Service Discovery support via Avahi
 %bcond_without	ldap		# do not include LDAP support
 %bcond_without	gssapi		# do not include GSSAPI support
 %bcond_without	php		# don't build PHP extension/support in web interface
