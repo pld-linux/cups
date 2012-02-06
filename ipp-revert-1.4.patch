@@ -530,7 +530,7 @@ Index: branch-1.5/backend/ipp.c
 +
 +    if ((fd = cupsTempFd(tmpfilename, sizeof(tmpfilename))) < 0)
 +    {
-+      _cupsLangPrintError(_("ERROR: Unable to create temporary file"));
++      _cupsLangPrintError("ERROR", _("Unable to create temporary file"));
 +      return (CUPS_BACKEND_FAILED);
 +    }
 +
@@ -2833,7 +2833,7 @@ Index: branch-1.5/backend/ipp.c
 +  if ((fd = cupsTempFd(pstmpname, sizeof(pstmpname))) < 0)
    {
 -    status = xpc_dictionary_get_int64(response, "status");
-+    _cupsLangPrintError(_("ERROR: Unable to create temporary file"));
++    _cupsLangPrintError("ERROR", _("Unable to create temporary file"));
 +    if (ppdfile)
 +      unlink(ppdfile);
 +    return (-1);
