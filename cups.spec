@@ -17,7 +17,7 @@ Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.5.2
-Release:	1
+Release:	2
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
@@ -44,6 +44,8 @@ Patch10:	%{name}-peercred.patch
 Patch11:	%{name}-usb.patch
 Patch12:	%{name}-desktop.patch
 Patch13:	%{name}-systemd-socket.patch
+# http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=638521
+Patch14:	ipp-revert-1.4.patch
 # avahi patches from fedora
 Patch100:	%{name}-avahi-1-config.patch
 Patch101:	%{name}-avahi-2-backend.patch
@@ -323,6 +325,7 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 #%patch11 -p1
 %patch12 -p1
 %patch13 -p1
+%patch14 -p1
 
 %if %{with avahi}
 %patch100 -p1
