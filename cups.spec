@@ -17,7 +17,7 @@ Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.5.2
-Release:	3
+Release:	4
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
@@ -79,12 +79,13 @@ BuildRequires:	rpm-perlprov
 BuildRequires:	rpmbuild(macros) >= 1.641
 BuildRequires:	systemd-devel
 Requires(post,preun):	/sbin/chkconfig
+Requires(post,preun,postun):	systemd-units >= 38
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Requires:	openssl-tools
 Requires:	pam >= 0.77.3
 Requires:	perl-modules
 Requires:	rc-scripts
-Requires:	systemd-units
+Requires:	systemd-units >= 38
 Suggests:	ImageMagick-coder-pdf
 Suggests:	cups-filter-pstoraster
 Suggests:	ghostscript-cups
