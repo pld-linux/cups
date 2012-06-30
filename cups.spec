@@ -415,6 +415,10 @@ if [ "%{_lib}" != "lib" ] ; then
 %endif
 fi
 
+%if %{with avahi}
+ln -s %{_ulibdir}/cups/backend/dnssd $RPM_BUILD_ROOT%{_ulibdir}/cups/backend/mdns
+%endif
+
 %if %{with php}
 %{__make} -C scripting/php install \
 	PHPDIR=$RPM_BUILD_ROOT%{php_extensiondir}
@@ -558,13 +562,15 @@ fi
 %lang(pl) %{_ulibdir}/cups/cgi-bin/pl
 %lang(ru) %{_ulibdir}/cups/cgi-bin/ru
 
-%{?with_avahi:%attr(755,root,root) %{_ulibdir}/cups/backend/dnssd}
+%if %{with avahi}
+%attr(755,root,root) %{_ulibdir}/cups/backend/dnssd
+%attr(755,root,root) %{_ulibdir}/cups/backend/mdns
+%endif
 %attr(755,root,root) %{_ulibdir}/cups/backend/http
 %attr(755,root,root) %{_ulibdir}/cups/backend/https
 %attr(755,root,root) %{_ulibdir}/cups/backend/ipp
 %attr(755,root,root) %{_ulibdir}/cups/backend/ipps
 %attr(755,root,root) %{_ulibdir}/cups/backend/lpd
-%{?with_avahi:%attr(755,root,root) %{_ulibdir}/cups/backend/mdns}
 %attr(755,root,root) %{_ulibdir}/cups/backend/snmp
 %attr(755,root,root) %{_ulibdir}/cups/backend/socket
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-deviced
