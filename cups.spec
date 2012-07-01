@@ -67,8 +67,7 @@ BuildRequires:	libpaper-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
-BuildRequires:	libusb-compat-devel
-BuildRequires:	libusb-devel
+BuildRequires:	libusb-devel >= 1.0
 %{?with_ldap:BuildRequires:	openldap-devel}
 %{?with_slp:BuildRequires:	openslp-devel}
 %{!?with_gnutls:BuildRequires:	openssl-devel}
