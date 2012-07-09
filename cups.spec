@@ -17,7 +17,7 @@ Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.5.3
-Release:	1
+Release:	2
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
@@ -44,8 +44,10 @@ Patch10:	%{name}-peercred.patch
 Patch11:	%{name}-usb.patch
 Patch12:	%{name}-desktop.patch
 Patch13:	%{name}-systemd-socket.patch
-# http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=638521
-Patch14:	ipp-revert-1.4.patch
+Patch14:	add-ipp-backend-of-cups-1.4.patch
+Patch15:	ipp-backend-cups-1.5.4-fixes.patch
+Patch16:	reactivate_recommended_driver.patch
+Patch17:	read-embedded-options-from-incoming-postscript-and-add-to-ipp-attrs.patch
 # avahi patches from fedora
 Patch100:	%{name}-avahi-1-config.patch
 Patch101:	%{name}-avahi-2-backend.patch
@@ -325,8 +327,9 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 #%patch11 -p1
 %patch12 -p1
 %patch13 -p1
-# 1.5.3 shows it may have a chance of working without this
-#%patch14 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1
 
 %if %{with avahi}
 %patch100 -p1
@@ -568,6 +571,7 @@ fi
 %attr(755,root,root) %{_ulibdir}/cups/backend/http
 %attr(755,root,root) %{_ulibdir}/cups/backend/https
 %attr(755,root,root) %{_ulibdir}/cups/backend/ipp
+%attr(755,root,root) %{_ulibdir}/cups/backend/ipp14
 %attr(755,root,root) %{_ulibdir}/cups/backend/ipps
 %attr(755,root,root) %{_ulibdir}/cups/backend/lpd
 %attr(755,root,root) %{_ulibdir}/cups/backend/snmp
