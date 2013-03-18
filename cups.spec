@@ -16,13 +16,13 @@
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.5.3
-Release:	4
+Version:	1.5.4
+Release:	1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
 Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	e1ad15257aa6f162414ea3beae0c5df8
+# Source0-md5:	de3006e5cf1ee78a9c6145ce62c4e982
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -45,9 +45,8 @@ Patch11:	%{name}-usb.patch
 Patch12:	%{name}-desktop.patch
 Patch13:	%{name}-systemd-socket.patch
 Patch14:	add-ipp-backend-of-cups-1.4.patch
-Patch15:	ipp-backend-cups-1.5.4-fixes.patch
-Patch16:	reactivate_recommended_driver.patch
-Patch17:	read-embedded-options-from-incoming-postscript-and-add-to-ipp-attrs.patch
+Patch15:	reactivate_recommended_driver.patch
+Patch16:	read-embedded-options-from-incoming-postscript-and-add-to-ipp-attrs.patch
 # avahi patches from fedora
 Patch100:	%{name}-avahi-1-config.patch
 Patch101:	%{name}-avahi-2-backend.patch
