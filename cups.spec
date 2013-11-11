@@ -5,24 +5,21 @@
 %bcond_without	avahi		# DNS Service Discovery support via Avahi
 %bcond_without	ldap		# do not include LDAP support
 %bcond_without	gssapi		# do not include GSSAPI support
-%bcond_without	php		# don't build PHP extension/support in web interface
-%bcond_without	perl		# don't build Perl extension/support in web interface
 %bcond_without	python		# don't build Python support in web interface
 %bcond_without	slp		# do not include SLP support
 %bcond_without	static_libs	# don't build static library
 
 %define		pdir CUPS
-%include	/usr/lib/rpm/macros.perl
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.5.4
-Release:	3
+Version:	1.7.0
+Release:	0.1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
-Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	de3006e5cf1ee78a9c6145ce62c4e982
+Source0:	http://www.cups.org/software/%{version}/%{name}-%{version}-source.tar.bz2
+# Source0-md5:	5ab496a2ce27017fcdb3d7ec4818a75a
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -48,11 +45,8 @@ Patch14:	add-ipp-backend-of-cups-1.4.patch
 Patch15:	reactivate_recommended_driver.patch
 Patch16:	read-embedded-options-from-incoming-postscript-and-add-to-ipp-attrs.patch
 # avahi patches from fedora
-Patch100:	%{name}-avahi-1-config.patch
-Patch101:	%{name}-avahi-2-backend.patch
-Patch102:	%{name}-avahi-3-timeouts.patch
-Patch103:	%{name}-avahi-4-poll.patch
-Patch104:	%{name}-avahi-5-services.patch
+Patch100:	%{name}-avahi-address.patch
+Patch101:	%{name}-avahi-no-threaded.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf >= 2.60
@@ -73,9 +67,7 @@ BuildRequires:	libusb-devel >= 1.0
 %{?with_slp:BuildRequires:	openslp-devel}
 %{!?with_gnutls:BuildRequires:	openssl-devel}
 BuildRequires:	pam-devel
-%{?with_php:BuildRequires:	php-devel >= 4:5.0.0}
 BuildRequires:	pkgconfig
-BuildRequires:	rpm-perlprov
 BuildRequires:	rpmbuild(macros) >= 1.641
 BuildRequires:	systemd-devel
 Requires(post,preun):	/sbin/chkconfig
@@ -83,7 +75,6 @@ Requires(post,preun,postun):	systemd-units >= 38
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Requires:	openssl-tools
 Requires:	pam >= 0.77.3
-Requires:	perl-modules
 Requires:	rc-scripts
 Requires:	systemd-units >= 38
 Suggests:	ImageMagick-coder-pdf
@@ -91,6 +82,10 @@ Suggests:	cups-filter-pstoraster
 Suggests:	ghostscript-cups
 Suggests:	poppler-progs
 Provides:	printingdaemon
+Obsoletes:	backend-parallel
+Obsoletes:	backend-serial
+Obsoletes:	perl-cups
+Obsoletes:	php-cups
 Obsoletes:	printingdaemon
 Conflicts:	ghostscript < 7.05.4
 Conflicts:	logrotate < 3.7-4
@@ -224,35 +219,6 @@ Ogólny system druku dla Uniksa - biblioteki statyczne.
 Bibliotecas estáticas para desenvolvimento de programas que usam as
 bibliotecas do CUPS.
 
-%package -n perl-cups
-Summary:	Perl module for CUPS
-Summary(pl.UTF-8):	Moduł Perla CUPS
-License:	GPL v2 + openssl exception
-Group:		Development/Languages/Perl
-Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
-
-%description -n perl-cups
-Perl module for Common Unix Printing System.
-
-%description -n perl-cups -l pl.UTF-8
-Moduł Perla do ogólnego systemu druku dla Uniksa.
-
-%package -n php-cups
-Summary:	PHP module for CUPS
-Summary(pl.UTF-8):	Moduł PHP CUPS
-License:	GPL v2 + openssl exception
-Group:		Development/Languages/PHP
-Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
-%{?requires_php_extension}
-Requires:	/etc/php/conf.d
-Requires:	php(core) >= 5.0.0
-
-%description -n php-cups
-PHP module for Common Unix Printing System.
-
-%description -n php-cups -l pl.UTF-8
-Moduł PHP do ogólnego systemu druku dla Uniksa.
-
 %package backend-usb
 Summary:	USB backend for CUPS
 Summary(pl.UTF-8):	Backend USB dla CUPS-a
@@ -265,36 +231,6 @@ This package allow CUPS printing on USB printers.
 
 %description backend-usb -l pl.UTF-8
 Ten pakiet umożliwia drukowanie z poziomu CUPS-a na drukarkach USB.
-
-%package backend-serial
-Summary:	Serial port backend for CUPS
-Summary(pl.UTF-8):	Backend obsługujący porty szeregowe dla CUPS-a
-License:	GPL v2 + openssl exception
-Group:		Applications/Printing
-Requires:	%{name} = %{epoch}:%{version}-%{release}
-
-%description backend-serial
-This package allow CUPS printing on printers connected by serial
-ports.
-
-%description backend-serial -l pl.UTF-8
-Ten pakiet umożliwia drukowanie z poziomu CUPS-a na drukarkach
-podłączonych do portów szeregowych.
-
-%package backend-parallel
-Summary:	Parallel port backend for CUPS
-Summary(pl.UTF-8):	Backend obsługujący porty równoległe dla CUPS-a
-License:	GPL v2 + openssl exception
-Group:		Applications/Printing
-Requires:	%{name} = %{epoch}:%{version}-%{release}
-
-%description backend-parallel
-This package allow CUPS printing on printers connected by parallel
-ports.
-
-%description backend-parallel -l pl.UTF-8
-Ten pakiet umożliwia drukowanie z poziomu CUPS-a na drukarkach
-podłączonych do portów równoległych.
 
 %package lpd
 Summary:	LPD compatibility support for CUPS print server
@@ -333,9 +269,6 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 %if %{with avahi}
 %patch100 -p1
 %patch101 -p1
-%patch102 -p1
-%patch103 -p1
-%patch104 -p1
 %endif
 
 %build
@@ -373,28 +306,10 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 	--with-optim=-Wno-format-y2k \
 	%{?with_dnssd:--with-dnssd-libs=x} \
 	%{?with_dnssd:--with-dnssd-includes=x} \
-	%{?with_perl:--with-perl=%{_bindir}/perl} \
-	%{?with_php:--with-php=%{_bindir}/php} \
 	%{?with_python:--with-python=%{_bindir}/python} \
 	--with-systemdsystemunitdir=%{systemdunitdir}
 
 %{__make} %{?debug:OPTIONS="-DDEBUG"}
-
-%{__perl} -pi -e 's#-I\.\.\/\.\.#-I../.. -I../../cups#g' scripting/php/Makefile
-%{?with_php:%{__make} -C scripting/php PHPCONFIG=%{_bindir}/php-config}
-
-%if %{with perl}
-cd scripting/perl
-%{__perl} -pi -e 's@-lcups@-L../../cups $1@' Makefile.PL
-%{__perl} Makefile.PL \
-	INSTALLDIRS=vendor \
-	OPTIMIZE="%{rpmcflags} -I../.."
-# avoid rpaths generated by MakeMaker
-%{__perl} -pi -e 's@LD_RUN_PATH="\$\(LD_RUN_PATH\)" @@' Makefile
-
-%{__make}
-cd ../..
-%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -418,21 +333,6 @@ fi
 
 %if %{with avahi}
 ln -s %{_ulibdir}/cups/backend/dnssd $RPM_BUILD_ROOT%{_ulibdir}/cups/backend/mdns
-%endif
-
-%if %{with php}
-%{__make} -C scripting/php install \
-	PHPDIR=$RPM_BUILD_ROOT%{php_extensiondir}
-install -d $RPM_BUILD_ROOT%{php_sysconfdir}/conf.d
-cat > $RPM_BUILD_ROOT%{php_sysconfdir}/conf.d/phpcups.ini << 'EOF'
-; Enable phpcups extension module
-extension=phpcups.so
-EOF
-%endif
-
-%if %{with perl}
-%{__make} -C scripting/perl install \
-	DESTDIR=$RPM_BUILD_ROOT
 %endif
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
@@ -462,15 +362,8 @@ install -d $RPM_BUILD_ROOT%{_sysconfdir}/cups/ssl
 ln -s accept $RPM_BUILD_ROOT%{_sbindir}/enable
 ln -s accept $RPM_BUILD_ROOT%{_sbindir}/disable
 
-# fix/update locale names
-install -d $RPM_BUILD_ROOT%{_datadir}/locale/{nb,zh_CN}
-mv -f $RPM_BUILD_ROOT%{_datadir}/locale/{no/cups_no.po,nb/cups_nb.po}
-mv -f $RPM_BUILD_ROOT%{_datadir}/locale/{zh/cups_zh.po,zh_CN/cups_zh_CN.po}
-
 # check-files cleanup
-rm -rf $RPM_BUILD_ROOT%{_mandir}/{,es/,fr/}cat?
-rm -rf $RPM_BUILD_ROOT/''etc/{init.d,rc?.d}/*
-rm -rf $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/cupsd.conf.default
+%{__rm} -r $RPM_BUILD_ROOT/etc/{init.d,rc?.d}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -499,14 +392,6 @@ fi
 %post	image-lib -p /sbin/ldconfig
 %postun	image-lib -p /sbin/ldconfig
 
-%post -n php-cups
-%php_webserver_restart
-
-%postun -n php-cups
-if [ "$1" = 0 ]; then
-	%php_webserver_restart
-fi
-
 %post lpd
 %service -q rc-inetd reload
 
@@ -528,6 +413,7 @@ fi
 %{systemdtmpfilesdir}/%{name}.conf
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/classes.conf
 %attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/cupsd.conf
+%attr(640,root,lp) %{_sysconfdir}/%{name}/cupsd.conf.default
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/printers.conf
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/mailto.conf
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/snmp.conf
@@ -552,15 +438,12 @@ fi
 %{_ulibdir}/cups/cgi-bin/*.css
 %{_ulibdir}/cups/cgi-bin/*.html
 %{_ulibdir}/cups/cgi-bin/*.txt
-%lang(de) %{_ulibdir}/cups/cgi-bin/de
+%lang(ca) %{_ulibdir}/cups/cgi-bin/ca
+%lang(cs) %{_ulibdir}/cups/cgi-bin/cs
 %lang(es) %{_ulibdir}/cups/cgi-bin/es
-%lang(eu) %{_ulibdir}/cups/cgi-bin/eu
 %lang(fr) %{_ulibdir}/cups/cgi-bin/fr
-%lang(hu) %{_ulibdir}/cups/cgi-bin/hu
-%lang(id) %{_ulibdir}/cups/cgi-bin/id
 %lang(it) %{_ulibdir}/cups/cgi-bin/it
 %lang(ja) %{_ulibdir}/cups/cgi-bin/ja
-%lang(pl) %{_ulibdir}/cups/cgi-bin/pl
 %lang(ru) %{_ulibdir}/cups/cgi-bin/ru
 
 %if %{with avahi}
@@ -578,18 +461,15 @@ fi
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-deviced
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-driverd
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-exec
-%attr(755,root,root) %{_ulibdir}/cups/daemon/cups-polld
 %attr(755,root,root) %{_ulibdir}/cups/filter/*
 %attr(755,root,root) %{_ulibdir}/cups/monitor/*
 %attr(755,root,root) %{_ulibdir}/cups/notifier/*
 
 %{_datadir}/cups/banners
-%{_datadir}/cups/charsets
 %{_datadir}/cups/data
 %{_datadir}/cups/drivers
 %{_datadir}/cups/drv
 %{_datadir}/cups/examples
-%{_datadir}/cups/fonts
 %{_datadir}/cups/mime
 %dir %{_datadir}/cups/model
 # dirs for gimp-print-cups-4.2.7-1
@@ -605,15 +485,12 @@ fi
 
 %dir %{_datadir}/cups/templates
 %{_datadir}/cups/templates/*.tmpl
-%lang(de) %{_datadir}/cups/templates/de
+%lang(ca) %{_datadir}/cups/templates/ca
+%lang(cs) %{_datadir}/cups/templates/cs
 %lang(es) %{_datadir}/cups/templates/es
-%lang(eu) %{_datadir}/cups/templates/eu
 %lang(fr) %{_datadir}/cups/templates/fr
-%lang(hu) %{_datadir}/cups/templates/hu
-%lang(id) %{_datadir}/cups/templates/id
 %lang(it) %{_datadir}/cups/templates/it
 %lang(ja) %{_datadir}/cups/templates/ja
-%lang(pl) %{_datadir}/cups/templates/pl
 %lang(ru) %{_datadir}/cups/templates/ru
 %{_mandir}/man1/cupstestppd.1*
 %{_mandir}/man1/cupstestdsc.1*
@@ -626,7 +503,6 @@ fi
 %{_mandir}/man8/accept.8*
 %{_mandir}/man8/cups-deviced.8*
 %{_mandir}/man8/cups-driverd.8*
-%{_mandir}/man8/cups-polld.8*
 %{_mandir}/man8/cupsaddsmb.8*
 %{_mandir}/man8/cupsctl.8*
 %{_mandir}/man8/cupsd.8*
@@ -655,30 +531,16 @@ fi
 %dir %attr(755,root,lp) %{_sysconfdir}/%{name}
 %attr(755,root,root) %{_libdir}/libcups.so.*
 %attr(755,root,root) %{_libdir}/libcupscgi.so.*
-%attr(755,root,root) %{_libdir}/libcupsdriver.so.*
 %attr(755,root,root) %{_libdir}/libcupsmime.so.*
 %attr(755,root,root) %{_libdir}/libcupsppdc.so.*
 %dir %{_datadir}/cups
-%lang(da) %{_datadir}/locale/da/cups_da.po
-%lang(de) %{_datadir}/locale/de/cups_de.po
+%lang(ca) %{_datadir}/locale/ca/cups_ca.po
+%lang(cs) %{_datadir}/locale/cs/cups_cs.po
 %lang(es) %{_datadir}/locale/es/cups_es.po
-%lang(eu) %{_datadir}/locale/eu/cups_eu.po
-%lang(fi) %{_datadir}/locale/fi/cups_fi.po
 %lang(fr) %{_datadir}/locale/fr/cups_fr.po
-%lang(hu) %{_datadir}/locale/hu/cups_hu.po
-%lang(id) %{_datadir}/locale/id/cups_id.po
 %lang(it) %{_datadir}/locale/it/cups_it.po
-%lang(ko) %{_datadir}/locale/ko/cups_ko.po
 %lang(ja) %{_datadir}/locale/ja/cups_ja.po
-%lang(nl) %{_datadir}/locale/nl/cups_nl.po
-%lang(nb) %{_datadir}/locale/nb/cups_nb.po
-%lang(pl) %{_datadir}/locale/pl/cups_pl.po
-%lang(pt) %{_datadir}/locale/pt/cups_pt.po
-%lang(pt_BR) %{_datadir}/locale/pt_BR/cups_pt_BR.po
 %lang(ru) %{_datadir}/locale/ru/cups_ru.po
-%lang(sv) %{_datadir}/locale/sv/cups_sv.po
-%lang(zh_CN) %{_datadir}/locale/zh_CN/cups_zh_CN.po
-%lang(zh_TW) %{_datadir}/locale/zh_TW/cups_zh_TW.po
 
 %files clients
 %defattr(644,root,root,755)
@@ -729,7 +591,6 @@ fi
 %attr(755,root,root) %{_bindir}/cups-config
 %attr(755,root,root) %{_libdir}/libcups.so
 %attr(755,root,root) %{_libdir}/libcupscgi.so
-%attr(755,root,root) %{_libdir}/libcupsdriver.so
 %attr(755,root,root) %{_libdir}/libcupsimage.so
 %attr(755,root,root) %{_libdir}/libcupsmime.so
 %attr(755,root,root) %{_libdir}/libcupsppdc.so
@@ -741,42 +602,14 @@ fi
 %defattr(644,root,root,755)
 %{_libdir}/libcups.a
 %{_libdir}/libcupscgi.a
-%{_libdir}/libcupsdriver.a
 %{_libdir}/libcupsimage.a
 %{_libdir}/libcupsmime.a
 %{_libdir}/libcupsppdc.a
 %endif
 
-%if %{with perl}
-%files -n perl-cups
-%defattr(644,root,root,755)
-%{perl_vendorarch}/CUPS.pm
-%dir %{perl_vendorarch}/auto/CUPS
-%{perl_vendorarch}/auto/CUPS/CUPS.bs
-%{perl_vendorarch}/auto/CUPS/autosplit.ix
-%attr(755,root,root) %{perl_vendorarch}/auto/CUPS/CUPS.so
-%{_mandir}/man3/CUPS.3pm*
-%endif
-
-%if %{with php}
-%files -n php-cups
-%defattr(644,root,root,755)
-%doc scripting/php/README
-%attr(755,root,root) %{php_extensiondir}/phpcups.so
-%config(noreplace) %verify(not md5 mtime size) %{php_sysconfdir}/conf.d/phpcups.ini
-%endif
-
 %files backend-usb
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_ulibdir}/cups/backend/usb
-
-%files backend-serial
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_ulibdir}/cups/backend/serial
-
-%files backend-parallel
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_ulibdir}/cups/backend/parallel
 
 %files lpd
 %defattr(644,root,root,755)

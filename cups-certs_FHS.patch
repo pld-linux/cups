@@ -1,9 +1,9 @@
 --- cups-1.2.7/config-scripts/cups-directories.m4.orig	2006-08-29 22:48:59.000000000 +0200
 +++ cups-1.2.7/config-scripts/cups-directories.m4	2006-12-18 03:28:33.624756362 +0100
 @@ -421,6 +421,13 @@
- 		CUPS_STATEDIR="$localstatedir/run/cups"
- 		;;
- esac
+ 			CUPS_STATEDIR="$localstatedir/run/cups"
+ 			;;
+ 	esac])
 +AC_ARG_WITH(logdir, [  --with-statedir           set path for certs state],statedir="$withval",statedir="")
 +
 +if test x$logdir = x; then
