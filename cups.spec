@@ -45,6 +45,7 @@ Patch14:	add-ipp-backend-of-cups-1.4.patch
 Patch15:	reactivate_recommended_driver.patch
 Patch16:	read-embedded-options-from-incoming-postscript-and-add-to-ipp-attrs.patch
 Patch17:	%{name}-use-ipp1.1.patch
+Patch18:	%{name}-final-content-type.patch
 # avahi patches from fedora
 Patch100:	%{name}-avahi-address.patch
 Patch101:	%{name}-avahi-no-threaded.patch
@@ -267,6 +268,7 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 %patch15 -p1
 %patch16 -p1
 %patch17 -p1
+%patch18 -p1
 
 %if %{with avahi}
 %patch100 -p1
