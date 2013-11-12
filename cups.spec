@@ -414,6 +414,7 @@ fi
 %{systemdunitdir}/cups.path
 %{systemdtmpfilesdir}/%{name}.conf
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/classes.conf
+%attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/cups-files.conf
 %attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/cupsd.conf
 %attr(640,root,lp) %{_sysconfdir}/%{name}/cupsd.conf.default
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/printers.conf
@@ -505,6 +506,7 @@ fi
 %{_mandir}/man8/accept.8*
 %{_mandir}/man8/cups-deviced.8*
 %{_mandir}/man8/cups-driverd.8*
+%{_mandir}/man8/cups-snmp.8*
 %{_mandir}/man8/cupsaddsmb.8*
 %{_mandir}/man8/cupsctl.8*
 %{_mandir}/man8/cupsd.8*
@@ -548,6 +550,7 @@ fi
 %defattr(644,root,root,755)
 %attr(644,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/client.conf
 %attr(755,root,root) %{_bindir}/cancel
+%attr(755,root,root) %{_bindir}/ippfind
 %attr(755,root,root) %{_bindir}/ipptool
 %attr(755,root,root) %{_bindir}/lp
 %attr(755,root,root) %{_bindir}/lpoptions
@@ -572,6 +575,7 @@ fi
 %{_desktopdir}/cups.desktop
 %{_iconsdir}/hicolor/*/apps/cups.png
 %{_mandir}/man1/cancel.1*
+%{_mandir}/man1/ippfind.1*
 %{_mandir}/man1/ipptool.1*
 %{_mandir}/man1/lp.1*
 %{_mandir}/man1/lpoptions.1*
@@ -612,6 +616,8 @@ fi
 %files backend-usb
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_ulibdir}/cups/backend/usb
+%dir %{_datadir}/cups/usb
+%{_datadir}/cups/usb/org.cups.usb-quirks
 
 %files lpd
 %defattr(644,root,root,755)
