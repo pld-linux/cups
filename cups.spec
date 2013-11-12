@@ -74,13 +74,13 @@ BuildRequires:	systemd-devel
 Requires(post,preun):	/sbin/chkconfig
 Requires(post,preun,postun):	systemd-units >= 38
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
+Requires:	cups-filters
 Requires:	openssl-tools
 Requires:	pam >= 0.77.3
 Requires:	rc-scripts
 Requires:	systemd-units >= 38
 Suggests:	ImageMagick-coder-pdf
 Suggests:	cups-filter-pstoraster
-Suggests:	ghostscript-cups
 Suggests:	poppler-progs
 Provides:	printingdaemon
 Obsoletes:	backend-parallel
@@ -367,6 +367,9 @@ ln -s accept $RPM_BUILD_ROOT%{_sbindir}/disable
 # check-files cleanup
 %{__rm} -r $RPM_BUILD_ROOT/etc/{init.d,rc?.d}
 
+# shipped in cups-filters
+%{__rm} -r $RPM_BUILD_ROOT%{_datadir}/cups/banners
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -468,7 +471,6 @@ fi
 %attr(755,root,root) %{_ulibdir}/cups/monitor/*
 %attr(755,root,root) %{_ulibdir}/cups/notifier/*
 
-%{_datadir}/cups/banners
 %{_datadir}/cups/data
 %{_datadir}/cups/drivers
 %{_datadir}/cups/drv
