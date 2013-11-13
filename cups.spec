@@ -14,7 +14,7 @@ Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.7.0
-Release:	1
+Release:	2
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
@@ -84,12 +84,11 @@ Suggests:	ImageMagick-coder-pdf
 Suggests:	cups-filter-pstoraster
 Suggests:	poppler-progs
 Provides:	printingdaemon
-Obsoletes:	backend-parallel
-Obsoletes:	backend-serial
 Obsoletes:	perl-cups
 Obsoletes:	php-cups
 Obsoletes:	printingdaemon
 Conflicts:	ghostscript < 7.05.4
+Conflicts:	hplip < 3.13.11
 Conflicts:	logrotate < 3.7-4
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -376,6 +375,19 @@ ln -s accept $RPM_BUILD_ROOT%{_sbindir}/disable
 rm -rf $RPM_BUILD_ROOT
 
 %post
+# Deal with config migration due to CVE-2012-5519 (STR #4223)
+_keywords="^\(AccessLog\|CacheDir\|ConfigFilePerm\|\
+DataDir\|DocumentRoot\|ErrorLog\|FatalErrors\|\
+FileDevice\|FontPath\|Group\|LogFilePerm\|\
+LPDConfigFile\|PageLog\|Printcap\|PrintcapFormat\|\
+RemoteRoot\|RequestRoot\|ServerBin\|ServerCertificate\|\
+ServerKey\|ServerRoot\|SMBConfigFile\|StateDir\|\
+SystemGroup\|SystemGroupAuthKey\|TempDir\|User\)"
+if [ -f %{_sysconfdir}/cups/cupsd.conf ] && grep -iq "$_keywords" %{_sysconfdir}/cups/cupsd.conf; then
+	echo "# Settings automatically moved from cupsd.conf by RPM package:" >> %{_sysconfdir}/cups/cups-files.conf
+	grep -i "$_keywords" %{_sysconfdir}/cups/cupsd.conf >> %{_sysconfdir}/cups/cups-files.conf || :
+	%{__sed} -i -e "s,$_keywords,#&,ig" %{_sysconfdir}/cups/cupsd.conf || :
+fi
 /sbin/chkconfig --add cups
 %service cups restart "cups daemon"
 /sbin/rmmod usblp > /dev/null 2>&1 || :
@@ -391,7 +403,7 @@ fi
 %postun
 %systemd_reload
 
-%triggerpostun -- cups < 1.5.2-1
+%triggerpostun -- cups < 1:1.5.2-1
 %systemd_trigger cups.service cups.socket cups.path
 
 %post	lib -p /sbin/ldconfig
