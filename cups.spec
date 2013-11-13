@@ -47,6 +47,7 @@ Patch16:	read-embedded-options-from-incoming-postscript-and-add-to-ipp-attrs.pat
 Patch17:	%{name}-use-ipp1.1.patch
 Patch18:	%{name}-final-content-type.patch
 Patch19:	%{name}-jobhistory.patch
+Patch20:	%{name}-stringpool-rdar15382819.patch
 # avahi patches from fedora
 Patch100:	%{name}-avahi-address.patch
 Patch101:	%{name}-avahi-no-threaded.patch
@@ -270,6 +271,7 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 %patch17 -p1
 %patch18 -p1
 %patch19 -p1
+%patch20 -p1
 
 %if %{with avahi}
 %patch100 -p1
