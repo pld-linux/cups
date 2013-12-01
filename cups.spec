@@ -1,15 +1,12 @@
 #
 # Conditional build:
 %bcond_with	gnutls		# use GNU TLS for SSL/TLS support (instead of OpenSSL)
-%bcond_with	dnssd		# DNS Service Discovery support (obsoleted by Avahi patch)
+%bcond_with	dnssd		# DNS Service Discovery support via dns_sd API (obsoleted by Avahi patch)
 %bcond_without	avahi		# DNS Service Discovery support via Avahi
-%bcond_without	ldap		# do not include LDAP support
 %bcond_without	gssapi		# do not include GSSAPI support
 %bcond_without	python		# don't build Python support in web interface
-%bcond_without	slp		# do not include SLP support
 %bcond_without	static_libs	# don't build static library
 
-%define		pdir CUPS
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
@@ -67,13 +64,12 @@ BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	libusb-devel >= 1.0
-%{?with_ldap:BuildRequires:	openldap-devel}
-%{?with_slp:BuildRequires:	openslp-devel}
 %{!?with_gnutls:BuildRequires:	openssl-devel}
 BuildRequires:	pam-devel
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.641
 BuildRequires:	systemd-devel
+BuildRequires:	zlib-devel
 Requires(post,preun):	/sbin/chkconfig
 Requires(post,preun,postun):	systemd-units >= 38
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
@@ -86,8 +82,6 @@ Suggests:	ImageMagick-coder-pdf
 Suggests:	cups-filter-pstoraster
 Suggests:	poppler-progs
 Provides:	printingdaemon
-Obsoletes:	perl-cups
-Obsoletes:	php-cups
 Obsoletes:	printingdaemon
 Conflicts:	ghostscript < 7.05.4
 Conflicts:	hplip < 3.13.11
@@ -283,36 +277,31 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 %{__autoconf}
 %configure \
 	--libdir=%{_ulibdir} \
+	--enable-acl \
+	--enable-avahi%{!?with_avahi:=no} \
 	--disable-cdsassl \
+	--enable-dbus \
+	%{?debug:--enable-debug} \
+	--enable-dnssd%{!?with_dnssd:=no} \
+	--enable-gnutls%{!?with_gnutls:=no} \
+	--enable-gssapi%{!?with_gssapi:=no} \
 	--enable-libpaper \
 	--enable-libusb \
-	--enable-acl \
-	--enable-dbus \
-	--enable-image \
-	--enable-bannertops \
-	--enable-texttops \
+	--enable-openssl%{?with_gnutls:=no} \
 	--enable-shared \
 	--enable-ssl \
-	%{?debug:--enable-debug} \
-	--%{!?with_avahi:dis}%{?with_avahi:en}able-avahi \
-	--%{!?with_dnssd:dis}%{?with_dnssd:en}able-dnssd \
-	--%{!?with_ldap:dis}%{?with_ldap:en}able-ldap \
-	--%{!?with_gssapi:dis}%{?with_gssapi:en}able-gssapi \
-	--%{!?with_gnutls:dis}%{?with_gnutls:en}able-gnutls \
-	--%{?with_gnutls:dis}%{!?with_gnutls:en}able-openssl \
-	--%{!?with_slp:dis}%{?with_slp:en}able-slp \
 	%{?with_static_libs:--enable-static} \
-	--with-cups-user=lp \
 	--with-cups-group=lp \
+	--with-cups-user=lp \
 	--with-system-groups=sys \
-	--with-printcap=/etc/printcap \
-	--with-dbusdir=/etc/dbus-1 \
-	--with-docdir=%{_ulibdir}/%{name}/cgi-bin \
 	--with-config-file-perm=0640 \
 	--with-log-file-perm=0640 \
-	--with-optim=-Wno-format-y2k \
+	--with-dbusdir=/etc/dbus-1 \
+	--with-docdir=%{_ulibdir}/%{name}/cgi-bin \
+	--with-printcap=/etc/printcap \
 	%{?with_dnssd:--with-dnssd-libs=x} \
 	%{?with_dnssd:--with-dnssd-includes=x} \
+	--with-optim=-Wno-format-y2k \
 	%{?with_python:--with-python=%{_bindir}/python} \
 	--with-systemdsystemunitdir=%{systemdunitdir}
 
@@ -682,6 +671,6 @@ fi
 
 %files lpd
 %defattr(644,root,root,755)
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/rc-inetd/*
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/rc-inetd/cups-lpd
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-lpd
 %{_mandir}/man8/cups-lpd.8*
