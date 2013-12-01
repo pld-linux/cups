@@ -427,7 +427,7 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc *.txt
-%attr(640,root,root) %config %verify(not md5 mtime size) /etc/pam.d/*
+%attr(640,root,root) %config %verify(not md5 mtime size) /etc/pam.d/cups
 %attr(754,root,root) /etc/rc.d/init.d/cups
 /etc/dbus-1/system.d/cups.conf
 /etc/modprobe.d/cups.conf
@@ -456,7 +456,21 @@ fi
 %attr(755,root,root) %{_sbindir}/cupsfilter
 
 %dir %{_ulibdir}/cups
-%dir %{_ulibdir}/cups/*
+%dir %{_ulibdir}/cups/backend
+%if %{with avahi}
+%attr(755,root,root) %{_ulibdir}/cups/backend/dnssd
+%attr(755,root,root) %{_ulibdir}/cups/backend/mdns
+%endif
+%attr(755,root,root) %{_ulibdir}/cups/backend/http
+%attr(755,root,root) %{_ulibdir}/cups/backend/https
+%attr(755,root,root) %{_ulibdir}/cups/backend/ipp
+%attr(755,root,root) %{_ulibdir}/cups/backend/ipp14
+%attr(755,root,root) %{_ulibdir}/cups/backend/ipps
+%attr(755,root,root) %{_ulibdir}/cups/backend/lpd
+%attr(755,root,root) %{_ulibdir}/cups/backend/snmp
+%attr(755,root,root) %{_ulibdir}/cups/backend/socket
+
+%dir %{_ulibdir}/cups/cgi-bin
 %{_ulibdir}/cups/cgi-bin/help
 %{_ulibdir}/cups/cgi-bin/images
 %attr(755,root,root) %{_ulibdir}/cups/cgi-bin/*.cgi
@@ -471,30 +485,36 @@ fi
 %lang(ja) %{_ulibdir}/cups/cgi-bin/ja
 %lang(ru) %{_ulibdir}/cups/cgi-bin/ru
 
-%if %{with avahi}
-%attr(755,root,root) %{_ulibdir}/cups/backend/dnssd
-%attr(755,root,root) %{_ulibdir}/cups/backend/mdns
-%endif
-%attr(755,root,root) %{_ulibdir}/cups/backend/http
-%attr(755,root,root) %{_ulibdir}/cups/backend/https
-%attr(755,root,root) %{_ulibdir}/cups/backend/ipp
-%attr(755,root,root) %{_ulibdir}/cups/backend/ipp14
-%attr(755,root,root) %{_ulibdir}/cups/backend/ipps
-%attr(755,root,root) %{_ulibdir}/cups/backend/lpd
-%attr(755,root,root) %{_ulibdir}/cups/backend/snmp
-%attr(755,root,root) %{_ulibdir}/cups/backend/socket
+%dir %{_ulibdir}/cups/daemon
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-deviced
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-driverd
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-exec
-%attr(755,root,root) %{_ulibdir}/cups/filter/*
-%attr(755,root,root) %{_ulibdir}/cups/monitor/*
-%attr(755,root,root) %{_ulibdir}/cups/notifier/*
+%dir %{_ulibdir}/cups/filter
+%attr(755,root,root) %{_ulibdir}/cups/filter/commandtops
+%attr(755,root,root) %{_ulibdir}/cups/filter/gziptoany
+%attr(755,root,root) %{_ulibdir}/cups/filter/pstops
+%attr(755,root,root) %{_ulibdir}/cups/filter/rastertodymo
+%attr(755,root,root) %{_ulibdir}/cups/filter/rastertoepson
+%attr(755,root,root) %{_ulibdir}/cups/filter/rastertohp
+%attr(755,root,root) %{_ulibdir}/cups/filter/rastertolabel
+%attr(755,root,root) %{_ulibdir}/cups/filter/rastertopwg
+%dir %{_ulibdir}/cups/monitor
+%attr(755,root,root) %{_ulibdir}/cups/monitor/bcp
+%attr(755,root,root) %{_ulibdir}/cups/monitor/tbcp
+%dir %{_ulibdir}/cups/notifier
+%attr(755,root,root) %{_ulibdir}/cups/notifier/dbus
+%attr(755,root,root) %{_ulibdir}/cups/notifier/mailto
+%attr(755,root,root) %{_ulibdir}/cups/notifier/rss
 
 %dir %{_datadir}/cups/data
-%{_datadir}/cups/drivers
-%{_datadir}/cups/drv
-%{_datadir}/cups/examples
-%{_datadir}/cups/mime
+%dir %{_datadir}/cups/drivers
+%dir %{_datadir}/cups/drv
+%{_datadir}/cups/drv/sample.drv
+%dir %{_datadir}/cups/examples
+%{_datadir}/cups/examples/*.drv
+%dir %{_datadir}/cups/mime
+%{_datadir}/cups/mime/mime.convs
+%{_datadir}/cups/mime/mime.types
 %dir %{_datadir}/cups/model
 # dirs for gimp-print-cups-4.2.7-1
 %dir %{_datadir}/cups/model/C
@@ -505,7 +525,13 @@ fi
 %lang(pl) %dir %{_datadir}/cups/model/pl
 %lang(sv) %dir %{_datadir}/cups/model/sv
 
-%{_datadir}/cups/ppdc
+%dir %{_datadir}/cups/ppdc
+%{_datadir}/cups/ppdc/epson.h
+%{_datadir}/cups/ppdc/hp.h
+%{_datadir}/cups/ppdc/label.h
+%{_datadir}/cups/ppdc/font.defs
+%{_datadir}/cups/ppdc/media.defs
+%{_datadir}/cups/ppdc/raster.defs
 
 %dir %{_datadir}/cups/templates
 %{_datadir}/cups/templates/*.tmpl
@@ -523,7 +549,18 @@ fi
 %{_mandir}/man7/backend.7*
 %{_mandir}/man7/filter.7*
 %{_mandir}/man7/notifier.7*
-%{_mandir}/man5/*
+%{_mandir}/man5/classes.conf.5*
+%{_mandir}/man5/client.conf.5*
+%{_mandir}/man5/cups-files.conf.5*
+%{_mandir}/man5/cups-snmp.conf.5*
+%{_mandir}/man5/cupsd.conf.5*
+%{_mandir}/man5/ipptoolfile.5*
+%{_mandir}/man5/mailto.conf.5*
+%{_mandir}/man5/mime.convs.5*
+%{_mandir}/man5/mime.types.5*
+%{_mandir}/man5/ppdcfile.5*
+%{_mandir}/man5/printers.conf.5*
+%{_mandir}/man5/subscriptions.conf.5*
 %{_mandir}/man8/accept.8*
 %{_mandir}/man8/cups-deviced.8*
 %{_mandir}/man8/cups-driverd.8*
@@ -533,7 +570,10 @@ fi
 %{_mandir}/man8/cupsd.8*
 %{_mandir}/man8/cupsenable.8*
 %{_mandir}/man8/cupsfilter.8*
-%{_mandir}/man8/lp*
+%{_mandir}/man8/lpadmin.8*
+%{_mandir}/man8/lpc.8*
+%{_mandir}/man8/lpinfo.8*
+%{_mandir}/man8/lpmove.8*
 
 %dir %attr(775,root,lp) /var/cache/cups
 %dir %attr(755,root,lp) /var/lib/cups
