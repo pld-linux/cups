@@ -79,7 +79,6 @@ Requires:	pam >= 0.77.3
 Requires:	rc-scripts
 Requires:	systemd-units >= 38
 Suggests:	ImageMagick-coder-pdf
-Suggests:	cups-filter-pstoraster
 Suggests:	poppler-progs
 Provides:	printingdaemon
 Obsoletes:	printingdaemon
