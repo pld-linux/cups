@@ -11,7 +11,7 @@ Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.7.0
-Release:	3
+Release:	4
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
@@ -340,7 +340,12 @@ install %{SOURCE7} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 
 touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
 touch $RPM_BUILD_ROOT/etc/security/blacklist.cups
-touch $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/{classes,printers,client}.conf
+touch $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/{classes,printers}.conf
+
+cat >$RPM_BUILD_ROOT%{_sysconfdir}/%{name}/client.conf <<'EOF'
+# Encryption Always
+# ServerName print.server.ip.or.name
+EOF
 
 # windows drivers can be put there.
 install -d $RPM_BUILD_ROOT%{_datadir}/cups/drivers
@@ -538,7 +543,6 @@ fi
 %{_mandir}/man7/filter.7*
 %{_mandir}/man7/notifier.7*
 %{_mandir}/man5/classes.conf.5*
-%{_mandir}/man5/client.conf.5*
 %{_mandir}/man5/cups-files.conf.5*
 %{_mandir}/man5/cups-snmp.conf.5*
 %{_mandir}/man5/cupsd.conf.5*
@@ -549,19 +553,12 @@ fi
 %{_mandir}/man5/ppdcfile.5*
 %{_mandir}/man5/printers.conf.5*
 %{_mandir}/man5/subscriptions.conf.5*
-%{_mandir}/man8/accept.8*
 %{_mandir}/man8/cups-deviced.8*
 %{_mandir}/man8/cups-driverd.8*
 %{_mandir}/man8/cups-snmp.8*
-%{_mandir}/man8/cupsaddsmb.8*
 %{_mandir}/man8/cupsctl.8*
 %{_mandir}/man8/cupsd.8*
-%{_mandir}/man8/cupsenable.8*
 %{_mandir}/man8/cupsfilter.8*
-%{_mandir}/man8/lpadmin.8*
-%{_mandir}/man8/lpc.8*
-%{_mandir}/man8/lpinfo.8*
-%{_mandir}/man8/lpmove.8*
 
 %dir %attr(775,root,lp) /var/cache/cups
 %dir %attr(755,root,lp) /var/lib/cups
@@ -632,9 +629,17 @@ fi
 %{_mandir}/man1/lpr.1*
 %{_mandir}/man1/lprm.1*
 %{_mandir}/man1/lpstat.1*
+%{_mandir}/man5/client.conf.5*
+%{_mandir}/man8/accept.8*
 %{_mandir}/man8/cupsaccept.8*
+%{_mandir}/man8/cupsaddsmb.8*
+%{_mandir}/man8/cupsenable.8*
 %{_mandir}/man8/cupsdisable.8*
 %{_mandir}/man8/cupsreject.8*
+%{_mandir}/man8/lpadmin.8*
+%{_mandir}/man8/lpc.8*
+%{_mandir}/man8/lpinfo.8*
+%{_mandir}/man8/lpmove.8*
 %{_mandir}/man8/reject.8*
 
 %files image-lib
