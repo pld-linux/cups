@@ -11,7 +11,7 @@ Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	1.7.0
-Release:	4
+Release:	5
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
@@ -482,6 +482,7 @@ fi
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-deviced
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-driverd
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-exec
+%dir %{_ulibdir}/cups/driver
 %dir %{_ulibdir}/cups/filter
 %attr(755,root,root) %{_ulibdir}/cups/filter/commandtops
 %attr(755,root,root) %{_ulibdir}/cups/filter/gziptoany
