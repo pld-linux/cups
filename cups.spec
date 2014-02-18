@@ -10,13 +10,13 @@
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.7.0
-Release:	5
+Version:	1.7.1
+Release:	1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
 Source0:	http://www.cups.org/software/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	5ab496a2ce27017fcdb3d7ec4818a75a
+# Source0-md5:	55277c40fd4b7183dc3671d39c5c42b7
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -43,8 +43,6 @@ Patch15:	reactivate_recommended_driver.patch
 Patch16:	read-embedded-options-from-incoming-postscript-and-add-to-ipp-attrs.patch
 Patch17:	%{name}-use-ipp1.1.patch
 Patch18:	%{name}-final-content-type.patch
-Patch19:	%{name}-jobhistory.patch
-Patch20:	%{name}-stringpool-rdar15382819.patch
 # avahi patches from fedora
 Patch100:	%{name}-avahi-address.patch
 Patch101:	%{name}-avahi-no-threaded.patch
@@ -263,8 +261,6 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 %patch16 -p1
 %patch17 -p1
 %patch18 -p1
-%patch19 -p1
-%patch20 -p1
 
 %if %{with avahi}
 %patch100 -p1
