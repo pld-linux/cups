@@ -468,10 +468,12 @@ fi
 %{_ulibdir}/cups/cgi-bin/*.txt
 %lang(ca) %{_ulibdir}/cups/cgi-bin/ca
 %lang(cs) %{_ulibdir}/cups/cgi-bin/cs
+%lang(de) %{_ulibdir}/cups/cgi-bin/de
 %lang(es) %{_ulibdir}/cups/cgi-bin/es
 %lang(fr) %{_ulibdir}/cups/cgi-bin/fr
 %lang(it) %{_ulibdir}/cups/cgi-bin/it
 %lang(ja) %{_ulibdir}/cups/cgi-bin/ja
+%lang(pt_BR) %{_ulibdir}/cups/cgi-bin/pt_BR
 %lang(ru) %{_ulibdir}/cups/cgi-bin/ru
 
 %dir %{_ulibdir}/cups/daemon
@@ -527,10 +529,12 @@ fi
 %{_datadir}/cups/templates/*.tmpl
 %lang(ca) %{_datadir}/cups/templates/ca
 %lang(cs) %{_datadir}/cups/templates/cs
+%lang(de) %{_datadir}/cups/templates/de
 %lang(es) %{_datadir}/cups/templates/es
 %lang(fr) %{_datadir}/cups/templates/fr
 %lang(it) %{_datadir}/cups/templates/it
 %lang(ja) %{_datadir}/cups/templates/ja
+%lang(pt_BR) %{_datadir}/cups/templates/pt_BR
 %lang(ru) %{_datadir}/cups/templates/ru
 %{_mandir}/man1/cupstestppd.1*
 %{_mandir}/man1/cupstestdsc.1*
@@ -583,10 +587,12 @@ fi
 %dir %{_datadir}/cups
 %lang(ca) %{_datadir}/locale/ca/cups_ca.po
 %lang(cs) %{_datadir}/locale/cs/cups_cs.po
+%lang(de) %{_datadir}/locale/de/cups_de.po
 %lang(es) %{_datadir}/locale/es/cups_es.po
 %lang(fr) %{_datadir}/locale/fr/cups_fr.po
 %lang(it) %{_datadir}/locale/it/cups_it.po
 %lang(ja) %{_datadir}/locale/ja/cups_ja.po
+%lang(pt_BR) %{_datadir}/locale/pt_BR/cups_pt_BR.po
 %lang(ru) %{_datadir}/locale/ru/cups_ru.po
 
 %files clients
