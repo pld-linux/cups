@@ -10,13 +10,13 @@
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	1.7.5
+Version:	2.0.0
 Release:	1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
 Group:		Applications/Printing
 Source0:	http://www.cups.org/software/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	5d893edc2957005f78e2b2423fdace2e
+# Source0-md5:	2cdd81fea23e9e29555c24bdfd0d7c89
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -24,8 +24,6 @@ Source4:	%{name}.mailto.conf
 Source5:	%{name}-lpd.inetd
 Source6:	%{name}-modprobe.conf
 Source7:	%{name}.tmpfiles
-# svn diff http://svn.easysw.com/public/cups/tags/release-1.4.3/ http://svn.easysw.com/public/cups/branches/branch-1.4/ > cups-branch.diff
-# + drop config-scripts/cups-common.m4 change
 Patch0:		%{name}-config.patch
 Patch2:		%{name}-options.patch
 Patch3:		%{name}-man_pages_linking.patch
@@ -358,9 +356,6 @@ install -d $RPM_BUILD_ROOT%{_sysconfdir}/cups/ssl
 ln -s accept $RPM_BUILD_ROOT%{_sbindir}/enable
 ln -s accept $RPM_BUILD_ROOT%{_sbindir}/disable
 
-# check-files cleanup
-%{__rm} -r $RPM_BUILD_ROOT/etc/{init.d,rc?.d}
-
 # shipped in cups-filters
 %{__rm} -r $RPM_BUILD_ROOT%{_datadir}/cups/banners
 %{__rm} -r $RPM_BUILD_ROOT%{_datadir}/cups/data/testprint
@@ -385,20 +380,20 @@ fi
 /sbin/chkconfig --add cups
 %service cups restart "cups daemon"
 /sbin/rmmod usblp > /dev/null 2>&1 || :
-%systemd_post cups.service cups.socket cups.path
+%systemd_post org.cups.cupsd.service org.cups.cupd.socket org.cups.cupsd.path
 
 %preun
 if [ "$1" = "0" ]; then
 	%service cups stop
 	/sbin/chkconfig --del cups
 fi
-%systemd_preun cups.service cups.socket cups.path
+%systemd_preun org.cups.cupsd.service org.cups.cupsd.socket org.cups.cupsd.path
 
 %postun
 %systemd_reload
 
 %triggerpostun -- cups < 1:1.5.2-1
-%systemd_trigger cups.service cups.socket cups.path
+%systemd_trigger org.cups.cupsd.service org.cups.cupsd.socket org.cups.cupsd.path
 
 %post	lib -p /sbin/ldconfig
 %postun	lib -p /sbin/ldconfig
@@ -420,9 +415,9 @@ fi
 %attr(754,root,root) /etc/rc.d/init.d/cups
 /etc/dbus-1/system.d/cups.conf
 /etc/modprobe.d/cups.conf
-%{systemdunitdir}/cups.service
-%{systemdunitdir}/cups.socket
-%{systemdunitdir}/cups.path
+%{systemdunitdir}/org.cups.cupsd.service
+%{systemdunitdir}/org.cups.cupsd.socket
+%{systemdunitdir}/org.cups.cupsd.path
 %{systemdtmpfilesdir}/%{name}.conf
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/classes.conf
 %attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/cups-files.conf
@@ -436,7 +431,6 @@ fi
 %dir %{_sysconfdir}/%{name}/interfaces
 %dir %attr(755,root,lp) %{_sysconfdir}/%{name}/ppd
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
-%attr(4755,lp,root) %{_bindir}/lppasswd
 %attr(755,root,root) %{_bindir}/cupstestppd
 %attr(755,root,root) %{_bindir}/cupstestdsc
 %attr(755,root,root) %{_bindir}/ppd*
@@ -451,10 +445,8 @@ fi
 %attr(755,root,root) %{_ulibdir}/cups/backend/mdns
 %endif
 %attr(755,root,root) %{_ulibdir}/cups/backend/http
-%attr(755,root,root) %{_ulibdir}/cups/backend/https
 %attr(755,root,root) %{_ulibdir}/cups/backend/ipp
 %attr(755,root,root) %{_ulibdir}/cups/backend/ipp14
-%attr(755,root,root) %{_ulibdir}/cups/backend/ipps
 %attr(755,root,root) %{_ulibdir}/cups/backend/lpd
 %attr(755,root,root) %{_ulibdir}/cups/backend/snmp
 %attr(755,root,root) %{_ulibdir}/cups/backend/socket
@@ -465,16 +457,9 @@ fi
 %attr(755,root,root) %{_ulibdir}/cups/cgi-bin/*.cgi
 %{_ulibdir}/cups/cgi-bin/*.css
 %{_ulibdir}/cups/cgi-bin/*.html
+%{_ulibdir}/cups/cgi-bin/*.png
 %{_ulibdir}/cups/cgi-bin/*.txt
-%lang(ca) %{_ulibdir}/cups/cgi-bin/ca
-%lang(cs) %{_ulibdir}/cups/cgi-bin/cs
-%lang(de) %{_ulibdir}/cups/cgi-bin/de
 %lang(es) %{_ulibdir}/cups/cgi-bin/es
-%lang(fr) %{_ulibdir}/cups/cgi-bin/fr
-%lang(it) %{_ulibdir}/cups/cgi-bin/it
-%lang(ja) %{_ulibdir}/cups/cgi-bin/ja
-%lang(pt_BR) %{_ulibdir}/cups/cgi-bin/pt_BR
-%lang(ru) %{_ulibdir}/cups/cgi-bin/ru
 
 %dir %{_ulibdir}/cups/daemon
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-deviced
@@ -527,18 +512,10 @@ fi
 
 %dir %{_datadir}/cups/templates
 %{_datadir}/cups/templates/*.tmpl
-%lang(ca) %{_datadir}/cups/templates/ca
-%lang(cs) %{_datadir}/cups/templates/cs
-%lang(de) %{_datadir}/cups/templates/de
 %lang(es) %{_datadir}/cups/templates/es
-%lang(fr) %{_datadir}/cups/templates/fr
-%lang(it) %{_datadir}/cups/templates/it
-%lang(ja) %{_datadir}/cups/templates/ja
-%lang(pt_BR) %{_datadir}/cups/templates/pt_BR
-%lang(ru) %{_datadir}/cups/templates/ru
+%{_mandir}/man1/cups.1*
 %{_mandir}/man1/cupstestppd.1*
 %{_mandir}/man1/cupstestdsc.1*
-%{_mandir}/man1/lppasswd.1*
 %{_mandir}/man1/ppd*.1*
 %{_mandir}/man7/backend.7*
 %{_mandir}/man7/filter.7*
@@ -556,9 +533,12 @@ fi
 %{_mandir}/man5/subscriptions.conf.5*
 %{_mandir}/man8/cups-deviced.8*
 %{_mandir}/man8/cups-driverd.8*
+%{_mandir}/man8/cups-exec.8*
 %{_mandir}/man8/cups-snmp.8*
 %{_mandir}/man8/cupsctl.8*
 %{_mandir}/man8/cupsd.8*
+%{_mandir}/man8/cupsd-helper.8*
+%{_mandir}/man8/cupsd-logs.8*
 %{_mandir}/man8/cupsfilter.8*
 
 %dir %attr(775,root,lp) /var/cache/cups
@@ -587,12 +567,10 @@ fi
 %dir %{_datadir}/cups
 %lang(ca) %{_datadir}/locale/ca/cups_ca.po
 %lang(cs) %{_datadir}/locale/cs/cups_cs.po
-%lang(de) %{_datadir}/locale/de/cups_de.po
 %lang(es) %{_datadir}/locale/es/cups_es.po
 %lang(fr) %{_datadir}/locale/fr/cups_fr.po
 %lang(it) %{_datadir}/locale/it/cups_it.po
 %lang(ja) %{_datadir}/locale/ja/cups_ja.po
-%lang(pt_BR) %{_datadir}/locale/pt_BR/cups_pt_BR.po
 %lang(ru) %{_datadir}/locale/ru/cups_ru.po
 
 %files clients
