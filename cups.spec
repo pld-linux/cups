@@ -1,6 +1,6 @@
 #
 # Conditional build:
-%bcond_with	gnutls		# use GNU TLS for SSL/TLS support (instead of OpenSSL)
+%bcond_without	gnutls		# use GNU TLS for SSL/TLS support
 %bcond_with	dnssd		# DNS Service Discovery support via dns_sd API (obsoleted by Avahi patch)
 %bcond_without	avahi		# DNS Service Discovery support via Avahi
 %bcond_without	gssapi		# do not include GSSAPI support
@@ -10,13 +10,13 @@
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	2.0.0
+Version:	2.0.1
 Release:	1
 Epoch:		1
-License:	LGPL v2 (libraries), GPL v2 (the rest) + openssl exception
+License:	LGPL v2 (libraries), GPL v2 (the rest)
 Group:		Applications/Printing
 Source0:	http://www.cups.org/software/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	2cdd81fea23e9e29555c24bdfd0d7c89
+# Source0-md5:	7f7c33071035fb20d0879929a42da711
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -60,7 +60,6 @@ BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	libusb-devel >= 1.0
-%{!?with_gnutls:BuildRequires:	openssl-devel}
 BuildRequires:	pam-devel
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.641
@@ -70,7 +69,6 @@ Requires(post,preun):	/sbin/chkconfig
 Requires(post,preun,postun):	systemd-units >= 38
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Requires:	cups-filters
-Requires:	openssl-tools
 Requires:	pam >= 0.77.3
 Requires:	rc-scripts
 Requires:	systemd-units >= 38
@@ -115,7 +113,7 @@ portável para os sistemas operacionais baseados no UNIX®.
 Summary:	Common Unix Printing System Libraries
 Summary(pl.UTF-8):	Biblioteki dla CUPS
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão - bibliotecas para uso em clientes cups
-License:	LGPL v2 + openssl exception
+License:	LGPL v2
 Group:		Libraries
 Provides:	%{name}-libs = %{epoch}:%{version}-%{release}
 Obsoletes:	cups-libs
@@ -133,7 +131,7 @@ Bibliotecas CUPS requeridas pelos clientes CUPS.
 %package clients
 Summary:	Common Unix Printing System Clients
 Summary(pl.UTF-8):	Aplikacje klienckie dla CUPS
-License:	GPL v2 + openssl exception
+License:	GPL v2
 Group:		Applications/Printing
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Provides:	printingclient
@@ -149,7 +147,7 @@ Aplikacje klienckie dla CUPS.
 Summary:	Common Unix Printing System Libraries - images manipulation
 Summary(pl.UTF-8):	Biblioteki dla CUPS - obsługa formatów graficznych
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão - bibliotecas para uso em clientes cups
-License:	LGPL v2 + openssl exception
+License:	LGPL v2
 Group:		Libraries
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 Obsoletes:	libcups1
@@ -167,14 +165,13 @@ Bibliotecas CUPS requeridas pelos clientes CUPS.
 Summary:	Common Unix Printing System development files
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa - pliki nagłówkowe
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão - ambiente de desenvolvimento
-License:	LGPL v2 + openssl exception
+License:	LGPL v2
 Group:		Development/Libraries
 Requires:	%{name}-image-lib = %{epoch}:%{version}-%{release}
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 # for libcups
 %{?with_gnutls:Requires:	gnutls-devel}
 %{?with_gssapi:Requires:	heimdal-devel}
-%{!?with_gnutls:Requires:	openssl-devel}
 Requires:	zlib-devel
 # for libcupsimage
 Requires:	libjpeg-devel
@@ -197,7 +194,7 @@ CUPS.
 Summary:	Common Unix Printing System static libraries
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa - biblioteki statyczne
 Summary(pt_BR.UTF-8):	Common Unix Printing System - bibliotecas estáticas
-License:	LGPL v2 + openssl exception
+License:	LGPL v2
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 
@@ -214,7 +211,7 @@ bibliotecas do CUPS.
 %package backend-usb
 Summary:	USB backend for CUPS
 Summary(pl.UTF-8):	Backend USB dla CUPS-a
-License:	GPL v2 + openssl exception
+License:	GPL v2
 Group:		Applications/Printing
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
@@ -227,7 +224,7 @@ Ten pakiet umożliwia drukowanie z poziomu CUPS-a na drukarkach USB.
 %package lpd
 Summary:	LPD compatibility support for CUPS print server
 Summary(pl.UTF-8):	Wsparcie dla LPD w serwerze wydruków CUPS
-License:	GPL v2 + openssl exception
+License:	GPL v2
 Group:		Applications/Printing
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	rc-inetd
@@ -280,7 +277,6 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 	--enable-gssapi%{!?with_gssapi:=no} \
 	--enable-libpaper \
 	--enable-libusb \
-	--enable-openssl%{?with_gnutls:=no} \
 	--enable-shared \
 	--enable-ssl \
 	%{?with_static_libs:--enable-static} \
@@ -445,8 +441,10 @@ fi
 %attr(755,root,root) %{_ulibdir}/cups/backend/mdns
 %endif
 %attr(755,root,root) %{_ulibdir}/cups/backend/http
+%attr(755,root,root) %{_ulibdir}/cups/backend/https
 %attr(755,root,root) %{_ulibdir}/cups/backend/ipp
 %attr(755,root,root) %{_ulibdir}/cups/backend/ipp14
+%attr(755,root,root) %{_ulibdir}/cups/backend/ipps
 %attr(755,root,root) %{_ulibdir}/cups/backend/lpd
 %attr(755,root,root) %{_ulibdir}/cups/backend/snmp
 %attr(755,root,root) %{_ulibdir}/cups/backend/socket
@@ -658,4 +656,6 @@ fi
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/rc-inetd/cups-lpd
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-lpd
+%{systemdunitdir}/org.cups.cups-lpd.socket
+%{systemdunitdir}/org.cups.cups-lpd@.service
 %{_mandir}/man8/cups-lpd.8*
