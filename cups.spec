@@ -10,13 +10,13 @@
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	2.0.1
+Version:	2.0.2
 Release:	1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest)
 Group:		Applications/Printing
 Source0:	http://www.cups.org/software/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	7f7c33071035fb20d0879929a42da711
+# Source0-md5:	6e0ea72dbafcf5baaa1cf4178e71096d
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -458,6 +458,7 @@ fi
 %{_ulibdir}/cups/cgi-bin/*.png
 %{_ulibdir}/cups/cgi-bin/*.txt
 %lang(es) %{_ulibdir}/cups/cgi-bin/es
+%lang(ja) %{_ulibdir}/cups/cgi-bin/ja
 
 %dir %{_ulibdir}/cups/daemon
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-deviced
@@ -511,6 +512,7 @@ fi
 %dir %{_datadir}/cups/templates
 %{_datadir}/cups/templates/*.tmpl
 %lang(es) %{_datadir}/cups/templates/es
+%lang(ja) %{_datadir}/cups/templates/ja
 %{_mandir}/man1/cups.1*
 %{_mandir}/man1/cupstestppd.1*
 %{_mandir}/man1/cupstestdsc.1*
