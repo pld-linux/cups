@@ -1,6 +1,5 @@
 /var/log/cups/*log {
 	olddir /var/log/archive/cups
-	compress
 	create 660 root logs
 	postrotate
 		/sbin/service cups restart > /dev/null
