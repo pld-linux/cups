@@ -48,8 +48,8 @@ URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake
-%{?with_dnssd:BuildRequires:    avahi-compat-libdns_sd-devel}
-%{?with_avahi:BuildRequires: avahi-devel}
+%{?with_dnssd:BuildRequires:	avahi-compat-libdns_sd-devel}
+%{?with_avahi:BuildRequires:	avahi-devel}
 BuildRequires:	dbus-devel
 BuildRequires:	glibc-headers
 %{?with_gnutls:BuildRequires:	gnutls-devel}
@@ -367,7 +367,7 @@ FileDevice\|FontPath\|Group\|LogFilePerm\|\
 LPDConfigFile\|PageLog\|Printcap\|PrintcapFormat\|\
 RemoteRoot\|RequestRoot\|ServerBin\|ServerCertificate\|\
 ServerKey\|ServerRoot\|SMBConfigFile\|StateDir\|\
-SystemGroup\|SystemGroupAuthKey\|TempDir\|User\)"
+SystemGroup\|SystemGroupAuthKey\|TempDir\|User\)\b"
 if [ -f %{_sysconfdir}/cups/cupsd.conf ] && grep -iq "$_keywords" %{_sysconfdir}/cups/cupsd.conf; then
 	echo "# Settings automatically moved from cupsd.conf by RPM package:" >> %{_sysconfdir}/cups/cups-files.conf
 	grep -i "$_keywords" %{_sysconfdir}/cups/cupsd.conf >> %{_sysconfdir}/cups/cups-files.conf || :
@@ -400,7 +400,7 @@ fi
 %service -q rc-inetd reload
 
 %postun lpd
-if [ "$1" = 0 ]; then
+if [ "$1" = "0" ]; then
 	%service -q rc-inetd reload
 fi
 
