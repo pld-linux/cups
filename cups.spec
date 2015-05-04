@@ -67,11 +67,11 @@ BuildRequires:	zlib-devel
 Requires(post,preun):	/sbin/chkconfig
 Requires(post,preun,postun):	systemd-units >= 38
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
-Requires:	cups-filters
 Requires:	pam >= 0.77.3
 Requires:	rc-scripts
 Requires:	systemd-units >= 38
 Suggests:	ImageMagick-coder-pdf
+Suggests:	cups-filters
 Suggests:	poppler-progs
 Provides:	printingdaemon
 Obsoletes:	printingdaemon
@@ -351,7 +351,6 @@ ln -s accept $RPM_BUILD_ROOT%{_sbindir}/enable
 ln -s accept $RPM_BUILD_ROOT%{_sbindir}/disable
 
 # shipped in cups-filters
-%{__rm} -r $RPM_BUILD_ROOT%{_datadir}/cups/banners
 %{__rm} -r $RPM_BUILD_ROOT%{_datadir}/cups/data/testprint
 
 %clean
@@ -480,6 +479,7 @@ fi
 %attr(755,root,root) %{_ulibdir}/cups/notifier/mailto
 %attr(755,root,root) %{_ulibdir}/cups/notifier/rss
 
+%dir %{_datadir}/cups/banners
 %dir %{_datadir}/cups/data
 %dir %{_datadir}/cups/drivers
 %dir %{_datadir}/cups/drv
