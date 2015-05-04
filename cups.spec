@@ -351,6 +351,7 @@ ln -s accept $RPM_BUILD_ROOT%{_sbindir}/enable
 ln -s accept $RPM_BUILD_ROOT%{_sbindir}/disable
 
 # shipped in cups-filters
+%{__rm} -r $RPM_BUILD_ROOT%{_datadir}/cups/banners/*
 %{__rm} -r $RPM_BUILD_ROOT%{_datadir}/cups/data/testprint
 
 %clean
