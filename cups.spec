@@ -10,13 +10,13 @@
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	2.0.2
-Release:	4
+Version:	2.1.0
+Release:	1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest)
 Group:		Applications/Printing
 Source0:	http://www.cups.org/software/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	6e0ea72dbafcf5baaa1cf4178e71096d
+# Source0-md5:	c4e57a66298bfdba66bb3d5bedd317a4
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -350,10 +350,6 @@ install -d $RPM_BUILD_ROOT%{_sysconfdir}/cups/ssl
 ln -s accept $RPM_BUILD_ROOT%{_sbindir}/enable
 ln -s accept $RPM_BUILD_ROOT%{_sbindir}/disable
 
-# shipped in cups-filters
-%{__rm} -r $RPM_BUILD_ROOT%{_datadir}/cups/banners/*
-%{__rm} -r $RPM_BUILD_ROOT%{_datadir}/cups/data/testprint
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -455,8 +451,10 @@ fi
 %{_ulibdir}/cups/cgi-bin/*.html
 %{_ulibdir}/cups/cgi-bin/*.png
 %{_ulibdir}/cups/cgi-bin/*.txt
+%lang(de) %{_ulibdir}/cups/cgi-bin/de
 %lang(es) %{_ulibdir}/cups/cgi-bin/es
 %lang(ja) %{_ulibdir}/cups/cgi-bin/ja
+%lang(ru) %{_ulibdir}/cups/cgi-bin/ru
 
 %dir %{_ulibdir}/cups/daemon
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-deviced
@@ -510,8 +508,10 @@ fi
 
 %dir %{_datadir}/cups/templates
 %{_datadir}/cups/templates/*.tmpl
+%lang(de) %{_datadir}/cups/templates/de
 %lang(es) %{_datadir}/cups/templates/es
 %lang(ja) %{_datadir}/cups/templates/ja
+%lang(ru) %{_datadir}/cups/templates/ru
 %{_mandir}/man1/cups.1*
 %{_mandir}/man1/cupstestppd.1*
 %{_mandir}/man1/cupstestdsc.1*
@@ -523,6 +523,7 @@ fi
 %{_mandir}/man5/cups-files.conf.5*
 %{_mandir}/man5/cups-snmp.conf.5*
 %{_mandir}/man5/cupsd.conf.5*
+%{_mandir}/man5/cupsd-logs.5*
 %{_mandir}/man5/ipptoolfile.5*
 %{_mandir}/man5/mailto.conf.5*
 %{_mandir}/man5/mime.convs.5*
@@ -537,7 +538,6 @@ fi
 %{_mandir}/man8/cupsctl.8*
 %{_mandir}/man8/cupsd.8*
 %{_mandir}/man8/cupsd-helper.8*
-%{_mandir}/man8/cupsd-logs.8*
 %{_mandir}/man8/cupsfilter.8*
 
 %dir %attr(775,root,lp) /var/cache/cups
@@ -566,6 +566,7 @@ fi
 %dir %{_datadir}/cups
 %lang(ca) %{_datadir}/locale/ca/cups_ca.po
 %lang(cs) %{_datadir}/locale/cs/cups_cs.po
+%lang(de) %{_datadir}/locale/de/cups_de.po
 %lang(es) %{_datadir}/locale/es/cups_es.po
 %lang(fr) %{_datadir}/locale/fr/cups_fr.po
 %lang(it) %{_datadir}/locale/it/cups_it.po
