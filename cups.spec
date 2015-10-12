@@ -290,7 +290,7 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 	%{?with_dnssd:--with-dnssd-includes=x} \
 	--with-optim=-Wno-format-y2k \
 	%{?with_python:--with-python=%{_bindir}/python} \
-	--with-systemdsystemunitdir=%{systemdunitdir}
+	--with-systemd=%{systemdunitdir}
 
 %{__make} %{?debug:OPTIONS="-DDEBUG"}
 
