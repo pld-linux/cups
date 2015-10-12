@@ -53,11 +53,8 @@ BuildRequires:	dbus-devel
 BuildRequires:	glibc-headers
 %{?with_gnutls:BuildRequires:	gnutls-devel}
 %{?with_gssapi:BuildRequires:	heimdal-devel}
-BuildRequires:	libjpeg-devel
 BuildRequires:	libpaper-devel
-BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
-BuildRequires:	libtiff-devel
 BuildRequires:	libusb-devel >= 1.0
 BuildRequires:	pam-devel
 BuildRequires:	pkgconfig
