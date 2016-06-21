@@ -11,7 +11,7 @@ Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	2.1.4
-Release:	1
+Release:	2
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest)
 Group:		Applications/Printing
@@ -316,7 +316,7 @@ ln -s %{_ulibdir}/cups/backend/dnssd $RPM_BUILD_ROOT%{_ulibdir}/cups/backend/mdn
 %endif
 
 cp -p %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
-cp -p %{SOURCE2} $RPM_BUILD_ROOT/etc/pam.d/%{name}
+cp -pf %{SOURCE2} $RPM_BUILD_ROOT/etc/pam.d/%{name}
 cp -p %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/%{name}
 cp -p %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/cups/mailto.conf
 sed -e 's|__ULIBDIR__|%{_ulibdir}|g' %{SOURCE5} > $RPM_BUILD_ROOT/etc/sysconfig/rc-inetd/cups-lpd
