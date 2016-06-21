@@ -10,13 +10,13 @@
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	2.1.3
+Version:	2.1.4
 Release:	1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest)
 Group:		Applications/Printing
-Source0:	http://www.cups.org/software/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	62b8fafd590e75f72316915790b0850a
+Source0:	https://github.com/apple/cups/archive/release-%{version}.tar.gz
+# Source0-md5:	5a9b778799f3d43f8be9c3b7ac69d012
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -166,8 +166,8 @@ Group:		Development/Libraries
 Requires:	%{name}-image-lib = %{epoch}:%{version}-%{release}
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 # for libcups
-%{?with_gnutls:Requires:	gnutls-devel}
-%{?with_gssapi:Requires:	heimdal-devel}
+%{?with_gnutls:Requires: gnutls-devel}
+%{?with_gssapi:Requires: heimdal-devel}
 Requires:	zlib-devel
 # for libcupsimage
 Requires:	libjpeg-devel
@@ -232,7 +232,7 @@ LPD compatibility support for CUPS print server.
 Wsparcie dla LPD w serwerze wydruków CUPS.
 
 %prep
-%setup -q
+%setup -q -n %{name}-release-%{version}
 %patch0 -p1
 %patch2 -p1
 %patch3 -p1
@@ -315,13 +315,13 @@ fi
 ln -s %{_ulibdir}/cups/backend/dnssd $RPM_BUILD_ROOT%{_ulibdir}/cups/backend/mdns
 %endif
 
-install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
-install %{SOURCE2} $RPM_BUILD_ROOT/etc/pam.d/%{name}
-install %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/%{name}
-install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/cups/mailto.conf
+cp -p %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
+cp -p %{SOURCE2} $RPM_BUILD_ROOT/etc/pam.d/%{name}
+cp -p %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/%{name}
+cp -p %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/cups/mailto.conf
 sed -e 's|__ULIBDIR__|%{_ulibdir}|g' %{SOURCE5} > $RPM_BUILD_ROOT/etc/sysconfig/rc-inetd/cups-lpd
-install %{SOURCE6} $RPM_BUILD_ROOT/etc/modprobe.d/cups.conf
-install %{SOURCE7} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
+cp -p %{SOURCE6} $RPM_BUILD_ROOT/etc/modprobe.d/cups.conf
+cp -p %{SOURCE7} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 
 touch $RPM_BUILD_ROOT/var/log/cups/{access_log,error_log,page_log}
 touch $RPM_BUILD_ROOT/etc/security/blacklist.cups
@@ -451,6 +451,7 @@ fi
 %lang(de) %{_ulibdir}/cups/cgi-bin/de
 %lang(es) %{_ulibdir}/cups/cgi-bin/es
 %lang(ja) %{_ulibdir}/cups/cgi-bin/ja
+%lang(pt_BR) %{_ulibdir}/cups/cgi-bin/pt_BR
 %lang(ru) %{_ulibdir}/cups/cgi-bin/ru
 
 %dir %{_ulibdir}/cups/daemon
@@ -508,6 +509,7 @@ fi
 %lang(de) %{_datadir}/cups/templates/de
 %lang(es) %{_datadir}/cups/templates/es
 %lang(ja) %{_datadir}/cups/templates/ja
+%lang(pt_BR) %{_datadir}/cups/templates/pt_BR
 %lang(ru) %{_datadir}/cups/templates/ru
 %{_mandir}/man1/cups.1*
 %{_mandir}/man1/cupstestppd.1*
@@ -561,14 +563,15 @@ fi
 %attr(755,root,root) %{_libdir}/libcupsmime.so.*
 %attr(755,root,root) %{_libdir}/libcupsppdc.so.*
 %dir %{_datadir}/cups
-%lang(ca) %{_datadir}/locale/ca/cups_ca.po
-%lang(cs) %{_datadir}/locale/cs/cups_cs.po
-%lang(de) %{_datadir}/locale/de/cups_de.po
-%lang(es) %{_datadir}/locale/es/cups_es.po
-%lang(fr) %{_datadir}/locale/fr/cups_fr.po
-%lang(it) %{_datadir}/locale/it/cups_it.po
-%lang(ja) %{_datadir}/locale/ja/cups_ja.po
-%lang(ru) %{_datadir}/locale/ru/cups_ru.po
+%lang(ca) %{_localedir}/ca/cups_ca.po
+%lang(cs) %{_localedir}/cs/cups_cs.po
+%lang(de) %{_localedir}/de/cups_de.po
+%lang(es) %{_localedir}/es/cups_es.po
+%lang(fr) %{_localedir}/fr/cups_fr.po
+%lang(it) %{_localedir}/it/cups_it.po
+%lang(ja) %{_localedir}/ja/cups_ja.po
+%lang(pt_BR) %{_localedir}/pt_BR/cups_pt_BR.po
+%lang(ru) %{_localedir}/ru/cups_ru.po
 
 %files clients
 %defattr(644,root,root,755)
