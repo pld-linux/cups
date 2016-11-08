@@ -10,13 +10,13 @@
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	2.1.4
-Release:	2
+Version:	2.2.1
+Release:	1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest)
 Group:		Applications/Printing
-Source0:	https://github.com/apple/cups/archive/release-%{version}.tar.gz
-# Source0-md5:	5a9b778799f3d43f8be9c3b7ac69d012
+Source0:	https://github.com/apple/cups/releases/download/v%{version}/%{name}-%{version}-source.tar.gz
+# Source0-md5:	a94da2a1e9dbdccb4f3836a38a431931
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -43,6 +43,22 @@ Patch18:	%{name}-final-content-type.patch
 # avahi patches from fedora
 Patch100:	%{name}-avahi-address.patch
 Patch101:	%{name}-avahi-no-threaded.patch
+Patch102:	cups-banners.patch
+Patch103:	cups-pid.patch
+Patch104:	cups-eggcups.patch
+Patch105:	cups-driverd-timeout.patch
+Patch106:	cups-logrotate.patch
+Patch107:	cups-res_init.patch
+Patch108:	cups-filter-debug.patch
+Patch109:	cups-hp-deviceid-oid.patch
+Patch110:	cups-dnssd-deviceid.patch
+Patch111:	cups-ricoh-deviceid-oid.patch
+Patch112:	cups-enum-all.patch
+Patch113:	cups-dymo-deviceid.patch
+Patch114:	cups-freebind.patch
+Patch115:	cups-ipp-multifile.patch
+Patch116:	cups-web-devices-timeout.patch
+Patch117:	cups-lspp.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 BuildRequires:	autoconf >= 2.60
@@ -232,7 +248,7 @@ LPD compatibility support for CUPS print server.
 Wsparcie dla LPD w serwerze wydruków CUPS.
 
 %prep
-%setup -q -n %{name}-release-%{version}
+%setup -q
 %patch0 -p1
 %patch2 -p1
 %patch3 -p1
@@ -256,6 +272,23 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 %patch100 -p1
 %patch101 -p1
 %endif
+
+%patch102 -p1
+%patch103 -p1
+%patch104 -p1
+%patch105 -p1
+%patch106 -p1
+%patch107 -p1
+%patch108 -p1
+%patch109 -p1
+%patch110 -p1
+%patch111 -p1
+%patch112 -p1
+%patch113 -p1
+%patch114 -p1
+%patch115 -p1
+%patch116 -p1
+%patch117 -p1
 
 %build
 %{__aclocal} -I config-scripts
@@ -415,7 +448,6 @@ fi
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/snmp.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/security/blacklist.cups
 %dir %attr(700,root,lp) %{_sysconfdir}/%{name}/ssl
-%dir %{_sysconfdir}/%{name}/interfaces
 %dir %attr(755,root,lp) %{_sysconfdir}/%{name}/ppd
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
 %attr(755,root,root) %{_bindir}/cupstestppd
