@@ -3,9 +3,11 @@
 %bcond_without	gnutls		# use GNU TLS for SSL/TLS support
 %bcond_with	dnssd		# DNS Service Discovery support via dns_sd API (obsoleted by Avahi patch)
 %bcond_without	avahi		# DNS Service Discovery support via Avahi
-%bcond_without	gssapi		# do not include GSSAPI support
-%bcond_without	python		# don't build Python support in web interface
-%bcond_without	static_libs	# don't build static library
+%bcond_without	gssapi		# GSSAPI support
+%bcond_with	lspp		# audit and SELinux label support (lspp patch)
+%bcond_with	tcp_wrappers	# tcp_wrappers/libwrap support
+%bcond_without	python		# Python support in web interface
+%bcond_without	static_libs	# static library
 
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
@@ -61,6 +63,7 @@ Patch116:	cups-web-devices-timeout.patch
 Patch117:	cups-lspp.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
+%{?with_lspp:BuildRequires:	audit-libs-devel}
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake
 %{?with_dnssd:BuildRequires:	avahi-compat-libdns_sd-devel}
@@ -70,8 +73,10 @@ BuildRequires:	glibc-headers
 %{?with_gnutls:BuildRequires:	gnutls-devel}
 %{?with_gssapi:BuildRequires:	heimdal-devel}
 BuildRequires:	libpaper-devel
+%{?with_lspp:BuildRequires:	libselinux-devel}
 BuildRequires:	libstdc++-devel
 BuildRequires:	libusb-devel >= 1.0
+%{?with_tcp_wrappers:BuildRequires:	libwrap-devel}
 BuildRequires:	pam-devel
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.641
@@ -305,9 +310,11 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 	--enable-gssapi%{!?with_gssapi:=no} \
 	--enable-libpaper \
 	--enable-libusb \
+	%{?with_lspp:--enable-lspp} \
 	--enable-shared \
 	--enable-ssl \
 	%{?with_static_libs:--enable-static} \
+	%{?with_tcp_wrappers:--enable-tcp-wrappers} \
 	--with-cups-group=lp \
 	--with-cups-user=lp \
 	--with-system-groups=sys \
