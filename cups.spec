@@ -12,13 +12,13 @@
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	2.2.1
-Release:	2
+Version:	2.2.4
+Release:	1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest)
 Group:		Applications/Printing
 Source0:	https://github.com/apple/cups/releases/download/v%{version}/%{name}-%{version}-source.tar.gz
-# Source0-md5:	a94da2a1e9dbdccb4f3836a38a431931
+# Source0-md5:	d26e5a0a574a69fe1d01079b2931fc49
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -55,7 +55,7 @@ Patch108:	cups-filter-debug.patch
 Patch109:	cups-hp-deviceid-oid.patch
 Patch110:	cups-dnssd-deviceid.patch
 Patch111:	cups-ricoh-deviceid-oid.patch
-Patch112:	cups-enum-all.patch
+
 Patch113:	cups-dymo-deviceid.patch
 Patch114:	cups-freebind.patch
 Patch115:	cups-ipp-multifile.patch
@@ -288,7 +288,7 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 %patch109 -p1
 %patch110 -p1
 %patch111 -p1
-%patch112 -p1
+
 %patch113 -p1
 %patch114 -p1
 %patch115 -p1
@@ -611,6 +611,7 @@ fi
 %lang(ja) %{_localedir}/ja/cups_ja.po
 %lang(pt_BR) %{_localedir}/pt_BR/cups_pt_BR.po
 %lang(ru) %{_localedir}/ru/cups_ru.po
+%lang(zh_CN) %{_localedir}/zh_CN/cups_zh_CN.po
 
 %files clients
 %defattr(644,root,root,755)
