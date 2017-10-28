@@ -12,13 +12,13 @@
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	2.2.4
+Version:	2.2.5
 Release:	1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest)
 Group:		Applications/Printing
 Source0:	https://github.com/apple/cups/releases/download/v%{version}/%{name}-%{version}-source.tar.gz
-# Source0-md5:	d26e5a0a574a69fe1d01079b2931fc49
+# Source0-md5:	76294dff74c3baf3fdf7c626cd48b873
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -547,6 +547,7 @@ fi
 %{_datadir}/cups/templates/*.tmpl
 %lang(de) %{_datadir}/cups/templates/de
 %lang(es) %{_datadir}/cups/templates/es
+%lang(fr) %{_datadir}/cups/templates/fr
 %lang(ja) %{_datadir}/cups/templates/ja
 %lang(pt_BR) %{_datadir}/cups/templates/pt_BR
 %lang(ru) %{_datadir}/cups/templates/ru
