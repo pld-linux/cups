@@ -12,13 +12,13 @@
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	2.2.7
-Release:	2
+Version:	2.2.8
+Release:	1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest)
 Group:		Applications/Printing
 Source0:	https://github.com/apple/cups/releases/download/v%{version}/%{name}-%{version}-source.tar.gz
-# Source0-md5:	ac703bcde223dab6d205a5fff193f716
+# Source0-md5:	33150d08993a04c8e22176e93805a051
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -61,7 +61,6 @@ Patch114:	cups-freebind.patch
 Patch115:	cups-ipp-multifile.patch
 Patch116:	cups-web-devices-timeout.patch
 Patch117:	cups-lspp.patch
-Patch118:	cups-bug-5289.patch
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 %{?with_lspp:BuildRequires:	audit-libs-devel}
@@ -295,7 +294,6 @@ Wsparcie dla LPD w serwerze wydruków CUPS.
 %patch115 -p1
 %patch116 -p1
 %patch117 -p1
-%patch118 -p1
 
 %build
 %{__aclocal} -I config-scripts
