@@ -13,7 +13,7 @@ Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	2.2.8
-Release:	1
+Release:	2
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest)
 Group:		Applications/Printing
@@ -85,6 +85,7 @@ BuildRequires:	zlib-devel
 Requires(post,preun):	/sbin/chkconfig
 Requires(post,preun,postun):	systemd-units >= 38
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
+Requires:	%{name}-ppdc = %{epoch}:%{version}-%{release}
 Requires:	pam >= 0.77.3
 Requires:	rc-scripts
 Requires:	systemd-units >= 38
@@ -126,6 +127,62 @@ drukarek.
 O sistema Unix de impressão (CUPS) fornece uma camada de impressão
 portável para os sistemas operacionais baseados no UNIX®.
 
+%package backend-usb
+Summary:	USB backend for CUPS
+Summary(pl.UTF-8):	Backend USB dla CUPS-a
+License:	GPL v2
+Group:		Applications/Printing
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+
+%description backend-usb
+This package allow CUPS printing on USB printers.
+
+%description backend-usb -l pl.UTF-8
+Ten pakiet umożliwia drukowanie z poziomu CUPS-a na drukarkach USB.
+
+%package lpd
+Summary:	LPD compatibility support for CUPS print server
+Summary(pl.UTF-8):	Wsparcie dla LPD w serwerze wydruków CUPS
+License:	GPL v2
+Group:		Applications/Printing
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	rc-inetd
+
+%description lpd
+LPD compatibility support for CUPS print server.
+
+%description lpd -l pl.UTF-8
+Wsparcie dla LPD w serwerze wydruków CUPS.
+
+%package ppdc
+Summary:	Common Unix Printing System - PPD manipulation utilities
+Summary(pl.UTF-8):	Narzędzia CUPS do operacji na plikach PPD
+License:	GPL v2
+Group:		Applications/Printing
+Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
+
+%description ppdc
+This package provides utilities to generate and manipulate PPD files.
+
+%description ppdc -l pl.UTF-8
+Ten pakiet zawiera narzędzia do generowania i operowania na plikach
+PPD.
+
+%package clients
+Summary:	Common Unix Printing System Clients
+Summary(pl.UTF-8):	Aplikacje klienckie dla CUPS
+License:	GPL v2
+Group:		Applications/Printing
+Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
+Provides:	printingclient
+Obsoletes:	printingclient
+
+%description clients
+Common Unix Printing System Clients.
+
+%description clients -l pl.UTF-8
+Aplikacje klienckie dla CUPS.
+
 %package lib
 Summary:	Common Unix Printing System Libraries
 Summary(pl.UTF-8):	Biblioteki dla CUPS
@@ -144,21 +201,6 @@ Biblioteki dla CUPS.
 
 %description lib -l pt_BR.UTF-8
 Bibliotecas CUPS requeridas pelos clientes CUPS.
-
-%package clients
-Summary:	Common Unix Printing System Clients
-Summary(pl.UTF-8):	Aplikacje klienckie dla CUPS
-License:	GPL v2
-Group:		Applications/Printing
-Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
-Provides:	printingclient
-Obsoletes:	printingclient
-
-%description clients
-Common Unix Printing System Clients.
-
-%description clients -l pl.UTF-8
-Aplikacje klienckie dla CUPS.
 
 %package image-lib
 Summary:	Common Unix Printing System Libraries - images manipulation
@@ -224,33 +266,6 @@ Ogólny system druku dla Uniksa - biblioteki statyczne.
 %description static -l pt_BR.UTF-8
 Bibliotecas estáticas para desenvolvimento de programas que usam as
 bibliotecas do CUPS.
-
-%package backend-usb
-Summary:	USB backend for CUPS
-Summary(pl.UTF-8):	Backend USB dla CUPS-a
-License:	GPL v2
-Group:		Applications/Printing
-Requires:	%{name} = %{epoch}:%{version}-%{release}
-
-%description backend-usb
-This package allow CUPS printing on USB printers.
-
-%description backend-usb -l pl.UTF-8
-Ten pakiet umożliwia drukowanie z poziomu CUPS-a na drukarkach USB.
-
-%package lpd
-Summary:	LPD compatibility support for CUPS print server
-Summary(pl.UTF-8):	Wsparcie dla LPD w serwerze wydruków CUPS
-License:	GPL v2
-Group:		Applications/Printing
-Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	rc-inetd
-
-%description lpd
-LPD compatibility support for CUPS print server.
-
-%description lpd -l pl.UTF-8
-Wsparcie dla LPD w serwerze wydruków CUPS.
 
 %prep
 %setup -q
@@ -459,7 +474,6 @@ fi
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
 %attr(755,root,root) %{_bindir}/cupstestppd
 %attr(755,root,root) %{_bindir}/cupstestdsc
-%attr(755,root,root) %{_bindir}/ppd*
 %attr(755,root,root) %{_sbindir}/cupsctl
 %attr(755,root,root) %{_sbindir}/cupsd
 %attr(755,root,root) %{_sbindir}/cupsfilter
@@ -518,10 +532,6 @@ fi
 %dir %{_datadir}/cups/banners
 %dir %{_datadir}/cups/data
 %dir %{_datadir}/cups/drivers
-%dir %{_datadir}/cups/drv
-%{_datadir}/cups/drv/sample.drv
-%dir %{_datadir}/cups/examples
-%{_datadir}/cups/examples/*.drv
 %dir %{_datadir}/cups/mime
 %{_datadir}/cups/mime/mime.convs
 %{_datadir}/cups/mime/mime.types
@@ -535,14 +545,6 @@ fi
 %lang(pl) %dir %{_datadir}/cups/model/pl
 %lang(sv) %dir %{_datadir}/cups/model/sv
 
-%dir %{_datadir}/cups/ppdc
-%{_datadir}/cups/ppdc/epson.h
-%{_datadir}/cups/ppdc/hp.h
-%{_datadir}/cups/ppdc/label.h
-%{_datadir}/cups/ppdc/font.defs
-%{_datadir}/cups/ppdc/media.defs
-%{_datadir}/cups/ppdc/raster.defs
-
 %dir %{_datadir}/cups/templates
 %{_datadir}/cups/templates/*.tmpl
 %lang(de) %{_datadir}/cups/templates/de
@@ -554,10 +556,6 @@ fi
 %{_mandir}/man1/cups.1*
 %{_mandir}/man1/cupstestppd.1*
 %{_mandir}/man1/cupstestdsc.1*
-%{_mandir}/man1/ppd*.1*
-%{_mandir}/man7/backend.7*
-%{_mandir}/man7/filter.7*
-%{_mandir}/man7/notifier.7*
 %{_mandir}/man5/classes.conf.5*
 %{_mandir}/man5/cups-files.conf.5*
 %{_mandir}/man5/cups-snmp.conf.5*
@@ -567,9 +565,11 @@ fi
 %{_mandir}/man5/mailto.conf.5*
 %{_mandir}/man5/mime.convs.5*
 %{_mandir}/man5/mime.types.5*
-%{_mandir}/man5/ppdcfile.5*
 %{_mandir}/man5/printers.conf.5*
 %{_mandir}/man5/subscriptions.conf.5*
+%{_mandir}/man7/backend.7*
+%{_mandir}/man7/filter.7*
+%{_mandir}/man7/notifier.7*
 %{_mandir}/man8/cups-deviced.8*
 %{_mandir}/man8/cups-driverd.8*
 %{_mandir}/man8/cups-exec.8*
@@ -595,24 +595,36 @@ fi
 %attr(640,root,logs) %ghost /var/log/cups/error_log
 %attr(640,root,logs) %ghost /var/log/cups/page_log
 
-%files lib
+%files backend-usb
 %defattr(644,root,root,755)
-%dir %attr(755,root,lp) %{_sysconfdir}/%{name}
-%attr(755,root,root) %{_libdir}/libcups.so.*
-%attr(755,root,root) %{_libdir}/libcupscgi.so.*
-%attr(755,root,root) %{_libdir}/libcupsmime.so.*
-%attr(755,root,root) %{_libdir}/libcupsppdc.so.*
-%dir %{_datadir}/cups
-%lang(ca) %{_localedir}/ca/cups_ca.po
-%lang(cs) %{_localedir}/cs/cups_cs.po
-%lang(de) %{_localedir}/de/cups_de.po
-%lang(es) %{_localedir}/es/cups_es.po
-%lang(fr) %{_localedir}/fr/cups_fr.po
-%lang(it) %{_localedir}/it/cups_it.po
-%lang(ja) %{_localedir}/ja/cups_ja.po
-%lang(pt_BR) %{_localedir}/pt_BR/cups_pt_BR.po
-%lang(ru) %{_localedir}/ru/cups_ru.po
-%lang(zh_CN) %{_localedir}/zh_CN/cups_zh_CN.po
+%attr(755,root,root) %{_ulibdir}/cups/backend/usb
+%dir %{_datadir}/cups/usb
+%{_datadir}/cups/usb/org.cups.usb-quirks
+
+%files lpd
+%defattr(644,root,root,755)
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/rc-inetd/cups-lpd
+%attr(755,root,root) %{_ulibdir}/cups/daemon/cups-lpd
+%{systemdunitdir}/org.cups.cups-lpd.socket
+%{systemdunitdir}/org.cups.cups-lpd@.service
+%{_mandir}/man8/cups-lpd.8*
+
+%files ppdc
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/ppd*
+%dir %{_datadir}/cups/drv
+%{_datadir}/cups/drv/sample.drv
+%dir %{_datadir}/cups/examples
+%{_datadir}/cups/examples/*.drv
+%dir %{_datadir}/cups/ppdc
+%{_datadir}/cups/ppdc/epson.h
+%{_datadir}/cups/ppdc/hp.h
+%{_datadir}/cups/ppdc/label.h
+%{_datadir}/cups/ppdc/font.defs
+%{_datadir}/cups/ppdc/media.defs
+%{_datadir}/cups/ppdc/raster.defs
+%{_mandir}/man1/ppd*.1*
+%{_mandir}/man5/ppdcfile.5*
 
 %files clients
 %defattr(644,root,root,755)
@@ -664,6 +676,25 @@ fi
 %{_mandir}/man8/lpmove.8*
 %{_mandir}/man8/reject.8*
 
+%files lib
+%defattr(644,root,root,755)
+%dir %attr(755,root,lp) %{_sysconfdir}/%{name}
+%attr(755,root,root) %{_libdir}/libcups.so.*
+%attr(755,root,root) %{_libdir}/libcupscgi.so.*
+%attr(755,root,root) %{_libdir}/libcupsmime.so.*
+%attr(755,root,root) %{_libdir}/libcupsppdc.so.*
+%dir %{_datadir}/cups
+%lang(ca) %{_localedir}/ca/cups_ca.po
+%lang(cs) %{_localedir}/cs/cups_cs.po
+%lang(de) %{_localedir}/de/cups_de.po
+%lang(es) %{_localedir}/es/cups_es.po
+%lang(fr) %{_localedir}/fr/cups_fr.po
+%lang(it) %{_localedir}/it/cups_it.po
+%lang(ja) %{_localedir}/ja/cups_ja.po
+%lang(pt_BR) %{_localedir}/pt_BR/cups_pt_BR.po
+%lang(ru) %{_localedir}/ru/cups_ru.po
+%lang(zh_CN) %{_localedir}/zh_CN/cups_zh_CN.po
+
 %files image-lib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libcupsimage.so.*
@@ -688,17 +719,3 @@ fi
 %{_libdir}/libcupsmime.a
 %{_libdir}/libcupsppdc.a
 %endif
-
-%files backend-usb
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_ulibdir}/cups/backend/usb
-%dir %{_datadir}/cups/usb
-%{_datadir}/cups/usb/org.cups.usb-quirks
-
-%files lpd
-%defattr(644,root,root,755)
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/rc-inetd/cups-lpd
-%attr(755,root,root) %{_ulibdir}/cups/daemon/cups-lpd
-%{systemdunitdir}/org.cups.cups-lpd.socket
-%{systemdunitdir}/org.cups.cups-lpd@.service
-%{_mandir}/man8/cups-lpd.8*
