@@ -97,9 +97,9 @@ diff -up cups-2.2.5/backend/Makefile.eggcups cups-2.2.5/backend/Makefile
  	echo Linking $@...
 -	$(LD_CC) $(LDFLAGS) -o ipp ipp.o libbackend.a $(LIBS)
 +	$(LD_CC) $(LDFLAGS) -o ipp ipp.o libbackend.a $(LIBS) $(SERVERLIBS)
+ 	$(CODE_SIGN) -s "$(CODE_SIGN_IDENTITY)" $@
  	$(RM) http
  	$(LN) ipp http
- 
 diff -up cups-2.2.5/scheduler/subscriptions.c.eggcups cups-2.2.5/scheduler/subscriptions.c
 --- cups-2.2.5/scheduler/subscriptions.c.eggcups	2017-10-13 20:22:26.000000000 +0200
 +++ cups-2.2.5/scheduler/subscriptions.c	2017-10-17 18:56:42.409024451 +0200
