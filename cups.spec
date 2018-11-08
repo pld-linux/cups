@@ -12,13 +12,13 @@
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	2.2.8
-Release:	2
+Version:	2.2.9
+Release:	1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest)
 Group:		Applications/Printing
 Source0:	https://github.com/apple/cups/releases/download/v%{version}/%{name}-%{version}-source.tar.gz
-# Source0-md5:	33150d08993a04c8e22176e93805a051
+# Source0-md5:	798e83bb1a240f5417a252903d83ae0c
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -680,9 +680,6 @@ fi
 %defattr(644,root,root,755)
 %dir %attr(755,root,lp) %{_sysconfdir}/%{name}
 %attr(755,root,root) %{_libdir}/libcups.so.*
-%attr(755,root,root) %{_libdir}/libcupscgi.so.*
-%attr(755,root,root) %{_libdir}/libcupsmime.so.*
-%attr(755,root,root) %{_libdir}/libcupsppdc.so.*
 %dir %{_datadir}/cups
 %lang(ca) %{_localedir}/ca/cups_ca.po
 %lang(cs) %{_localedir}/cs/cups_cs.po
@@ -703,10 +700,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/cups-config
 %attr(755,root,root) %{_libdir}/libcups.so
-%attr(755,root,root) %{_libdir}/libcupscgi.so
 %attr(755,root,root) %{_libdir}/libcupsimage.so
-%attr(755,root,root) %{_libdir}/libcupsmime.so
-%attr(755,root,root) %{_libdir}/libcupsppdc.so
 %{_includedir}/cups
 %{_mandir}/man1/cups-config.1*
 
@@ -714,8 +708,5 @@ fi
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libcups.a
-%{_libdir}/libcupscgi.a
 %{_libdir}/libcupsimage.a
-%{_libdir}/libcupsmime.a
-%{_libdir}/libcupsppdc.a
 %endif
