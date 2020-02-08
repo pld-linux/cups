@@ -1,36 +1,27 @@
---- cups-1.2rc1/man/Makefile.wiget	2006-04-05 12:06:41.000000000 +0200
-+++ cups-1.2rc1/man/Makefile	2006-04-05 12:07:50.000000000 +0200
-@@ -140,13 +140,13 @@ install-data: all
+--- cups-2.3.1/man/Makefile~	2019-12-13 15:44:10.000000000 +0100
++++ cups-2.3.1/man/Makefile	2020-02-08 14:28:19.482255123 +0100
+@@ -128,19 +128,19 @@ install-data: all
+ 		$(INSTALL_MAN) $$file $(MANDIR)/man7; \
  	done
- 	for file in accept cupsreject reject; do \
- 		$(RM) $(AMANDIR)/man$(MAN8DIR)/$$file.$(MAN8EXT); \
--		$(LN) cupsaccept.$(MAN8EXT) $(AMANDIR)/man$(MAN8DIR)/$$file.$(MAN8EXT); \
-+		echo ".so cupsaccept.$(MAN8EXT)" > $(AMANDIR)/man$(MAN8DIR)/$$file.$(MAN8EXT); \
+ 	$(RM) $(MANDIR)/man7/ippeveps.7
+-	$(LN) ippevepcl.7 $(MANDIR)/man7/ippeveps.7
++	echo ".so ippevepcl.7" > $(MANDIR)/man7/ippeveps.7
+ 	echo Installing man pages in $(MANDIR)/man8...
+ 	$(INSTALL_DIR) -m 755 $(MANDIR)/man8
+ 	for file in $(MAN8); do \
+ 		$(INSTALL_MAN) $$file $(MANDIR)/man8; \
  	done
- 	$(RM) $(AMANDIR)/man$(MAN8DIR)/cupsdisable.$(MAN8EXT)
--	$(LN) cupsenable.$(MAN8EXT) $(AMANDIR)/man$(MAN8DIR)/cupsdisable.$(MAN8EXT)
-+	echo ".so cupsenable.$(MAN8EXT)" > $(AMANDIR)/man$(MAN8DIR)/cupsdisable.$(MAN8EXT)
- 	for file in cups-deviced cups-driverd cups-exec; do \
- 		$(RM) $(AMANDIR)/man$(MAN8DIR)/$$file.$(MAN8EXT); \
--		$(LN) cupsd-helper.$(MAN8EXT) $(AMANDIR)/man$(MAN8DIR)/$$file.$(MAN8EXT); \
-+		echo ".so cupsd-helper.$(MAN8EXT)" > $(AMANDIR)/man$(MAN8DIR)/$$file.$(MAN8EXT); \
+ 	$(RM) $(MANDIR)/man8/cupsdisable.8
+-	$(LN) cupsenable.8 $(MANDIR)/man8/cupsdisable.8
++	echo ".so cupsenable.8" > $(MANDIR)/man8/cupsdisable.8
+ 	$(RM) $(MANDIR)/man8/cupsreject.8
+-	$(LN) cupsaccept.8 $(MANDIR)/man8/cupsreject.8
++	echo ".so cupsaccept.8" > $(MANDIR)/man8/cupsreject.8
+ 	for file in cups-deviced.8 cups-driverd.8 cups-exec.8; do \
+ 		$(RM) $(MANDIR)/man8/$$file; \
+-		$(LN) cupsd-helper.8 $(MANDIR)/man8/$$file; \
++		echo ".so cupsd-helper.8" > $(MANDIR)/man8/$$file; \
  	done
  
  
---- cups-1.4.0/config-scripts/cups-manpages.m4~	2009-01-12 20:17:09.000000000 +0100
-+++ cups-1.4.0/config-scripts/cups-manpages.m4	2009-08-29 22:32:49.346665192 +0200
-@@ -69,10 +69,10 @@
- 		;;
- 	Linux* | GNU* | Darwin*)
- 		# Linux, GNU Hurd, and macOS
--		MAN1EXT=1.gz
--		MAN5EXT=5.gz
--		MAN7EXT=7.gz
--		MAN8EXT=8.gz
-+		MAN1EXT=1
-+		MAN5EXT=5
-+		MAN7EXT=7
-+		MAN8EXT=8
- 		MAN8DIR=8
- 		;;
- 	*)
+

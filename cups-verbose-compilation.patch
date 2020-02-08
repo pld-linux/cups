@@ -1,12 +1,10 @@
---- cups-1.3.7/Makedefs.in~	2008-04-11 07:59:17.000000000 +0200
-+++ cups-1.3.7/Makedefs.in	2008-04-11 07:59:50.000000000 +0200
-@@ -258,7 +258,7 @@
+--- cups-2.3.1/Makedefs.in~	2019-12-13 15:44:10.000000000 +0100
++++ cups-2.3.1/Makedefs.in	2020-02-08 14:30:12.856885409 +0100
+@@ -263,7 +263,6 @@ USBQUIRKS	=	@USBQUIRKS@
  # Rules...
  #
  
 -.SILENT:
-+#.SILENT:
- .SUFFIXES:	.1 .1.gz .1m .1m.gz .3 .3.gz .5 .5.gz .7 .7.gz .8 .8.gz .a .c .cxx .h .man .o .gz
+ .SUFFIXES:	.a .c .cxx .h .o
  
  .c.o:
-

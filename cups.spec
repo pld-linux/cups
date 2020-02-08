@@ -6,19 +6,18 @@
 %bcond_without	gssapi		# GSSAPI support
 %bcond_with	lspp		# audit and SELinux label support (lspp patch)
 %bcond_with	tcp_wrappers	# tcp_wrappers/libwrap support
-%bcond_without	python		# Python support in web interface
 %bcond_without	static_libs	# static library
 
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	2.2.11
+Version:	2.3.1
 Release:	1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest)
 Group:		Applications/Printing
 Source0:	https://github.com/apple/cups/releases/download/v%{version}/%{name}-%{version}-source.tar.gz
-# Source0-md5:	7afbbcd2497e7d742583c492f6de40cd
+# Source0-md5:	8ad8897c97cf4d90f20dac4318f47421
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -38,7 +37,7 @@ Patch10:	%{name}-peercred.patch
 Patch11:	%{name}-usb.patch
 Patch12:	%{name}-desktop.patch
 Patch13:	%{name}-systemd-socket.patch
-Patch14:	add-ipp-backend-of-cups-1.4.patch
+
 Patch15:	reactivate_recommended_driver.patch
 Patch16:	read-embedded-options-from-incoming-postscript-and-add-to-ipp-attrs.patch
 Patch18:	%{name}-final-content-type.patch
@@ -283,7 +282,7 @@ bibliotecas do CUPS.
 #%patch11 -p1
 %patch12 -p1
 %patch13 -p1
-%patch14 -p1
+
 %patch15 -p1
 %patch16 -p1
 %patch18 -p1
@@ -341,7 +340,6 @@ bibliotecas do CUPS.
 	%{?with_dnssd:--with-dnssd-libs=x} \
 	%{?with_dnssd:--with-dnssd-includes=x} \
 	--with-optim=-Wno-format-y2k \
-	%{?with_python:--with-python=%{_bindir}/python} \
 	--with-systemd=%{systemdunitdir}
 
 %{__make} %{?debug:OPTIONS="-DDEBUG"}
@@ -452,7 +450,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc *.txt
+%doc *.md
 %attr(640,root,root) %config %verify(not md5 mtime size) /etc/pam.d/cups
 %attr(754,root,root) /etc/rc.d/init.d/cups
 /etc/dbus-1/system.d/cups.conf
@@ -473,7 +471,7 @@ fi
 %dir %attr(755,root,lp) %{_sysconfdir}/%{name}/ppd
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
 %attr(755,root,root) %{_bindir}/cupstestppd
-%attr(755,root,root) %{_bindir}/cupstestdsc
+%attr(755,root,root) %{_bindir}/ippeveprinter
 %attr(755,root,root) %{_sbindir}/cupsctl
 %attr(755,root,root) %{_sbindir}/cupsd
 %attr(755,root,root) %{_sbindir}/cupsfilter
@@ -487,7 +485,6 @@ fi
 %attr(755,root,root) %{_ulibdir}/cups/backend/http
 %attr(755,root,root) %{_ulibdir}/cups/backend/https
 %attr(755,root,root) %{_ulibdir}/cups/backend/ipp
-%attr(755,root,root) %{_ulibdir}/cups/backend/ipp14
 %attr(755,root,root) %{_ulibdir}/cups/backend/ipps
 %attr(755,root,root) %{_ulibdir}/cups/backend/lpd
 %attr(755,root,root) %{_ulibdir}/cups/backend/snmp
@@ -507,6 +504,9 @@ fi
 %lang(pt_BR) %{_ulibdir}/cups/cgi-bin/pt_BR
 %lang(ru) %{_ulibdir}/cups/cgi-bin/ru
 
+%dir %{_ulibdir}/cups/command
+%attr(755,root,root) %{_ulibdir}/cups/command/ippevepcl
+%attr(755,root,root) %{_ulibdir}/cups/command/ippeveps
 %dir %{_ulibdir}/cups/daemon
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-deviced
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-driverd
@@ -516,7 +516,6 @@ fi
 %attr(755,root,root) %{_ulibdir}/cups/filter/commandtops
 %attr(755,root,root) %{_ulibdir}/cups/filter/gziptoany
 %attr(755,root,root) %{_ulibdir}/cups/filter/pstops
-%attr(755,root,root) %{_ulibdir}/cups/filter/rastertodymo
 %attr(755,root,root) %{_ulibdir}/cups/filter/rastertoepson
 %attr(755,root,root) %{_ulibdir}/cups/filter/rastertohp
 %attr(755,root,root) %{_ulibdir}/cups/filter/rastertolabel
@@ -555,7 +554,7 @@ fi
 %lang(ru) %{_datadir}/cups/templates/ru
 %{_mandir}/man1/cups.1*
 %{_mandir}/man1/cupstestppd.1*
-%{_mandir}/man1/cupstestdsc.1*
+%{_mandir}/man1/ippeveprinter.1*
 %{_mandir}/man5/classes.conf.5*
 %{_mandir}/man5/cups-files.conf.5*
 %{_mandir}/man5/cups-snmp.conf.5*
@@ -569,6 +568,8 @@ fi
 %{_mandir}/man5/subscriptions.conf.5*
 %{_mandir}/man7/backend.7*
 %{_mandir}/man7/filter.7*
+%{_mandir}/man7/ippevepcl.7*
+%{_mandir}/man7/ippeveps.7*
 %{_mandir}/man7/notifier.7*
 %{_mandir}/man8/cups-deviced.8*
 %{_mandir}/man8/cups-driverd.8*
@@ -638,9 +639,7 @@ fi
 %attr(755,root,root) %{_bindir}/lpr
 %attr(755,root,root) %{_bindir}/lprm
 %attr(755,root,root) %{_bindir}/lpstat
-%attr(755,root,root) %{_sbindir}/accept
 %attr(755,root,root) %{_sbindir}/cupsaccept
-%attr(755,root,root) %{_sbindir}/cupsaddsmb
 %attr(755,root,root) %{_sbindir}/cupsenable
 %attr(755,root,root) %{_sbindir}/cupsdisable
 %attr(755,root,root) %{_sbindir}/cupsreject
@@ -650,7 +649,6 @@ fi
 %attr(755,root,root) %{_sbindir}/lpc
 %attr(755,root,root) %{_sbindir}/lpinfo
 %attr(755,root,root) %{_sbindir}/lpmove
-%attr(755,root,root) %{_sbindir}/reject
 %{_datadir}/cups/ipptool
 %{_desktopdir}/cups.desktop
 %{_iconsdir}/hicolor/*/apps/cups.png
@@ -664,9 +662,7 @@ fi
 %{_mandir}/man1/lprm.1*
 %{_mandir}/man1/lpstat.1*
 %{_mandir}/man5/client.conf.5*
-%{_mandir}/man8/accept.8*
 %{_mandir}/man8/cupsaccept.8*
-%{_mandir}/man8/cupsaddsmb.8*
 %{_mandir}/man8/cupsenable.8*
 %{_mandir}/man8/cupsdisable.8*
 %{_mandir}/man8/cupsreject.8*
@@ -674,7 +670,6 @@ fi
 %{_mandir}/man8/lpc.8*
 %{_mandir}/man8/lpinfo.8*
 %{_mandir}/man8/lpmove.8*
-%{_mandir}/man8/reject.8*
 
 %files lib
 %defattr(644,root,root,755)
@@ -684,6 +679,7 @@ fi
 %lang(ca) %{_localedir}/ca/cups_ca.po
 %lang(cs) %{_localedir}/cs/cups_cs.po
 %lang(de) %{_localedir}/de/cups_de.po
+%{_localedir}/en/cups_en.po
 %lang(es) %{_localedir}/es/cups_es.po
 %lang(fr) %{_localedir}/fr/cups_fr.po
 %lang(it) %{_localedir}/it/cups_it.po
