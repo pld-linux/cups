@@ -12,7 +12,7 @@ Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	2.3.1
-Release:	1
+Release:	2
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest)
 Group:		Applications/Printing
@@ -37,7 +37,7 @@ Patch10:	%{name}-peercred.patch
 Patch11:	%{name}-usb.patch
 Patch12:	%{name}-desktop.patch
 Patch13:	%{name}-systemd-socket.patch
-
+Patch14:	%{name}-backroot-readable.patch
 Patch15:	reactivate_recommended_driver.patch
 Patch16:	read-embedded-options-from-incoming-postscript-and-add-to-ipp-attrs.patch
 Patch18:	%{name}-final-content-type.patch
@@ -282,7 +282,7 @@ bibliotecas do CUPS.
 #%patch11 -p1
 %patch12 -p1
 %patch13 -p1
-
+%patch14 -p1
 %patch15 -p1
 %patch16 -p1
 %patch18 -p1
@@ -358,9 +358,9 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,logrotate.d,modprobe.d,securit
 
 if [ "%{_lib}" != "lib" ] ; then
 	install -d $RPM_BUILD_ROOT%{_libdir}
-	mv $RPM_BUILD_ROOT%{_ulibdir}/*.so* $RPM_BUILD_ROOT%{_libdir}
+	%{__mv} $RPM_BUILD_ROOT%{_ulibdir}/*.so* $RPM_BUILD_ROOT%{_libdir}
 %if %{with static_libs}
-	mv $RPM_BUILD_ROOT%{_ulibdir}/*.a $RPM_BUILD_ROOT%{_libdir}
+	%{__mv} $RPM_BUILD_ROOT%{_ulibdir}/*.a $RPM_BUILD_ROOT%{_libdir}
 %endif
 fi
 
