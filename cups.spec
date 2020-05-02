@@ -631,7 +631,7 @@ fi
 %defattr(644,root,root,755)
 %attr(644,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/client.conf
 %attr(755,root,root) %{_bindir}/cancel
-%attr(755,root,root) %{_bindir}/ippfind
+%{?with_avahi:%attr(755,root,root) %{_bindir}/ippfind}
 %attr(755,root,root) %{_bindir}/ipptool
 %attr(755,root,root) %{_bindir}/lp
 %attr(755,root,root) %{_bindir}/lpoptions
@@ -653,7 +653,7 @@ fi
 %{_desktopdir}/cups.desktop
 %{_iconsdir}/hicolor/*/apps/cups.png
 %{_mandir}/man1/cancel.1*
-%{_mandir}/man1/ippfind.1*
+%{?with_avahi:%{_mandir}/man1/ippfind.1*}
 %{_mandir}/man1/ipptool.1*
 %{_mandir}/man1/lp.1*
 %{_mandir}/man1/lpoptions.1*
