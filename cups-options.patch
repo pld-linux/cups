@@ -1,18 +1,17 @@
-*** cups-1.1.10/cups/options.c~  Wed Sep 13 19:47:00 2000
---- cups-1.1.10/cups/options.c   Sat Sep 30 21:29:57 2000
-***************
-*** 442,447 ****
---- 442,454 ----
-    copyarg     = strdup(arg);
-    ptr         = copyarg;
-  
-+   /*
-+    * skip leading spaces
-+    */
-+ 
-+   while (isspace(*ptr))
-+     ++ptr;
-+ 
-    while (*ptr != '\0')
-    {
-     /*
+diff -urNp -x '*.orig' cups-2.3.3.org/cups/options.c cups-2.3.3/cups/options.c
+--- cups-2.3.3.org/cups/options.c	2020-04-27 20:04:29.000000000 +0200
++++ cups-2.3.3/cups/options.c	2021-04-20 22:45:48.336492339 +0200
+@@ -326,6 +326,13 @@ cupsParseOptions(
+   * Loop through the string...
+   */
+ 
++  /*
++   * skip leading spaces
++   */
++
++  while (isspace(*ptr))
++    ++ptr;
++
+   while (*ptr != '\0')
+   {
+    /*

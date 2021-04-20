@@ -1,7 +1,7 @@
-diff -up cups-2.2.12/scheduler/main.c.systemd-socket cups-2.2.12/scheduler/main.c
---- cups-2.2.12/scheduler/main.c.systemd-socket	2019-08-16 00:35:30.000000000 +0200
-+++ cups-2.2.12/scheduler/main.c	2019-08-19 09:31:09.703370325 +0200
-@@ -674,8 +674,16 @@ main(int  argc,				/* I - Number of comm
+diff -urNp -x '*.orig' cups-2.3.3.org/scheduler/main.c cups-2.3.3/scheduler/main.c
+--- cups-2.3.3.org/scheduler/main.c	2020-04-27 20:04:29.000000000 +0200
++++ cups-2.3.3/scheduler/main.c	2021-04-20 22:45:51.479823429 +0200
+@@ -681,8 +681,16 @@ main(int  argc,				/* I - Number of comm
  
  #ifdef HAVE_ONDEMAND
    if (OnDemand)
@@ -19,10 +19,10 @@ diff -up cups-2.2.12/scheduler/main.c.systemd-socket cups-2.2.12/scheduler/main.
  #endif /* HAVE_ONDEMAND */
    if (fg)
      cupsdAddEvent(CUPSD_EVENT_SERVER_STARTED, NULL, NULL, "Scheduler started in foreground.");
-diff -up cups-2.2.12/scheduler/org.cups.cupsd.service.in.systemd-socket cups-2.2.12/scheduler/org.cups.cupsd.service.in
---- cups-2.2.12/scheduler/org.cups.cupsd.service.in.systemd-socket	2019-08-19 09:31:09.703370325 +0200
-+++ cups-2.2.12/scheduler/org.cups.cupsd.service.in	2019-08-19 09:54:58.890036404 +0200
-@@ -1,10 +1,10 @@
+diff -urNp -x '*.orig' cups-2.3.3.org/scheduler/org.cups.cupsd.service.in cups-2.3.3/scheduler/org.cups.cupsd.service.in
+--- cups-2.3.3.org/scheduler/org.cups.cupsd.service.in	2020-04-27 20:04:29.000000000 +0200
++++ cups-2.3.3/scheduler/org.cups.cupsd.service.in	2021-04-20 22:45:51.479823429 +0200
+@@ -1,11 +1,11 @@
  [Unit]
  Description=CUPS Scheduler
  Documentation=man:cupsd(8)

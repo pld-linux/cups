@@ -1,7 +1,7 @@
-diff -up cups-1.7b1/cups/http-addr.c.res_init cups-1.7b1/cups/http-addr.c
---- cups-1.7b1/cups/http-addr.c.res_init	2013-03-20 19:14:10.000000000 +0100
-+++ cups-1.7b1/cups/http-addr.c	2013-04-19 12:01:36.927512159 +0200
-@@ -319,7 +319,8 @@ httpAddrLookup(
+diff -urNp -x '*.orig' cups-2.3.3.org/cups/http-addr.c cups-2.3.3/cups/http-addr.c
+--- cups-2.3.3.org/cups/http-addr.c	2020-04-27 20:04:29.000000000 +0200
++++ cups-2.3.3/cups/http-addr.c	2021-04-20 22:45:56.326486636 +0200
+@@ -388,7 +388,8 @@ httpAddrLookup(
  
      if (error)
      {
@@ -11,10 +11,10 @@ diff -up cups-1.7b1/cups/http-addr.c.res_init cups-1.7b1/cups/http-addr.c
          cg->need_res_init = 1;
  
        return (httpAddrString(addr, name, namelen));
-diff -up cups-1.7b1/cups/http-addrlist.c.res_init cups-1.7b1/cups/http-addrlist.c
---- cups-1.7b1/cups/http-addrlist.c.res_init	2013-04-19 12:01:36.930512119 +0200
-+++ cups-1.7b1/cups/http-addrlist.c	2013-04-19 12:03:13.769229554 +0200
-@@ -581,7 +581,8 @@ httpAddrGetList(const char *hostname,	/*
+diff -urNp -x '*.orig' cups-2.3.3.org/cups/http-addrlist.c cups-2.3.3/cups/http-addrlist.c
+--- cups-2.3.3.org/cups/http-addrlist.c	2020-04-27 20:04:29.000000000 +0200
++++ cups-2.3.3/cups/http-addrlist.c	2021-04-20 22:45:56.326486636 +0200
+@@ -649,7 +649,8 @@ httpAddrGetList(const char *hostname,	/*
      }
      else
      {
@@ -23,4 +23,4 @@ diff -up cups-1.7b1/cups/http-addrlist.c.res_init cups-1.7b1/cups/http-addrlist.
 +          error == EAI_NONAME)
          cg->need_res_init = 1;
  
-       _cupsSetError(IPP_STATUS_ERROR_INTERNAL, gai_strerror(error), 0);
+ #  ifdef _WIN32 /* Really, Microsoft?!? */
