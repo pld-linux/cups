@@ -19,21 +19,10 @@ diff -up cups-2.2.12/scheduler/main.c.systemd-socket cups-2.2.12/scheduler/main.
  #endif /* HAVE_ONDEMAND */
    if (fg)
      cupsdAddEvent(CUPSD_EVENT_SERVER_STARTED, NULL, NULL, "Scheduler started in foreground.");
-diff -up cups-2.2.12/scheduler/org.cups.cupsd.path.in.systemd-socket cups-2.2.12/scheduler/org.cups.cupsd.path.in
---- cups-2.2.12/scheduler/org.cups.cupsd.path.in.systemd-socket	2019-08-16 00:35:30.000000000 +0200
-+++ cups-2.2.12/scheduler/org.cups.cupsd.path.in	2019-08-19 09:31:09.703370325 +0200
-@@ -1,6 +1,6 @@
- [Unit]
- Description=CUPS Scheduler
--PartOf=org.cups.cupsd.service
-+PartOf=cups.service
- 
- [Path]
- PathExists=@CUPS_CACHEDIR@/org.cups.cupsd
 diff -up cups-2.2.12/scheduler/org.cups.cupsd.service.in.systemd-socket cups-2.2.12/scheduler/org.cups.cupsd.service.in
 --- cups-2.2.12/scheduler/org.cups.cupsd.service.in.systemd-socket	2019-08-19 09:31:09.703370325 +0200
 +++ cups-2.2.12/scheduler/org.cups.cupsd.service.in	2019-08-19 09:54:58.890036404 +0200
-@@ -1,13 +1,13 @@
+@@ -1,10 +1,10 @@
  [Unit]
  Description=CUPS Scheduler
  Documentation=man:cupsd(8)
@@ -47,28 +36,3 @@ diff -up cups-2.2.12/scheduler/org.cups.cupsd.service.in.systemd-socket cups-2.2
  Restart=on-failure
  
  [Install]
--Also=org.cups.cupsd.socket org.cups.cupsd.path
-+Also=cups.socket cups.path
- WantedBy=printer.target
-diff -up cups-2.2.12/scheduler/org.cups.cupsd.socket.in.systemd-socket cups-2.2.12/scheduler/org.cups.cupsd.socket.in
---- cups-2.2.12/scheduler/org.cups.cupsd.socket.in.systemd-socket	2019-08-16 00:35:30.000000000 +0200
-+++ cups-2.2.12/scheduler/org.cups.cupsd.socket.in	2019-08-19 09:31:09.703370325 +0200
-@@ -1,6 +1,6 @@
- [Unit]
- Description=CUPS Scheduler
--PartOf=org.cups.cupsd.service
-+PartOf=cups.service
- 
- [Socket]
- ListenStream=@CUPS_DEFAULT_DOMAINSOCKET@
-diff -up cups-2.2.12/scheduler/org.cups.cups-lpd.socket.systemd-socket cups-2.2.12/scheduler/org.cups.cups-lpd.socket
---- cups-2.2.12/scheduler/org.cups.cups-lpd.socket.systemd-socket	2019-08-16 00:35:30.000000000 +0200
-+++ cups-2.2.12/scheduler/org.cups.cups-lpd.socket	2019-08-19 09:31:09.703370325 +0200
-@@ -1,6 +1,6 @@
- [Unit]
- Description=CUPS LPD Server Socket
--PartOf=org.cups.cups-lpd.service
-+PartOf=cups-lpd.service
- 
- [Socket]
- ListenStream=515
