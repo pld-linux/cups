@@ -60,6 +60,7 @@ Patch114:	cups-freebind.patch
 Patch115:	cups-ipp-multifile.patch
 Patch116:	cups-web-devices-timeout.patch
 Patch117:	cups-lspp.patch
+Patch118:	scx3400w-quirks.patchs
 URL:		http://www.cups.org/
 BuildRequires:	acl-devel
 %{?with_lspp:BuildRequires:	audit-libs-devel}
@@ -308,6 +309,7 @@ bibliotecas do CUPS.
 %patch115 -p1
 %patch116 -p1
 %patch117 -p1
+%patch118 -p1
 
 %build
 %{__aclocal} -I config-scripts

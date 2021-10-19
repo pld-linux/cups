@@ -1,0 +1,24 @@
+From 231c3a3e3ee12e0078be772647707c7d63a6c098 Mon Sep 17 00:00:00 2001
+From: Zdenek Dohnal <zdohnal@redhat.com>
+Date: Tue, 12 Oct 2021 06:31:15 +0200
+Subject: [PATCH] org.cups.usb-quirks: Samsung SCX-3405W works without quirks
+
+---
+ CHANGES.md                  | 4 ++--
+ backend/org.cups.usb-quirks | 3 +++
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/backend/org.cups.usb-quirks b/backend/org.cups.usb-quirks
+index b4e12a25e..5aa0d41af 100644
+--- a/backend/org.cups.usb-quirks
++++ b/backend/org.cups.usb-quirks
+@@ -194,6 +194,9 @@
+ # All Samsung devices (https://bugs.launchpad.net/bugs/1032456)
+ 0x04e8 soft-reset
+ 
++# Samsung SCX-3405W works without quirks (https://github.com/OpenPrinting/cups/issues/270)
++0x04e8 0x344f whitelist
++
+ # Samsung ML-2160 Series (https://bugzilla.redhat.com/show_bug.cgi?id=873123)
+ 0x04e8 0x330f unidir
+ 
