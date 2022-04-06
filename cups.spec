@@ -7,6 +7,7 @@
 %bcond_with	lspp		# audit and SELinux label support (lspp patch)
 %bcond_with	tcp_wrappers	# tcp_wrappers/libwrap support
 %bcond_without	static_libs	# static library
+%bcond_without	systemd		# systemd
 
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
@@ -80,7 +81,7 @@ BuildRequires:	libusb-devel >= 1.0
 BuildRequires:	pam-devel
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.641
-BuildRequires:	systemd-devel
+%{?with_systemd:BuildRequires:	systemd-devel}
 BuildRequires:	zlib-devel
 Requires(post,preun):	/sbin/chkconfig
 Requires(post,preun,postun):	systemd-units >= 38
@@ -342,7 +343,8 @@ bibliotecas do CUPS.
 	%{?with_dnssd:--with-dnssd-libs=x} \
 	%{?with_dnssd:--with-dnssd-includes=x} \
 	--with-optim=-Wno-format-y2k \
-	--with-systemd=%{systemdunitdir}
+	%{?with_systemd:--with-systemd=%{systemdunitdir}} \
+	%{!?with_systemd:--disable-systemd}
 
 %{__make} %{?debug:OPTIONS="-DDEBUG"}
 
@@ -457,10 +459,12 @@ fi
 %attr(754,root,root) /etc/rc.d/init.d/cups
 /etc/dbus-1/system.d/cups.conf
 /etc/modprobe.d/cups.conf
+%if %{with systemd}
 %{systemdunitdir}/org.cups.cupsd.service
 %{systemdunitdir}/org.cups.cupsd.socket
 %{systemdunitdir}/org.cups.cupsd.path
 %{systemdtmpfilesdir}/%{name}.conf
+%endif
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/classes.conf
 %attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/cups-files.conf
 %attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/cupsd.conf
@@ -608,8 +612,10 @@ fi
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/rc-inetd/cups-lpd
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-lpd
+%if %{with systemd}
 %{systemdunitdir}/org.cups.cups-lpd.socket
 %{systemdunitdir}/org.cups.cups-lpd@.service
+%endif
 %{_mandir}/man8/cups-lpd.8*
 
 %files ppdc
