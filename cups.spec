@@ -83,7 +83,7 @@ BuildRequires:	rpmbuild(macros) >= 1.641
 BuildRequires:	zlib-devel
 Requires(post,preun):	/sbin/chkconfig
 Requires(post,preun,postun):	systemd-units >= 38
-Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
+Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 Requires:	%{name}-ppdc = %{epoch}:%{version}-%{release}
 Requires:	pam >= 0.77.3
 Requires:	rc-scripts
@@ -158,7 +158,7 @@ Summary:	Common Unix Printing System - PPD manipulation utilities
 Summary(pl.UTF-8):	Narzędzia CUPS do operacji na plikach PPD
 License:	GPL v2
 Group:		Applications/Printing
-Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
+Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 
 %description ppdc
 This package provides utilities to generate and manipulate PPD files.
@@ -172,7 +172,7 @@ Summary:	Common Unix Printing System Clients
 Summary(pl.UTF-8):	Aplikacje klienckie dla CUPS
 License:	GPL v2
 Group:		Applications/Printing
-Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
+Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 Provides:	printingclient
 Obsoletes:	printingclient
 
@@ -189,8 +189,8 @@ Summary(pt_BR.UTF-8):	Sistema Unix de Impressão - bibliotecas para uso em clien
 License:	LGPL v2
 Group:		Libraries
 Provides:	%{name}-libs = %{epoch}:%{version}-%{release}
-Obsoletes:	cups-libs
-Obsoletes:	libcups1
+Obsoletes:	cups-libs < 1:1.1.14-2
+Obsoletes:	libcups1 < 1:2
 
 %description lib
 Common Unix Printing System Libraries.
@@ -208,7 +208,7 @@ Summary(pt_BR.UTF-8):	Sistema Unix de Impressão - bibliotecas para uso em clien
 License:	LGPL v2
 Group:		Libraries
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
-Obsoletes:	libcups1
+Obsoletes:	libcups1 < 1:2
 
 %description image-lib
 Common Unix Printing System Libraries - images manipalation.
@@ -235,7 +235,7 @@ Requires:	zlib-devel
 Requires:	libjpeg-devel
 Requires:	libpng-devel
 Requires:	libtiff-devel
-Obsoletes:	libcups1-devel
+Obsoletes:	libcups1-devel < 1:2
 
 %description devel
 Common Unix Printing System development files.
@@ -680,7 +680,7 @@ fi
 %files lib
 %defattr(644,root,root,755)
 %dir %attr(755,root,lp) %{_sysconfdir}/%{name}
-%attr(755,root,root) %{_libdir}/libcups.so.*
+%attr(755,root,root) %{_libdir}/libcups.so.2
 %dir %{_datadir}/cups
 %lang(ca) %{_localedir}/ca/cups_ca.po
 %lang(cs) %{_localedir}/cs/cups_cs.po
@@ -696,7 +696,7 @@ fi
 
 %files image-lib
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libcupsimage.so.*
+%attr(755,root,root) %{_libdir}/libcupsimage.so.2
 
 %files devel
 %defattr(644,root,root,755)
