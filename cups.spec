@@ -12,13 +12,13 @@
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	2.3.3
-Release:	4
+Version:	2.3.6
+Release:	1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest)
 Group:		Applications/Printing
-Source0:	https://github.com/apple/cups/releases/download/v%{version}/%{name}-%{version}-source.tar.gz
-# Source0-md5:	412434ceefbdf3ec71bc9188a035f589
+Source0:	https://github.com/apple/cups/archive/v%{version}/%{name}-%{version}.tar.gz
+# Source0-md5:	1bfba624d19092b20db4807323417efe
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -38,7 +38,6 @@ Patch10:	%{name}-peercred.patch
 Patch11:	%{name}-usb.patch
 Patch12:	%{name}-desktop.patch
 Patch13:	%{name}-systemd-socket.patch
-Patch14:	%{name}-backroot-readable.patch
 Patch15:	reactivate_recommended_driver.patch
 Patch16:	read-embedded-options-from-incoming-postscript-and-add-to-ipp-attrs.patch
 Patch18:	%{name}-final-content-type.patch
@@ -52,9 +51,7 @@ Patch105:	cups-driverd-timeout.patch
 Patch106:	cups-logrotate.patch
 Patch107:	cups-res_init.patch
 Patch108:	cups-filter-debug.patch
-Patch109:	cups-hp-deviceid-oid.patch
 Patch110:	cups-dnssd-deviceid.patch
-Patch111:	cups-ricoh-deviceid-oid.patch
 
 Patch113:	cups-dymo-deviceid.patch
 Patch114:	cups-freebind.patch
@@ -284,7 +281,6 @@ bibliotecas do CUPS.
 #%patch11 -p1
 %patch12 -p1
 %patch13 -p1
-%patch14 -p1
 %patch15 -p1
 %patch16 -p1
 %patch18 -p1
@@ -301,9 +297,7 @@ bibliotecas do CUPS.
 %patch106 -p1
 %patch107 -p1
 %patch108 -p1
-%patch109 -p1
 %patch110 -p1
-%patch111 -p1
 
 %patch113 -p1
 %patch114 -p1
@@ -467,11 +461,13 @@ fi
 %endif
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/classes.conf
 %attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/cups-files.conf
+%attr(640,root,lp) %{_sysconfdir}/%{name}/cups-files.conf.default
 %attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/cupsd.conf
 %attr(640,root,lp) %{_sysconfdir}/%{name}/cupsd.conf.default
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/printers.conf
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/mailto.conf
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/snmp.conf
+%attr(640,root,lp) %{_sysconfdir}/%{name}/snmp.conf.default
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/security/blacklist.cups
 %dir %attr(700,root,lp) %{_sysconfdir}/%{name}/ssl
 %dir %attr(755,root,lp) %{_sysconfdir}/%{name}/ppd
