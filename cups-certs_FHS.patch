@@ -2,9 +2,9 @@ diff -urNp -x '*.orig' cups-2.3.3.org/config-scripts/cups-directories.m4 cups-2.
 --- cups-2.3.3.org/config-scripts/cups-directories.m4	2020-04-27 20:04:29.000000000 +0200
 +++ cups-2.3.3/config-scripts/cups-directories.m4	2021-04-20 22:45:49.526491490 +0200
 @@ -295,5 +295,12 @@ AC_ARG_WITH(rundir, [  --with-rundir
- 			CUPS_STATEDIR="$localstatedir/run/cups"
- 			;;
- 	esac])
+ 	CUPS_STATEDIR="$localstatedir/run/cups"
+     ])
+ ])
 +AC_ARG_WITH(logdir, [  --with-statedir           set path for certs state],statedir="$withval",statedir="")
 +
 +if test x$logdir = x; then
@@ -12,17 +12,17 @@ diff -urNp -x '*.orig' cups-2.3.3.org/config-scripts/cups-directories.m4 cups-2.
 +else
 +		CUPS_STATEDIR="$statedir"
 +fi
- AC_DEFINE_UNQUOTED(CUPS_STATEDIR, "$CUPS_STATEDIR")
- AC_SUBST(CUPS_STATEDIR)
+ AC_DEFINE_UNQUOTED([CUPS_STATEDIR], ["$CUPS_STATEDIR"], [Location of transient state files.])
+ AC_SUBST([CUPS_STATEDIR])
 diff -urNp -x '*.orig' cups-2.3.3.org/config-scripts/cups-network.m4 cups-2.3.3/config-scripts/cups-network.m4
 --- cups-2.3.3.org/config-scripts/cups-network.m4	2020-04-27 20:04:29.000000000 +0200
 +++ cups-2.3.3/config-scripts/cups-network.m4	2021-04-20 22:45:49.526491490 +0200
 @@ -48,7 +48,7 @@ if test x$enable_domainsocket != xno -a
- 				;;
- 			*)
- 				# All others use FHS standard...
--				CUPS_DEFAULT_DOMAINSOCKET="$CUPS_STATEDIR/cups.sock"
-+				CUPS_DEFAULT_DOMAINSOCKET="$localstatedir/run/cups/cups.sock"
- 				;;
- 		esac
- 	else
+ 	    CUPS_DEFAULT_DOMAINSOCKET="$localstatedir/run/cupsd"
+ 	], [*], [
+ 	    # All others use FHS standard...
+-	    CUPS_DEFAULT_DOMAINSOCKET="$CUPS_STATEDIR/cups.sock"
++	    CUPS_DEFAULT_DOMAINSOCKET="$localstatedir/run/cups/cups.sock"
+ 	])
+     ], [
+ 	CUPS_DEFAULT_DOMAINSOCKET="$default_domainsocket"

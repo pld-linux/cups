@@ -12,13 +12,13 @@
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
-Version:	2.3.6
-Release:	1
+Version:	2.4.8
+Release:	0.1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest)
 Group:		Applications/Printing
-Source0:	https://github.com/apple/cups/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	1bfba624d19092b20db4807323417efe
+Source0:	https://github.com/OpenPrinting/cups/releases/download/v%{version}/cups-%{version}-source.tar.gz
+# Source0-md5:	3fdd9a5249f090cd35e324246ef0e3e4
 Source1:	%{name}.init
 Source2:	%{name}.pamd
 Source3:	%{name}.logrotate
@@ -37,19 +37,14 @@ Patch9:		%{name}-verbose-compilation.patch
 Patch10:	%{name}-peercred.patch
 Patch11:	%{name}-usb.patch
 Patch12:	%{name}-desktop.patch
-Patch13:	%{name}-systemd-socket.patch
 Patch15:	reactivate_recommended_driver.patch
 Patch16:	read-embedded-options-from-incoming-postscript-and-add-to-ipp-attrs.patch
 Patch18:	%{name}-final-content-type.patch
 Patch19:	job-name-too-long.patch
-# avahi patches from fedora
-Patch100:	%{name}-avahi-address.patch
-Patch101:	%{name}-avahi-no-threaded.patch
 Patch102:	cups-banners.patch
 Patch103:	cups-pid.patch
 Patch104:	cups-eggcups.patch
 Patch105:	cups-driverd-timeout.patch
-Patch106:	cups-logrotate.patch
 Patch107:	cups-res_init.patch
 Patch108:	cups-filter-debug.patch
 Patch110:	cups-dnssd-deviceid.patch
@@ -59,8 +54,7 @@ Patch114:	cups-freebind.patch
 Patch115:	cups-ipp-multifile.patch
 Patch116:	cups-web-devices-timeout.patch
 Patch117:	cups-lspp.patch
-Patch118:	scx3400w-quirks.patchs
-URL:		http://www.cups.org/
+URL:		https://openprinting.github.io/cups/
 BuildRequires:	acl-devel
 %{?with_lspp:BuildRequires:	audit-libs-devel}
 BuildRequires:	autoconf >= 2.60
@@ -281,22 +275,15 @@ bibliotecas do CUPS.
 # why it hasn't been merged for so long (and why no other distro uses it)
 #%patch11 -p1
 %patch12 -p1
-%patch13 -p1
 %patch15 -p1
 %patch16 -p1
 %patch18 -p1
 %patch19 -p1
 
-%if %{with avahi}
-%patch100 -p1
-%patch101 -p1
-%endif
-
 %patch102 -p1
 %patch103 -p1
 %patch104 -p1
 %patch105 -p1
-%patch106 -p1
 %patch107 -p1
 %patch108 -p1
 %patch110 -p1
@@ -306,13 +293,11 @@ bibliotecas do CUPS.
 %patch115 -p1
 %patch116 -p1
 %patch117 -p1
-%patch118 -p1
 
 %build
 %{__aclocal} -I config-scripts
 %{__autoconf}
 %configure \
-	--libdir=%{_ulibdir} \
 	--enable-acl \
 	--enable-avahi%{!?with_avahi:=no} \
 	--disable-cdsassl \
@@ -335,6 +320,7 @@ bibliotecas do CUPS.
 	--with-log-file-perm=0640 \
 	--with-dbusdir=/etc/dbus-1 \
 	--with-docdir=%{_ulibdir}/%{name}/cgi-bin \
+	--with-pkgconfpath=%{_pkgconfigdir} \
 	--with-printcap=/etc/printcap \
 	%{?with_dnssd:--with-dnssd-libs=x} \
 	%{?with_dnssd:--with-dnssd-includes=x} \
@@ -355,14 +341,6 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,logrotate.d,modprobe.d,securit
 	BUILDROOT=$RPM_BUILD_ROOT \
 	CUPS_USER=$(id -u) \
 	CUPS_GROUP=$(id -g)
-
-if [ "%{_lib}" != "lib" ] ; then
-	install -d $RPM_BUILD_ROOT%{_libdir}
-	%{__mv} $RPM_BUILD_ROOT%{_ulibdir}/*.so* $RPM_BUILD_ROOT%{_libdir}
-%if %{with static_libs}
-	%{__mv} $RPM_BUILD_ROOT%{_ulibdir}/*.a $RPM_BUILD_ROOT%{_libdir}
-%endif
-fi
 
 %if %{with avahi}
 ln -s %{_ulibdir}/cups/backend/dnssd $RPM_BUILD_ROOT%{_ulibdir}/cups/backend/mdns
@@ -420,20 +398,20 @@ fi
 /sbin/chkconfig --add cups
 %service cups restart "cups daemon"
 /sbin/rmmod usblp > /dev/null 2>&1 || :
-%systemd_post org.cups.cupsd.service org.cups.cupd.socket org.cups.cupsd.path
+%systemd_post cups.service cups.socket cups.path
 
 %preun
 if [ "$1" = "0" ]; then
 	%service cups stop
 	/sbin/chkconfig --del cups
 fi
-%systemd_preun org.cups.cupsd.service org.cups.cupsd.socket org.cups.cupsd.path
+%systemd_preun cups.service cups.socket cups.path
 
 %postun
 %systemd_reload
 
 %triggerpostun -- cups < 1:1.5.2-1
-%systemd_trigger org.cups.cupsd.service org.cups.cupsd.socket org.cups.cupsd.path
+%systemd_trigger cups.service cups.socket cups.path
 
 %post	lib -p /sbin/ldconfig
 %postun	lib -p /sbin/ldconfig
@@ -456,9 +434,9 @@ fi
 /etc/dbus-1/system.d/cups.conf
 /etc/modprobe.d/cups.conf
 %if %{with systemd}
-%{systemdunitdir}/org.cups.cupsd.service
-%{systemdunitdir}/org.cups.cupsd.socket
-%{systemdunitdir}/org.cups.cupsd.path
+%{systemdunitdir}/cups.service
+%{systemdunitdir}/cups.socket
+%{systemdunitdir}/cups.path
 %{systemdtmpfilesdir}/%{name}.conf
 %endif
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/classes.conf
@@ -502,8 +480,10 @@ fi
 %{_ulibdir}/cups/cgi-bin/*.html
 %{_ulibdir}/cups/cgi-bin/*.png
 %{_ulibdir}/cups/cgi-bin/*.txt
+%lang(da) %{_ulibdir}/cups/cgi-bin/da
 %lang(de) %{_ulibdir}/cups/cgi-bin/de
 %lang(es) %{_ulibdir}/cups/cgi-bin/es
+%lang(fr) %{_ulibdir}/cups/cgi-bin/fr
 %lang(ja) %{_ulibdir}/cups/cgi-bin/ja
 %lang(pt_BR) %{_ulibdir}/cups/cgi-bin/pt_BR
 %lang(ru) %{_ulibdir}/cups/cgi-bin/ru
@@ -550,6 +530,7 @@ fi
 
 %dir %{_datadir}/cups/templates
 %{_datadir}/cups/templates/*.tmpl
+%lang(da) %{_datadir}/cups/templates/da
 %lang(de) %{_datadir}/cups/templates/de
 %lang(es) %{_datadir}/cups/templates/es
 %lang(fr) %{_datadir}/cups/templates/fr
@@ -611,8 +592,8 @@ fi
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/rc-inetd/cups-lpd
 %attr(755,root,root) %{_ulibdir}/cups/daemon/cups-lpd
 %if %{with systemd}
-%{systemdunitdir}/org.cups.cups-lpd.socket
-%{systemdunitdir}/org.cups.cups-lpd@.service
+%{systemdunitdir}/cups-lpd.socket
+%{systemdunitdir}/cups-lpd@.service
 %endif
 %{_mandir}/man8/cups-lpd.8*
 
@@ -684,6 +665,7 @@ fi
 %dir %{_datadir}/cups
 %lang(ca) %{_localedir}/ca/cups_ca.po
 %lang(cs) %{_localedir}/cs/cups_cs.po
+%lang(da) %{_localedir}/da/cups_da.po
 %lang(de) %{_localedir}/de/cups_de.po
 %{_localedir}/en/cups_en.po
 %lang(es) %{_localedir}/es/cups_es.po
@@ -704,6 +686,7 @@ fi
 %attr(755,root,root) %{_libdir}/libcups.so
 %attr(755,root,root) %{_libdir}/libcupsimage.so
 %{_includedir}/cups
+%{_pkgconfigdir}/cups.pc
 %{_mandir}/man1/cups-config.1*
 
 %if %{with static_libs}

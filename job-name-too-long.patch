@@ -1,6 +1,6 @@
 --- cups-2.3.6/backend/ipp.c.orig	2024-05-19 14:12:43.566004590 +0200
 +++ cups-2.3.6/backend/ipp.c	2024-05-19 14:49:20.758512651 +0200
-@@ -1519,14 +1519,13 @@
+@@ -1519,18 +1519,17 @@
  
    if (create_job)
    {
@@ -9,6 +9,10 @@
    }
    else
    {
+    /*
+     * TODO: make this compatible with UTF-8 - possible UTF-8 truncation here..
+     */
+ 
 -    snprintf(print_job_name, sizeof(print_job_name), "%s - %s", argv[1],
 -             argv[3]);
 -    monitor.job_name = print_job_name;
