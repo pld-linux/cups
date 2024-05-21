@@ -13,7 +13,7 @@ Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
 Name:		cups
 Version:	2.4.8
-Release:	0.1
+Release:	1
 Epoch:		1
 License:	LGPL v2 (libraries), GPL v2 (the rest)
 Group:		Applications/Printing
