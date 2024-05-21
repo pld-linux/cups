@@ -40,7 +40,6 @@ Patch12:	%{name}-desktop.patch
 Patch15:	reactivate_recommended_driver.patch
 Patch16:	read-embedded-options-from-incoming-postscript-and-add-to-ipp-attrs.patch
 Patch18:	%{name}-final-content-type.patch
-Patch19:	job-name-too-long.patch
 Patch102:	cups-banners.patch
 Patch103:	cups-pid.patch
 Patch104:	cups-eggcups.patch
@@ -278,7 +277,6 @@ bibliotecas do CUPS.
 %patch15 -p1
 %patch16 -p1
 %patch18 -p1
-%patch19 -p1
 
 %patch102 -p1
 %patch103 -p1
