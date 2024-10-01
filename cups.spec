@@ -435,6 +435,7 @@ fi
 %{systemdunitdir}/cups.service
 %{systemdunitdir}/cups.socket
 %{systemdunitdir}/cups.path
+%{systemdunitdir}/system-cups.slice
 %{systemdtmpfilesdir}/%{name}.conf
 %endif
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/classes.conf
