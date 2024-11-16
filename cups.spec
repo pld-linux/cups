@@ -1,13 +1,17 @@
 #
 # Conditional build:
-%bcond_without	gnutls		# use GNU TLS for SSL/TLS support
-%bcond_with	dnssd		# DNS Service Discovery support via dns_sd API (obsoleted by Avahi patch)
+%bcond_with	gnutls		# use GNU TLS for SSL/TLS support
+%bcond_with	dnssd		# DNS Service Discovery support via dns_sd API
 %bcond_without	avahi		# DNS Service Discovery support via Avahi
 %bcond_without	gssapi		# GSSAPI support
 %bcond_with	lspp		# audit and SELinux label support (lspp patch)
 %bcond_with	tcp_wrappers	# tcp_wrappers/libwrap support
 %bcond_without	static_libs	# static library
 %bcond_without	systemd		# systemd
+
+%if %{with dnssd}
+%undefine	with_avahi
+%endif
 
 Summary(pl.UTF-8):	Ogólny system druku dla Uniksa
 Summary(pt_BR.UTF-8):	Sistema Unix de Impressão
@@ -55,22 +59,24 @@ Patch117:	cups-lspp.patch
 URL:		https://openprinting.github.io/cups/
 BuildRequires:	acl-devel
 %{?with_lspp:BuildRequires:	audit-libs-devel}
-BuildRequires:	autoconf >= 2.60
+BuildRequires:	autoconf >= 2.71
 BuildRequires:	automake
 %{?with_dnssd:BuildRequires:	avahi-compat-libdns_sd-devel}
 %{?with_avahi:BuildRequires:	avahi-devel}
 BuildRequires:	dbus-devel
-BuildRequires:	glibc-headers
 %{?with_gnutls:BuildRequires:	gnutls-devel}
 %{?with_gssapi:BuildRequires:	heimdal-devel}
+BuildRequires:	libapparmor-devel
 BuildRequires:	libpaper-devel
 %{?with_lspp:BuildRequires:	libselinux-devel}
 BuildRequires:	libstdc++-devel
 BuildRequires:	libusb-devel >= 1.0
 %{?with_tcp_wrappers:BuildRequires:	libwrap-devel}
+%{!?with_gnutls:BuildRequires:	openssl-devel}
 BuildRequires:	pam-devel
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.641
+BuildRequires:	snapd-glib-2-devel
 %{?with_systemd:BuildRequires:	systemd-devel}
 BuildRequires:	zlib-devel
 Requires(post,preun):	/sbin/chkconfig
@@ -80,7 +86,6 @@ Requires:	%{name}-ppdc = %{epoch}:%{version}-%{release}
 Requires:	pam >= 0.77.3
 Requires:	rc-scripts
 Requires:	systemd-units >= 38
-Suggests:	ImageMagick-coder-pdf
 Suggests:	cups-filters
 Suggests:	poppler-progs
 Provides:	printingdaemon
@@ -219,14 +224,9 @@ License:	LGPL v2
 Group:		Development/Libraries
 Requires:	%{name}-image-lib = %{epoch}:%{version}-%{release}
 Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
-# for libcups
+%{?with_avahi:Requires:	avahi-devel}
 %{?with_gnutls:Requires: gnutls-devel}
-%{?with_gssapi:Requires: heimdal-devel}
-Requires:	zlib-devel
-# for libcupsimage
-Requires:	libjpeg-devel
-Requires:	libpng-devel
-Requires:	libtiff-devel
+%{!?with_gnutls:Requires: openssl-devel}
 Obsoletes:	libcups1-devel < 1:2
 
 %description devel
@@ -295,18 +295,13 @@ bibliotecas do CUPS.
 %{__autoconf}
 %configure \
 	--enable-acl \
-	--enable-avahi%{!?with_avahi:=no} \
-	--disable-cdsassl \
 	--enable-dbus \
 	%{?debug:--enable-debug} \
-	--enable-dnssd%{!?with_dnssd:=no} \
-	--enable-gnutls%{!?with_gnutls:=no} \
 	--enable-gssapi%{!?with_gssapi:=no} \
 	--enable-libpaper \
 	--enable-libusb \
 	%{?with_lspp:--enable-lspp} \
 	--enable-shared \
-	--enable-ssl \
 	%{?with_static_libs:--enable-static} \
 	%{?with_tcp_wrappers:--enable-tcp-wrappers} \
 	--with-cups-group=lp \
@@ -318,11 +313,11 @@ bibliotecas do CUPS.
 	--with-docdir=%{_ulibdir}/%{name}/cgi-bin \
 	--with-pkgconfpath=%{_pkgconfigdir} \
 	--with-printcap=/etc/printcap \
-	%{?with_dnssd:--with-dnssd-libs=x} \
-	%{?with_dnssd:--with-dnssd-includes=x} \
+	--with-dnssd=%{?with_avahi:avahi}%{?with_dnssd:mdnsresponder}%{!?with_avahi:%{!?with_dnssd:no}} \
 	--with-optim=-Wno-format-y2k \
 	%{?with_systemd:--with-systemd=%{systemdunitdir}} \
-	%{!?with_systemd:--disable-systemd}
+	--with-ondemand=%{?with_systemd:systemd}%{!?with_systemd:no} \
+	--with-tls=%{?with_gnutls:gnutls}%{!?with_gnutls:openssl}
 
 %{__make} %{?debug:OPTIONS="-DDEBUG"}
 
