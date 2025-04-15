@@ -1436,9 +1436,9 @@ diff -up cups-2.4.8/scheduler/job.c.lspp cups-2.4.8/scheduler/job.c
 +/* Copyright (C) 2005 Trusted Computer Solutions, Inc. */
 +/* (c) Copyright 2005-2006 Hewlett-Packard Development Company, L.P. */
 +
- /*
-  * Include necessary headers...
-  */
+ #include "cupsd.h"
+ #include <grp.h>
+ #include <cups/backend.h>
 @@ -24,6 +27,14 @@
  #  endif /* HAVE_IOKIT_PWR_MGT_IOPMLIBPRIVATE_H */
  #endif /* __APPLE__ */
