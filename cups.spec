@@ -260,35 +260,35 @@ bibliotecas do CUPS.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
+%patch -P0 -p1
+%patch -P2 -p1
+%patch -P3 -p1
+%patch -P4 -p1
+%patch -P5 -p1
 # why it hasn't been merged for so long (and why no other distro uses it)
-#%patch6 -p1
-%patch7 -p1
-%patch9 -p1
-%patch10 -p1
+#%%patch -P6 -p1
+%patch -P7 -p1
+%patch -P9 -p1
+%patch -P10 -p1
 # why it hasn't been merged for so long (and why no other distro uses it)
-#%patch11 -p1
-%patch12 -p1
-%patch15 -p1
-%patch16 -p1
+#%%patch -P11 -p1
+%patch -P12 -p1
+%patch -P15 -p1
+%patch -P16 -p1
 
-%patch102 -p1
-%patch103 -p1
-%patch104 -p1
-%patch105 -p1
-%patch107 -p1
-%patch108 -p1
-%patch110 -p1
+%patch -P102 -p1
+%patch -P103 -p1
+%patch -P104 -p1
+%patch -P105 -p1
+%patch -P107 -p1
+%patch -P108 -p1
+%patch -P110 -p1
 
-%patch113 -p1
-%patch114 -p1
-%patch115 -p1
-%patch116 -p1
-%patch117 -p1
+%patch -P113 -p1
+%patch -P114 -p1
+%patch -P115 -p1
+%patch -P116 -p1
+%patch -P117 -p1
 
 %build
 %{__aclocal} -I config-scripts
